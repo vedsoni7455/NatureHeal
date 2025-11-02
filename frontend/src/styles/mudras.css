@@ -1,0 +1,395 @@
+/* Mudras Page Styles */
+.mudras-page {
+  min-height: 100vh;
+}
+
+.mudras-hero {
+  background: linear-gradient(135deg, #e8f4f8 0%, #d1e7f0 50%, #b8d8e6 100%);
+  color: #2c3e50;
+  padding: 4rem 0;
+  text-align: center;
+  border-bottom: 1px solid rgba(184, 216, 230, 0.3);
+}
+
+.mudras-hero h1 {
+  font-size: 3rem;
+  font-weight: 700;
+  margin-bottom: 1rem;
+}
+
+.mudras-hero p {
+  font-size: 1.2rem;
+  opacity: 0.9;
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+/* Tab Navigation */
+.mudra-tabs {
+  display: flex;
+  justify-content: center;
+  gap: 2rem;
+  margin: 3rem 0;
+  border-bottom: 2px solid var(--neutral-200);
+  flex-wrap: wrap;
+}
+
+.tab-btn {
+  background: none;
+  border: none;
+  padding: 1rem 2rem;
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: var(--neutral-600);
+  cursor: pointer;
+  transition: all var(--transition-fast);
+  border-bottom: 3px solid transparent;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.tab-btn:hover {
+  color: var(--primary-600);
+}
+
+.tab-btn.active {
+  color: var(--primary-600);
+  border-bottom-color: var(--primary-500);
+}
+
+.tab-icon {
+  font-size: 1.5rem;
+}
+
+/* Mudra Content */
+.mudra-content {
+  margin-bottom: 4rem;
+}
+
+.mudra-section {
+  display: none;
+}
+
+.mudra-section.active {
+  display: block;
+}
+
+.mudra-header {
+  display: grid;
+  grid-template-columns: 1fr 2fr;
+  gap: 2rem;
+  align-items: center;
+  margin-bottom: 3rem;
+  padding: 2rem;
+  background: var(--neutral-50);
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--neutral-200);
+}
+
+.mudra-image img {
+  width: 100%;
+  height: 250px;
+  object-fit: cover;
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-md);
+}
+
+.mudra-content-wrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.mudra-icon {
+  font-size: 4rem;
+  text-align: center;
+}
+
+.mudra-intro h2 {
+  font-size: 2.5rem;
+  font-weight: 700;
+  color: var(--neutral-800);
+  margin-bottom: 1rem;
+}
+
+.mudra-intro p {
+  font-size: 1.1rem;
+  color: var(--neutral-700);
+  line-height: 1.6;
+}
+
+/* Mudra Grid */
+.mudra-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+  gap: 2rem;
+  margin-bottom: 3rem;
+}
+
+.mudra-card {
+  background: white;
+  padding: 2rem;
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-md);
+  border: 1px solid var(--neutral-200);
+  transition: all var(--transition-normal);
+}
+
+.mudra-card:hover {
+  transform: translateY(-5px);
+  box-shadow: var(--shadow-lg);
+}
+
+.mudra-card h3 {
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: var(--neutral-800);
+  margin-bottom: 1.5rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.mudra-card h3::before {
+  content: '';
+  width: 4px;
+  height: 20px;
+  background: var(--primary-500);
+  border-radius: 2px;
+}
+
+/* Benefits List */
+.benefits-list {
+  list-style: none;
+  padding: 0;
+}
+
+.benefits-list li {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.75rem 0;
+  border-bottom: 1px solid var(--neutral-100);
+}
+
+.benefits-list li:last-child {
+  border-bottom: none;
+}
+
+.benefit-icon {
+  color: var(--success-500);
+  font-weight: bold;
+  font-size: 1.1rem;
+}
+
+/* How To List */
+.howto-list {
+  list-style: none;
+  padding: 0;
+  counter-reset: step-counter;
+}
+
+.howto-list li {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.75rem;
+  padding: 1rem 0;
+  border-bottom: 1px solid var(--neutral-100);
+  counter-increment: step-counter;
+}
+
+.howto-list li:last-child {
+  border-bottom: none;
+}
+
+.step-number {
+  background: var(--primary-500);
+  color: white;
+  font-weight: bold;
+  font-size: 0.9rem;
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  margin-top: 0.1rem;
+}
+
+/* Precautions List */
+.precautions-list {
+  list-style: none;
+  padding: 0;
+}
+
+.precautions-list li {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.75rem;
+  padding: 1rem 0;
+  border-bottom: 1px solid var(--neutral-100);
+}
+
+.precautions-list li:last-child {
+  border-bottom: none;
+}
+
+.precaution-icon {
+  font-size: 1.1rem;
+  margin-top: 0.1rem;
+}
+
+/* Call to Action */
+.mudra-cta {
+  background: linear-gradient(135deg, var(--primary-50) 0%, var(--accent-50) 100%);
+  padding: 3rem;
+  border-radius: var(--radius-lg);
+  text-align: center;
+  margin-top: 3rem;
+}
+
+.cta-content h3 {
+  font-size: 2rem;
+  font-weight: 700;
+  color: var(--neutral-800);
+  margin-bottom: 1rem;
+}
+
+.cta-content p {
+  font-size: 1.1rem;
+  color: var(--neutral-700);
+  margin-bottom: 2rem;
+  max-width: 600px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.cta-buttons {
+  display: flex;
+  justify-content: center;
+  gap: 1rem;
+}
+
+.cta-primary,
+.cta-secondary {
+  padding: 1rem 2rem;
+  border-radius: var(--radius-md);
+  font-weight: 600;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: all var(--transition-fast);
+  border: none;
+}
+
+.cta-primary {
+  background: var(--primary-500);
+  color: white;
+}
+
+.cta-primary:hover {
+  background: var(--primary-600);
+  transform: translateY(-2px);
+}
+
+.cta-secondary {
+  background: white;
+  color: var(--primary-600);
+  border: 2px solid var(--primary-500);
+}
+
+.cta-secondary:hover {
+  background: var(--primary-50);
+  transform: translateY(-2px);
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .mudras-hero {
+    padding: 3rem 0;
+  }
+
+  .mudras-hero h1 {
+    font-size: 2.5rem;
+  }
+
+  .mudra-tabs {
+    flex-direction: column;
+    gap: 1rem;
+    margin: 2rem 0;
+  }
+
+  .tab-btn {
+    padding: 0.75rem 1.5rem;
+    font-size: 1rem;
+  }
+
+  .mudra-header {
+    grid-template-columns: 1fr;
+    text-align: center;
+    gap: 1rem;
+  }
+
+  .mudra-image img {
+    height: 200px;
+  }
+
+  .mudra-icon {
+    font-size: 3rem;
+  }
+
+  .mudra-intro h2 {
+    font-size: 2rem;
+  }
+
+  .mudra-grid {
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+  }
+
+  .mudra-card {
+    padding: 1.5rem;
+  }
+
+  .mudra-cta {
+    padding: 2rem 1.5rem;
+  }
+
+  .cta-buttons {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .cta-primary,
+  .cta-secondary {
+    width: 100%;
+    max-width: 300px;
+  }
+}
+
+@media (max-width: 480px) {
+  .mudras-hero h1 {
+    font-size: 2rem;
+  }
+
+  .mudra-intro h2 {
+    font-size: 1.75rem;
+  }
+
+  .mudra-card h3 {
+    font-size: 1.25rem;
+  }
+
+  .howto-list li {
+    padding: 0.75rem 0;
+  }
+
+  .mudra-cta {
+    padding: 1.5rem 1rem;
+  }
+
+  .cta-content h3 {
+    font-size: 1.5rem;
+  }
+}

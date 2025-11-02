@@ -1,0 +1,2 @@
+- [x] Reverted password hashing changes as per user request
+- [x] Test login functionality
