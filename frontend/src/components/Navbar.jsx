@@ -6,6 +6,7 @@ const Navbar = () => {
   const { user, logout } = useContext(AuthContext);
   const navigate = useNavigate();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
 
   const handleLogout = () => {
     logout();
@@ -19,6 +20,11 @@ const Navbar = () => {
 
   const closeMenu = () => {
     setIsMenuOpen(false);
+    setIsDropdownOpen(false);
+  };
+
+  const toggleDropdown = () => {
+    setIsDropdownOpen(!isDropdownOpen);
   };
 
   return (
@@ -90,26 +96,23 @@ const Navbar = () => {
           <div className="navbar-end">
             {user ? (
               <div className="navbar-item has-dropdown">
-                <div className="navbar-link">
+                <div className="navbar-link" onClick={toggleDropdown}>
                   <span className="user-icon">👤</span>
                   <span className="user-name">{user.name}</span>
                 </div>
-                <div className="navbar-dropdown">
-                  <div className="navbar-dropdown-item">
-                    <Link to="/profile" onClick={closeMenu}>
-                      <span>👤</span> Profile
-                    </Link>
+                {isDropdownOpen && (
+                  <div className="navbar-dropdown">
+                    <div className="navbar-dropdown-item">
+                      <Link to="/profile" onClick={closeMenu}>
+                        <span>👤</span> Profile
+                      </Link>
+                    </div>
+                    <hr style={{ margin: '0.5rem 0', border: 'none', borderTop: '1px solid #e9ecef' }} />
+                    <button onClick={handleLogout} className="navbar-dropdown-item logout-btn">
+                      <span>🚪</span> Logout
+                    </button>
                   </div>
-                  <div className="navbar-dropdown-item">
-                    <Link to="/settings" onClick={closeMenu}>
-                      <span>⚙️</span> Settings
-                    </Link>
-                  </div>
-                  <hr style={{ margin: '0.5rem 0', border: 'none', borderTop: '1px solid #e9ecef' }} />
-                  <button onClick={handleLogout} className="navbar-dropdown-item logout-btn">
-                    <span>🚪</span> Logout
-                  </button>
-                </div>
+                )}
               </div>
             ) : (
               <div className="buttons">
