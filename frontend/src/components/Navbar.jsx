@@ -7,6 +7,7 @@ const Navbar = () => {
   const navigate = useNavigate();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+  const [isHealthcareDropdownOpen, setIsHealthcareDropdownOpen] = useState(false);
 
   const handleLogout = () => {
     logout();
@@ -21,10 +22,15 @@ const Navbar = () => {
   const closeMenu = () => {
     setIsMenuOpen(false);
     setIsDropdownOpen(false);
+    setIsHealthcareDropdownOpen(false);
   };
 
   const toggleDropdown = () => {
     setIsDropdownOpen(!isDropdownOpen);
+  };
+
+  const toggleHealthcareDropdown = () => {
+    setIsHealthcareDropdownOpen(!isHealthcareDropdownOpen);
   };
 
   return (
@@ -44,54 +50,80 @@ const Navbar = () => {
         </div>
 
         <div className={`navbar-menu ${isMenuOpen ? 'is-active' : ''}`}>
-          <div className="navbar-start">
-            <div className="navbar-item">
-              <Link to="/" onClick={closeMenu}>Home</Link>
-            </div>
-            <div className="navbar-item">
-              <Link to="/about" onClick={closeMenu}>About Us</Link>
-            </div>
-            <div className="navbar-item">
-              <Link to="/therapies" onClick={closeMenu}>Therapies</Link>
-            </div>
-            <div className="navbar-item">
-              <Link to="/remedies" onClick={closeMenu}>Remedies</Link>
-            </div>
-            <div className="navbar-item">
-              <Link to="/mudras" onClick={closeMenu}>Mudras</Link>
-            </div>
-            <div className="navbar-item">
-              <Link to="/yoga-meditation" onClick={closeMenu}>Yoga & Meditation</Link>
-            </div>
-            <div className="navbar-item">
-              <Link to="/contact" onClick={closeMenu}>Contact Us</Link>
-            </div>
-            {user && (
-              <>
-                {user.role === 'patient' && (
-                  <div className="navbar-item">
-                    <Link to="/dashboard/patient" onClick={closeMenu}>Dashboard</Link>
-                  </div>
-                )}
-                {user.role === 'doctor' && (
-                  <div className="navbar-item">
-                    <Link to="/dashboard/doctor" onClick={closeMenu}>Dashboard</Link>
-                  </div>
-                )}
-                {user.role === 'admin' && (
-                  <div className="navbar-item">
-                    <Link to="/dashboard/admin" onClick={closeMenu}>Dashboard</Link>
-                  </div>
-                )}
+          {user && (
+            <div className="navbar-start">
+              <div className="navbar-item">
+                <Link to="/" onClick={closeMenu}>Home</Link>
+              </div>
+              {user.role === 'patient' && (
                 <div className="navbar-item">
-                  <Link to="/appointment" onClick={closeMenu}>Book Appointment</Link>
+                  <Link to="/dashboard/patient" onClick={closeMenu}>Dashboard</Link>
                 </div>
+              )}
+              {user.role === 'doctor' && (
                 <div className="navbar-item">
-                  <Link to="/chatbot" onClick={closeMenu}>AI Assistant</Link>
+                  <Link to="/dashboard/doctor" onClick={closeMenu}>Dashboard</Link>
                 </div>
-              </>
-            )}
-          </div>
+              )}
+              {user.role === 'admin' && (
+                <div className="navbar-item">
+                  <Link to="/dashboard/admin" onClick={closeMenu}>Dashboard</Link>
+                </div>
+              )}
+              <div className="navbar-item">
+                <Link to="/doctors" onClick={closeMenu}>Doctors</Link>
+              </div>
+              <div className="navbar-item">
+                <Link to="/appointment" onClick={closeMenu}>Book Appointment</Link>
+              </div>
+              <div className="navbar-item has-dropdown">
+                <div className="navbar-link" onClick={toggleHealthcareDropdown}>
+                  Healthcare
+                  <span className="dropdown-arrow">▼</span>
+                </div>
+                {isHealthcareDropdownOpen && (
+                  <div className="navbar-dropdown">
+                    <div className="navbar-dropdown-item">
+                      <Link to="/therapies" onClick={closeMenu}>
+                        <span>💆‍♀️</span> Therapies
+                      </Link>
+                    </div>
+                    <div className="navbar-dropdown-item">
+                      <Link to="/remedies" onClick={closeMenu}>
+                        <span>🌿</span> Remedies
+                      </Link>
+                    </div>
+                    <div className="navbar-dropdown-item">
+                      <Link to="/mudras" onClick={closeMenu}>
+                        <span>🙏</span> Mudras
+                      </Link>
+                    </div>
+                    <div className="navbar-dropdown-item">
+                      <Link to="/yoga-meditation" onClick={closeMenu}>
+                        <span>🧘‍♀️</span> Yoga & Meditation
+                      </Link>
+                    </div>
+                  </div>
+                )}
+              </div>
+              <div className="navbar-item">
+                <Link to="/symptom-checker" onClick={closeMenu}>Symptom Checker</Link>
+              </div>
+
+              <div className="navbar-item">
+                <Link to="/diet-planner" onClick={closeMenu}>Diet Planner</Link>
+              </div>
+              <div className="navbar-item">
+                <Link to="/chatbot" onClick={closeMenu}>AI Assistant</Link>
+              </div>
+              <div className="navbar-item">
+                <Link to="/about" onClick={closeMenu}>About Us</Link>
+              </div>
+              <div className="navbar-item">
+                <Link to="/contact" onClick={closeMenu}>Contact Us</Link>
+              </div>
+            </div>
+          )}
 
           <div className="navbar-end">
             {user ? (

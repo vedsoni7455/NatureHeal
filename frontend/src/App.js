@@ -12,11 +12,15 @@ import DashboardPatient from './pages/DashboardPatient';
 import DashboardDoctor from './pages/DashboardDoctor';
 import DashboardAdmin from './pages/DashboardAdmin';
 import AppointmentForm from './pages/AppointmentForm';
+import Doctors from './pages/Doctors';
 import Remedies from './pages/Remedies';
 import AlternativeTherapies from './pages/AlternativeTherapies';
 import Mudras from './pages/Mudras';
 import YogaMeditation from './pages/YogaMeditation';
 import ChatbotPage from './pages/ChatbotPage';
+import Profile from './pages/Profile';
+import SymptomChecker from './pages/SymptomChecker';
+import DietPlanner from './pages/DietPlanner';
 import './App.css';
 
 function App() {
@@ -36,11 +40,15 @@ function App() {
               <Route path="/dashboard/doctor" element={<DashboardDoctor />} />
               <Route path="/dashboard/admin" element={<DashboardAdmin />} />
               <Route path="/appointment" element={<AppointmentForm />} />
+              <Route path="/doctors" element={<Doctors />} />
               <Route path="/remedies" element={<Remedies />} />
               <Route path="/therapies" element={<AlternativeTherapies />} />
               <Route path="/mudras" element={<Mudras />} />
               <Route path="/yoga-meditation" element={<YogaMeditation />} />
               <Route path="/chatbot" element={<ChatbotPage />} />
+              <Route path="/profile" element={<Profile />} />
+              <Route path="/symptom-checker" element={<SymptomChecker />} />
+              <Route path="/diet-planner" element={<DietPlanner />} />
             </Routes>
           </main>
           <Footer />

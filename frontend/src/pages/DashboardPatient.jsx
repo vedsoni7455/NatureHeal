@@ -283,6 +283,38 @@ const DashboardPatient = () => {
                 <p>Browse and connect with expert practitioners</p>
               </div>
             </Link>
+
+            <Link to="/health-progress" className="action-item">
+              <span className="action-icon">📈</span>
+              <div className="action-content">
+                <h4>Health Progress</h4>
+                <p>Track your daily health metrics and progress</p>
+              </div>
+            </Link>
+
+            <Link to="/diet-planner" className="action-item">
+              <span className="action-icon">🥗</span>
+              <div className="action-content">
+                <h4>Diet Planner</h4>
+                <p>Get personalized diet plans and meal suggestions</p>
+              </div>
+            </Link>
+
+            <Link to="/symptom-checker" className="action-item">
+              <span className="action-icon">🔍</span>
+              <div className="action-content">
+                <h4>Symptom Checker</h4>
+                <p>Analyze your symptoms and get preliminary guidance</p>
+              </div>
+            </Link>
+
+            <Link to="/reminders" className="action-item">
+              <span className="action-icon">⏰</span>
+              <div className="action-content">
+                <h4>Health Reminders</h4>
+                <p>Manage medication and appointment reminders</p>
+              </div>
+            </Link>
           </div>
         </div>
       </div>

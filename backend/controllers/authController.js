@@ -18,9 +18,7 @@ export const registerUser = asyncHandler(async (req, res) => {
     diseaseDuration,
     specialization,
     experience,
-    licenseNumber,
-    phone,
-    address
+    phone
   } = req.body;
 
   // Check if user exists
@@ -32,7 +30,7 @@ export const registerUser = asyncHandler(async (req, res) => {
 
   // Validate required fields based on role
   if (role === 'doctor') {
-    if (!specialization || !experience || !licenseNumber) {
+    if (!specialization || !experience) {
       res.status(400);
       throw new Error('All doctor fields are required');
     }
@@ -51,17 +49,29 @@ export const registerUser = asyncHandler(async (req, res) => {
     diseaseDuration,
     specialization,
     experience,
-    licenseNumber,
     phone,
-    address,
   });
 
   if (user) {
-    res.status(201).json({
+    const userObj = {
       _id: user._id,
       name: user.name,
       email: user.email,
       role: user.role,
+      height: user.height,
+      weight: user.weight,
+      age: user.age,
+      disease: user.disease,
+      diseaseDuration: user.diseaseDuration,
+      specialization: user.specialization,
+      experience: user.experience,
+      phone: user.phone,
+      profilePicture: user.profilePicture,
+      isVerified: user.isVerified,
+      createdAt: user.createdAt,
+    };
+    res.status(201).json({
+      user: userObj,
       token: generateToken(user._id),
     });
   } else {
@@ -86,11 +96,25 @@ export const loginUser = asyncHandler(async (req, res) => {
   const user = await User.findOne({ email }).select('+password');
 
   if (user && (await user.matchPassword(password))) {
-    res.json({
+    const userObj = {
       _id: user._id,
       name: user.name,
       email: user.email,
       role: user.role,
+      height: user.height,
+      weight: user.weight,
+      age: user.age,
+      disease: user.disease,
+      diseaseDuration: user.diseaseDuration,
+      specialization: user.specialization,
+      experience: user.experience,
+      phone: user.phone,
+      profilePicture: user.profilePicture,
+      isVerified: user.isVerified,
+      createdAt: user.createdAt,
+    };
+    res.json({
+      user: userObj,
       token: generateToken(user._id),
     });
   } else {
@@ -164,11 +188,28 @@ export const updateUserProfile = asyncHandler(async (req, res) => {
 
     const updatedUser = await user.save();
 
-    res.json({
+    const userObj = {
       _id: updatedUser._id,
       name: updatedUser.name,
       email: updatedUser.email,
       role: updatedUser.role,
+      height: updatedUser.height,
+      weight: updatedUser.weight,
+      age: updatedUser.age,
+      disease: updatedUser.disease,
+      diseaseDuration: updatedUser.diseaseDuration,
+      specialization: updatedUser.specialization,
+      experience: updatedUser.experience,
+      licenseNumber: updatedUser.licenseNumber,
+      phone: updatedUser.phone,
+      address: updatedUser.address,
+      profilePicture: updatedUser.profilePicture,
+      isVerified: updatedUser.isVerified,
+      createdAt: updatedUser.createdAt,
+    };
+
+    res.json({
+      user: userObj,
       token: generateToken(updatedUser._id),
     });
   } else {

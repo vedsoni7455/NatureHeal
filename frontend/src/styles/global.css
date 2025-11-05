@@ -42,7 +42,7 @@ a:hover {
   display: inline-block;
   padding: 10px 20px;
   background-color: #27ae60;
-  color: rgb(255, 0, 0);
+  color: #dc3545;
   border: none;
   border-radius: 5px;
   cursor: pointer;
@@ -139,8 +139,18 @@ a:hover {
 }
 
 .navbar-brand {
+  position: absolute;
+  left: var(--spacing-lg);
+  top: 50%;
+  transform: translateY(-50%);
   display: flex;
   align-items: center;
+  z-index: 1001;
+}
+
+.navbar-brand.logged-out {
+  left: 50%;
+  transform: translateX(-50%) translateY(-50%);
 }
 
 .brand-link {
@@ -251,13 +261,14 @@ a:hover {
   position: absolute;
   top: 100%;
   right: 0;
-  background: var(--neutral-50);
+  background: rgba(39, 174, 96, 0.95);
   border-radius: var(--radius-md);
   box-shadow: var(--shadow-lg);
   min-width: 200px;
   padding: var(--spacing-sm) 0;
   margin-top: var(--spacing-sm);
   border: 1px solid var(--neutral-200);
+  z-index: 1000;
 }
 
 .navbar-dropdown-item {

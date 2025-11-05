@@ -42,6 +42,47 @@ const userSchema = new mongoose.Schema({
   diseaseDuration: {
     type: String, // e.g., "2 months", "1 year"
   },
+  // Wellness tracking fields
+  wellnessGoals: [{
+    type: String,
+    enum: ['weight-loss', 'weight-gain', 'stress-reduction', 'better-sleep', 'increased-energy', 'immunity-boost', 'mental-health', 'fitness'],
+  }],
+  dietaryPreferences: [{
+    type: String,
+    enum: ['vegetarian', 'vegan', 'gluten-free', 'dairy-free', 'keto', 'paleo', 'mediterranean', 'ayurvedic'],
+  }],
+  allergies: [String],
+  medicalHistory: [{
+    condition: String,
+    diagnosedDate: Date,
+    status: {
+      type: String,
+      enum: ['active', 'resolved', 'managed'],
+      default: 'active',
+    },
+    notes: String,
+  }],
+  currentMedications: [{
+    name: String,
+    dosage: String,
+    frequency: String,
+    prescribedBy: String,
+    startDate: Date,
+  }],
+  emergencyContact: {
+    name: String,
+    relationship: String,
+    phone: String,
+    email: String,
+  },
+  preferredLanguage: {
+    type: String,
+    default: 'en',
+  },
+  timezone: {
+    type: String,
+    default: 'UTC',
+  },
   // Doctor-specific fields
   specialization: {
     type: String,
@@ -53,7 +94,6 @@ const userSchema = new mongoose.Schema({
   },
   licenseNumber: {
     type: String,
-    required: function() { return this.role === 'doctor'; },
   },
   // Common fields
   phone: {

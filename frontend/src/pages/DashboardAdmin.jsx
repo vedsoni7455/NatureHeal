@@ -272,6 +272,38 @@ const DashboardAdmin = () => {
                 <p>Manage system backups</p>
               </div>
             </Link>
+
+            <Link to="/admin/users" className="action-item">
+              <span className="action-icon">👥</span>
+              <div className="action-content">
+                <h4>User Management</h4>
+                <p>Manage users, doctors, and permissions</p>
+              </div>
+            </Link>
+
+            <Link to="/admin/appointments" className="action-item">
+              <span className="action-icon">📅</span>
+              <div className="action-content">
+                <h4>Appointment Oversight</h4>
+                <p>Monitor and manage all appointments</p>
+              </div>
+            </Link>
+
+            <Link to="/admin/reports" className="action-item">
+              <span className="action-icon">📊</span>
+              <div className="action-content">
+                <h4>System Reports</h4>
+                <p>Generate comprehensive system reports</p>
+              </div>
+            </Link>
+
+            <Link to="/admin/settings" className="action-item">
+              <span className="action-icon">⚙️</span>
+              <div className="action-content">
+                <h4>System Settings</h4>
+                <p>Configure platform settings and policies</p>
+              </div>
+            </Link>
           </div>
         </div>
       </div>

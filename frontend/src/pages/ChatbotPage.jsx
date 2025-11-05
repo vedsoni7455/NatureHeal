@@ -1,5 +1,6 @@
 import React from 'react';
 import Chatbot from '../components/Chatbot';
+import '../styles/chatbot.css';
 
 const ChatbotPage = () => {
   return (

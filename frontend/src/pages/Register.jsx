@@ -15,9 +15,7 @@ const Register = () => {
     diseaseDuration: '',
     specialization: '',
     experience: '',
-    licenseNumber: '',
-    phone: '',
-    address: ''
+    phone: ''
   });
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
@@ -42,7 +40,7 @@ const Register = () => {
 
     try {
       await register(formData);
-      navigate('/dashboard/patient');
+      navigate('/');
     } catch (error) {
       const errorMessage = error.response?.data?.message || error.message || 'Registration failed. Please try again.';
       setError(errorMessage);
@@ -130,7 +128,7 @@ const Register = () => {
               </div>
             </div>
 
-            {showPatientFields && (
+            {showPatientFields ? (
               <>
                 <div className="form-row">
                   <div className="form-group">
@@ -204,6 +202,56 @@ const Register = () => {
                       name="diseaseDuration"
                       placeholder="e.g., 2 years, 6 months"
                       value={formData.diseaseDuration}
+                      onChange={handleChange}
+                    />
+                  </div>
+                </div>
+              </>
+            ) : (
+              <>
+                <div className="form-group">
+                  <label htmlFor="specialization">Specialization *</label>
+                  <div className="input-wrapper">
+                    <span className="input-icon">🏥</span>
+                    <input
+                      type="text"
+                      id="specialization"
+                      name="specialization"
+                      placeholder="e.g., Naturopathy, Homeopathy, Ayurveda"
+                      value={formData.specialization}
+                      onChange={handleChange}
+                      required
+                    />
+                  </div>
+                </div>
+
+                <div className="form-group">
+                  <label htmlFor="experience">Years of Experience *</label>
+                  <div className="input-wrapper">
+                    <span className="input-icon">📅</span>
+                    <input
+                      type="number"
+                      id="experience"
+                      name="experience"
+                      placeholder="5"
+                      value={formData.experience}
+                      onChange={handleChange}
+                      required
+                      min="0"
+                    />
+                  </div>
+                </div>
+
+                <div className="form-group">
+                  <label htmlFor="phone">Phone Number</label>
+                  <div className="input-wrapper">
+                    <span className="input-icon">📞</span>
+                    <input
+                      type="tel"
+                      id="phone"
+                      name="phone"
+                      placeholder="+1 (555) 123-4567"
+                      value={formData.phone}
                       onChange={handleChange}
                     />
                   </div>

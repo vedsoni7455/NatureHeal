@@ -21,7 +21,7 @@ const Login = () => {
 
     try {
       await login(formData.email, formData.password);
-      navigate('/dashboard/patient'); // Redirect based on role
+      navigate('/'); // Redirect to home page
     } catch (error) {
       const errorMessage = error.response?.data?.message || error.message || 'Login failed. Please check your credentials.';
       setError(errorMessage);

@@ -29,7 +29,6 @@ export const getDoctors = asyncHandler(async (req, res) => {
   const count = await User.countDocuments(query);
   const doctors = await User.find(query)
     .select('-password')
-    .populate('doctorDetails')
     .limit(pageSize)
     .skip(pageSize * (page - 1))
     .sort({ createdAt: -1 });
@@ -64,8 +63,7 @@ export const getDoctors = asyncHandler(async (req, res) => {
 // @access  Public
 export const getDoctorById = asyncHandler(async (req, res) => {
   const doctor = await User.findOne({ _id: req.params.id, role: 'doctor' })
-    .select('-password')
-    .populate('doctorDetails');
+    .select('-password');
 
   if (doctor) {
     const doctorDetails = await Doctor.findOne({ user: doctor._id }).select('-user');

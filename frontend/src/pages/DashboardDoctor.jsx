@@ -270,6 +270,38 @@ const DashboardDoctor = () => {
                 <p>Access medical resources and guidelines</p>
               </div>
             </Link>
+
+            <Link to="/symptom-checker" className="action-item">
+              <span className="action-icon">🔍</span>
+              <div className="action-content">
+                <h4>Symptom Checker</h4>
+                <p>Analyze patient symptoms and conditions</p>
+              </div>
+            </Link>
+
+            <Link to="/chatbot" className="action-item">
+              <span className="action-icon">🤖</span>
+              <div className="action-content">
+                <h4>AI Assistant</h4>
+                <p>Get AI-powered medical insights</p>
+              </div>
+            </Link>
+
+            <Link to="/symptom-checker" className="action-item">
+              <span className="action-icon">🔍</span>
+              <div className="action-content">
+                <h4>Symptom Analysis</h4>
+                <p>Review patient symptoms and provide guidance</p>
+              </div>
+            </Link>
+
+            <Link to="/profile" className="action-item">
+              <span className="action-icon">⚙️</span>
+              <div className="action-content">
+                <h4>Profile Settings</h4>
+                <p>Update your professional information</p>
+              </div>
+            </Link>
           </div>
         </div>
       </div>

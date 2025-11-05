@@ -5,7 +5,7 @@ import cors from "cors";
 import connectDB from "./config/db.js";
 
 // Load env
-dotenv.config();
+dotenv.config({ path: './.env' });
 
 // Connect MongoDB
 connectDB();
