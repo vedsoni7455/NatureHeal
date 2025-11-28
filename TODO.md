@@ -1,21 +1,8 @@
-# AI Integration Tasks
+# ESLint Warnings Fix Plan
 
-## DietPlanner.jsx Updates
-- [ ] Add loading and error state variables
-- [ ] Replace generatePlan function with async AI API call
-- [ ] Add loading spinner in UI
-- [ ] Add error message display in UI
-- [ ] Handle API response and set generatedPlan
-
-## HealthProgress.jsx Updates
-- [ ] Add loading, error, insights, and predictions state variables
-- [ ] Replace mock data with API calls in useEffect
-- [ ] Add AI insights section in overview tab
-- [ ] Add predictions display section
-- [ ] Add loading states and error handling for API calls
-
-## Testing
-- [ ] Test AI integration for diet planning
-- [ ] Test AI insights and predictions display
-- [ ] Verify loading indicators work properly
-- [ ] Verify error messages for AI service failures
+## Tasks to Complete
+- [ ] Edit `frontend/src/pages/DashboardDoctor.jsx`: Remove unused import `AppointmentCard`
+- [ ] Edit `frontend/src/pages/DietPlanner.jsx`: Remove unused state variables `currentStep` and `setCurrentStep`
+- [ ] Edit `frontend/src/pages/Doctors.jsx`: Add `fetchDoctors` to `useEffect` dependency array
+- [ ] Edit `frontend/src/pages/Profile.jsx`: Remove unused import `navigate`
+- [ ] Run ESLint to verify warnings are resolved

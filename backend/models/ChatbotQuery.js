@@ -16,7 +16,7 @@ const chatbotQuerySchema = new mongoose.Schema({
   response: {
     type: String,
     required: [true, 'Please add a response'],
-    maxlength: 2000,
+    maxlength: 10000,
   },
   category: {
     type: String,

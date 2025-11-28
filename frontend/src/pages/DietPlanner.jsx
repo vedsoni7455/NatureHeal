@@ -18,7 +18,6 @@ const DietPlanner = () => {
   const [generatedPlan, setGeneratedPlan] = useState(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
-  const [currentStep, setCurrentStep] = useState(0);
   const [animatedStats, setAnimatedStats] = useState({ users: 0, plans: 0, satisfaction: 0 });
 
   // Animation effect for stats
@@ -93,6 +92,7 @@ const DietPlanner = () => {
 
       const response = await aiAPI.generateAIDietPlan(dietData);
       setGeneratedPlan(response.data);
+      setActiveTab('plan'); // Switch to plan view
     } catch (err) {
       setError(err.response?.data?.message || 'Failed to generate diet plan. Please try again.');
     } finally {
@@ -319,33 +319,33 @@ const DietPlanner = () => {
                       <div className="meal-card">
                         <h4>🍳 Breakfast</h4>
                         <ul>
-                          {generatedPlan.meals.breakfast.map((item, index) => (
+                          {generatedPlan.meals?.breakfast?.map((item, index) => (
                             <li key={index}>{item}</li>
-                          ))}
+                          )) || <li>No breakfast options generated</li>}
                         </ul>
                       </div>
                       <div className="meal-card">
                         <h4>🥗 Lunch</h4>
                         <ul>
-                          {generatedPlan.meals.lunch.map((item, index) => (
+                          {generatedPlan.meals?.lunch?.map((item, index) => (
                             <li key={index}>{item}</li>
-                          ))}
+                          )) || <li>No lunch options generated</li>}
                         </ul>
                       </div>
                       <div className="meal-card">
                         <h4>🍽️ Dinner</h4>
                         <ul>
-                          {generatedPlan.meals.dinner.map((item, index) => (
+                          {generatedPlan.meals?.dinner?.map((item, index) => (
                             <li key={index}>{item}</li>
-                          ))}
+                          )) || <li>No dinner options generated</li>}
                         </ul>
                       </div>
                       <div className="meal-card">
                         <h4>🍎 Snacks</h4>
                         <ul>
-                          {generatedPlan.meals.snacks.map((item, index) => (
+                          {generatedPlan.meals?.snacks?.map((item, index) => (
                             <li key={index}>{item}</li>
-                          ))}
+                          )) || <li>No snack options generated</li>}
                         </ul>
                       </div>
                     </div>
@@ -354,22 +354,22 @@ const DietPlanner = () => {
                   <div className="tips-section">
                     <h3>Diet Tips</h3>
                     <ul className="tips-list">
-                      {generatedPlan.tips.map((tip, index) => (
+                      {generatedPlan.tips?.map((tip, index) => (
                         <li key={index}>
                           <span className="tip-icon">💡</span>
                           {tip}
                         </li>
-                      ))}
+                      )) || <li>No tips generated</li>}
                     </ul>
                   </div>
 
-                  {(generatedPlan.restrictions.length > 0 || generatedPlan.allergies.length > 0) && (
+                  {(generatedPlan.restrictions?.length > 0 || generatedPlan.allergies?.length > 0) && (
                     <div className="restrictions-section">
                       <h3>Considerations</h3>
-                      {generatedPlan.restrictions.length > 0 && (
+                      {generatedPlan.restrictions?.length > 0 && (
                         <p><strong>Dietary Restrictions:</strong> {generatedPlan.restrictions.join(', ')}</p>
                       )}
-                      {generatedPlan.allergies.length > 0 && (
+                      {generatedPlan.allergies?.length > 0 && (
                         <p><strong>Allergies:</strong> {generatedPlan.allergies.join(', ')}</p>
                       )}
                     </div>
@@ -418,11 +418,11 @@ const DietPlanner = () => {
               </div>
               <div className="recipe-card">
                 <div className="recipe-image">
-                  <span className="recipe-icon">🍗</span>
+                  <span className="recipe-icon">🥗</span>
                 </div>
                 <div className="recipe-content">
-                  <h3>Grilled Chicken Salad</h3>
-                  <p>Lean protein with mixed greens, cherry tomatoes, and balsamic vinaigrette.</p>
+                  <h3>Quinoa and Chickpea Salad</h3>
+                  <p>Protein-rich salad with quinoa, chickpeas, cucumbers, and a lemon vinaigrette.</p>
                   <div className="recipe-meta">
                     <span>20 min</span>
                     <span>320 cal</span>
@@ -435,12 +435,12 @@ const DietPlanner = () => {
                   <span className="recipe-icon">🥑</span>
                 </div>
                 <div className="recipe-content">
-                  <h3>Avocado Toast Bowl</h3>
-                  <p>Whole grain toast topped with smashed avocado, poached eggs, and microgreens.</p>
+                  <h3>Avocado Toast with Tomato</h3>
+                  <p>Whole grain toast topped with smashed avocado, sliced tomatoes, and microgreens.</p>
                   <div className="recipe-meta">
                     <span>15 min</span>
-                    <span>380 cal</span>
-                    <span>Vegetarian</span>
+                    <span>350 cal</span>
+                    <span>Vegan</span>
                   </div>
                 </div>
               </div>

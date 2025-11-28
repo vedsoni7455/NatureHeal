@@ -1,2 +1,2 @@
-# NatureHeal
-Major Project-2
+# Healora
+Major Project - Healora

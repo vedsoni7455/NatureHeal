@@ -6,7 +6,7 @@ const Footer = () => {
     <footer className="footer">
       <div className="footer-content">
         <div className="footer-section">
-          <h3>NatureHeal</h3>
+          <h3>Healora</h3>
           <p>Promoting Natural Health through Naturopathy and Homeopathy.</p>
           <p>Your trusted partner in holistic wellness and natural healing solutions.</p>
         </div>
@@ -35,7 +35,7 @@ const Footer = () => {
         <div className="footer-section">
           <h4>Contact Info</h4>
           <ul>
-            <li>📧 support@natureheal.com</li>
+            <li>📧 support@healora.com</li>
             <li>📞 +1 (555) 123-4567</li>
             <li>📍 123 Natural Health Way</li>
             <li>🌐 Wellness City, WC 12345</li>
@@ -44,7 +44,7 @@ const Footer = () => {
       </div>
 
       <div className="footer-bottom">
-        <p>&copy; 2023 NatureHeal. All rights reserved.</p>
+        <p>&copy; 2023 Healora. All rights reserved.</p>
         <div className="footer-links">
           <a href="#privacy">Privacy Policy</a>
           <a href="#terms">Terms of Service</a>

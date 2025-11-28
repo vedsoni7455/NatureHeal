@@ -9,7 +9,7 @@ const Home = () => {
 
   const slides = [
     {
-      title: "Welcome to NatureHeal",
+      title: "Welcome to Healora",
       subtitle: "Your Journey to Natural Wellness Begins Here",
       description: "Discover the power of natural healing through naturopathy and homeopathy.",
       cta: "Get Started",
@@ -123,7 +123,7 @@ const Home = () => {
       <section className="features-section">
         <div className="container">
           <div className="section-header">
-            <h2>Why Choose NatureHeal?</h2>
+            <h2>Why Choose Healora?</h2>
             <p>Experience holistic healthcare with our comprehensive natural wellness solutions</p>
           </div>
 
@@ -184,7 +184,7 @@ const Home = () => {
         <div className="container">
           <div className="section-header">
             <h2>History of Natural Healing</h2>
-            <p>Discover the rich heritage of homeopathy and naturopathy that forms the foundation of NatureHeal</p>
+            <p>Discover the rich heritage of homeopathy and naturopathy that forms the foundation of Healora</p>
           </div>
 
           <div className="history-grid">
@@ -308,7 +308,7 @@ const Home = () => {
         <div className="container">
           <div className="cta-content">
             <h2>Ready to Start Your Natural Healing Journey?</h2>
-            <p>Join thousands of people who have transformed their health with NatureHeal</p>
+            <p>Join thousands of people who have transformed their health with Healora</p>
             <div className="cta-buttons">
               <Link to="/register" className="cta-primary">Get Started Free</Link>
               <Link to="/remedies" className="cta-secondary">Explore Remedies</Link>

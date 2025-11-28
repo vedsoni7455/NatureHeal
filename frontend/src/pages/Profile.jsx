@@ -1,12 +1,10 @@
 import React, { useState, useContext, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
 import AuthContext from '../context/AuthContext';
 import api from '../utils/api';
 import '../styles/profile.css';
 
 const Profile = () => {
   const { user, setUser } = useContext(AuthContext);
-  const navigate = useNavigate();
   const [isEditing, setIsEditing] = useState(false);
   const [formData, setFormData] = useState({
     name: '',

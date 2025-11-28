@@ -1,67 +1,92 @@
- import asyncHandler from 'express-async-handler';
-import { GoogleGenerativeAI } from '@google/generative-ai';
+import asyncHandler from 'express-async-handler';
+import Groq from 'groq-sdk';
 import ChatbotQuery from '../models/ChatbotQuery.js';
 import DietPlan from '../models/DietPlan.js';
 import User from '../models/User.js';
 
-const genAI = process.env.GOOGLE_AI_API_KEY ? new GoogleGenerativeAI(process.env.GOOGLE_AI_API_KEY) : null;
-const model = genAI ? genAI.getGenerativeModel({ model: 'gemini-2.0-flash-exp' }) : null;
+// Lazy initialization of AI components
+let groq = null;
 
-console.log('Google AI API Key loaded:', process.env.GOOGLE_AI_API_KEY ? 'Yes' : 'No');
-console.log('GenAI initialized:', genAI ? 'Yes' : 'No');
-console.log('Model initialized:', model ? 'Yes' : 'No');
+const initializeAI = async () => {
+  if (!groq && process.env.GROQ_API_KEY) {
+    try {
+      groq = new Groq({ apiKey: process.env.GROQ_API_KEY });
+      console.log('Groq AI initialized successfully');
+    } catch (error) {
+      console.error('Failed to initialize Groq AI:', error);
+      throw error;
+    }
+  }
+  return groq;
+};
+
+// Middleware to ensure the AI model is initialized before proceeding
+const ensureAIInitialized = asyncHandler(async (req, res, next) => {
+  // Check API key first
+  if (!process.env.GROQ_API_KEY) {
+    console.warn('AI Middleware: GROQ_API_KEY not set. Sending 503.');
+    return res.status(503).json({
+      error: 'AI service is not configured.',
+      message: 'The API key for the AI service is missing.'
+    });
+  }
+
+  if (!groq) {
+    await initializeAI();
+  }
+
+  req.groq = groq; // Attach the client to the request object
+  next(); // Proceed to the actual route handler
+});
+
 
 // @desc    Chat with AI assistant
 // @route   POST /api/ai/chat
 // @access  Private
-export const chatWithAI = asyncHandler(async (req, res) => {
+const chatWithAIHandler = asyncHandler(async (req, res) => {
   const { message, sessionId, category } = req.body;
+
+  console.log('chatWithAI called with message:', message);
 
   if (!message) {
     res.status(400);
-    throw new Error('Message is required');
+    console.error('chatWithAI error: Message is required');
+    return res.json({ error: 'Message is required' });
   }
 
-  // Check API key
-  if (!process.env.GOOGLE_AI_API_KEY) {
-    // Return a fallback response instead of throwing an error
-    const fallbackReply = "I'm sorry, but the AI service is currently not configured. Please contact support for assistance with natural health questions.";
-    res.json({
-      reply: fallbackReply,
-      category: 'general',
-      sessionId: sessionId || `session_${Date.now()}`
-    });
-    return;
-  }
-
-  // Check if user is authenticated for saving to database
-  const isAuthenticated = req.user ? true : false;
+  const { groq } = req;
 
   const startTime = Date.now();
 
-  // System prompt for naturopathy and homeopathy context
-  const systemPrompt = `You are an AI assistant for a naturopathy and homeopathy website called NatureHeal.
-  You provide information on natural remedies, yoga asanas, meditation, healthy home remedies, and homeopathic methods to improve health without harmful medicines.
-  Always emphasize natural and holistic approaches. If a user mentions a disease, suggest consulting a doctor and provide general natural wellness tips.
-  Do not give medical advice or diagnose conditions. Encourage healthy lifestyle choices.
+  const systemPrompt = `You are a helpful and knowledgeable AI assistant for NatureHeal. 
+  
+  Your goal is to answer ANY question or query the user sends you. You are NOT limited to specific topics.
+  
+  While you are part of a health website, you should help the user with whatever they ask, whether it is about:
+  - General knowledge and facts
+  - Science, technology, and coding
+  - Daily life advice
+  - Natural remedies and health (your specialty)
+  - Or any other topic.
 
-  Categories you can help with:
-  - General wellness and lifestyle
-  - Natural remedies for common ailments
-  - Yoga asanas and their benefits
-  - Meditation techniques
-  - Homeopathic principles
-  - Nutrition and healthy eating
-  - Stress management and relaxation
-
-  Keep responses helpful, informative, and focused on natural health approaches.`;
+  Always be polite, accurate, and helpful. Do not refuse to answer questions unless they are harmful or illegal.`;
 
   try {
-    const result = await model.generateContent(systemPrompt + '\n\nUser: ' + message);
-    const reply = result.response.text();
+    const completion = await groq.chat.completions.create({
+      messages: [
+        { role: 'system', content: systemPrompt },
+        { role: 'user', content: message }
+      ],
+      model: 'llama-3.3-70b-versatile',
+      temperature: 0.7,
+      max_tokens: 1024,
+    });
+
+    const reply = completion.choices[0]?.message?.content || "I'm sorry, I couldn't generate a response.";
     const responseTime = Date.now() - startTime;
 
-    // Determine category if not provided
+    console.log('Received AI response:', reply);
+
     let queryCategory = category;
     if (!queryCategory) {
       const lowerMessage = message.toLowerCase();
@@ -80,14 +105,13 @@ export const chatWithAI = asyncHandler(async (req, res) => {
       }
     }
 
-    // Save query to database
     const query = new ChatbotQuery({
       user: req.user ? req.user._id : null,
       sessionId: sessionId || `session_${Date.now()}`,
       query: message,
       response: reply,
       category: queryCategory,
-      confidence: 0.9, // Gemini doesn't provide finish_reason, so default to high confidence
+      confidence: 0.9,
       responseTime,
       isAnonymous: !req.user,
     });
@@ -99,31 +123,25 @@ export const chatWithAI = asyncHandler(async (req, res) => {
       sessionId: query.sessionId
     });
   } catch (error) {
-    console.error('Google AI API error:', error);
-    res.status(500);
-    throw new Error('AI service temporarily unavailable');
+    console.error('Groq AI API error:', error);
+    res.status(500).json({
+      error: 'AI service temporarily unavailable',
+      details: error.message || error.toString()
+    });
   }
 });
 
 // @desc    Generate AI-powered diet plan
 // @route   POST /api/ai/generate-diet
 // @access  Private
-export const generateAIDietPlan = asyncHandler(async (req, res) => {
+const generateAIDietPlanHandler = asyncHandler(async (req, res) => {
   const { goals, preferences, restrictions, currentStats } = req.body;
+  const { groq } = req;
 
-  if (!process.env.GOOGLE_AI_API_KEY) {
-    return res.status(503).json({
-      error: 'AI service not available',
-      fallback: true,
-      message: 'Using basic diet plan generation'
-    });
-  }
+  // Get user profile data if available
+  const user = req.user ? await User.findById(req.user._id) : null;
 
-  try {
-    // Get user profile data
-    const user = await User.findById(req.user._id);
-
-    const prompt = `Generate a personalized 7-day diet plan for a person with the following profile:
+  const prompt = `Generate a personalized 7-day diet plan for a person with the following profile:
 
 User Profile:
 - Age: ${currentStats?.age || user?.age || 'Not specified'}
@@ -141,7 +159,7 @@ Please provide a comprehensive diet plan in the following JSON format:
 {
   "title": "Plan title",
   "description": "Brief description",
-  "duration": 30,
+  "duration": 7,
   "dailyCalories": 2200,
   "meals": {
     "breakfast": ["Option 1", "Option 2", "Option 3"],
@@ -150,56 +168,41 @@ Please provide a comprehensive diet plan in the following JSON format:
     "snacks": ["Snack 1", "Snack 2"]
   },
   "tips": ["Tip 1", "Tip 2", "Tip 3"],
-  "supplements": [
-    {
-      "name": "Supplement name",
-      "dosage": "dosage info",
-      "timing": "when to take",
-      "benefits": "health benefits"
-    }
-  ],
-  "weeklyRoutine": {
-    "exercise": ["Exercise recommendations"],
-    "meditation": ["Meditation suggestions"],
-    "sleep": "Sleep recommendations"
-  }
+  "restrictions": ["Restriction 1"],
+  "allergies": ["Allergy 1"]
 }
 
 Focus on natural, whole foods and ensure the plan is nutritionally balanced. Consider any restrictions and preferences provided.`;
 
-    const result = await model.generateContent(prompt);
-    const response = result.response;
-    const aiResponse = response.text();
+  try {
+    const completion = await groq.chat.completions.create({
+      messages: [
+        { role: 'user', content: prompt }
+      ],
+      model: 'llama-3.3-70b-versatile',
+      response_format: { type: 'json_object' }, // Force JSON output
+      temperature: 0.5,
+    });
 
-    // Parse the AI response (remove markdown formatting if present)
-    let planData;
-    try {
-      const jsonMatch = aiResponse.match(/\{[\s\S]*\}/);
-      if (jsonMatch) {
-        planData = JSON.parse(jsonMatch[0]);
-      } else {
-        throw new Error('No JSON found in response');
-      }
-    } catch (parseError) {
-      console.error('Failed to parse AI response:', parseError);
-      return res.status(500).json({
-        error: 'Failed to generate diet plan',
-        fallback: true
-      });
-    }
+    let aiResponse = completion.choices[0]?.message?.content;
+    if (!aiResponse) throw new Error('No response from AI');
+
+    // Clean up potential markdown formatting
+    aiResponse = aiResponse.replace(/```json\n?|```/g, '').trim();
+    console.log('Raw AI Diet Plan Response:', aiResponse); // Debug log
+
+    const planData = JSON.parse(aiResponse);
 
     res.json({
       ...planData,
       isAIGenerated: true,
-      aiPrompt: prompt,
       generatedAt: new Date()
     });
 
   } catch (error) {
     console.error('AI Diet Plan Generation Error:', error);
     res.status(500).json({
-      error: 'AI service temporarily unavailable',
-      fallback: true
+      error: 'AI service temporarily unavailable or failed to parse response.',
     });
   }
 });
@@ -207,44 +210,28 @@ Focus on natural, whole foods and ensure the plan is nutritionally balanced. Con
 // @desc    Generate AI health insights
 // @route   POST /api/ai/health-insights
 // @access  Private
-export const generateAIHealthInsights = asyncHandler(async (req, res) => {
+const generateAIHealthInsightsHandler = asyncHandler(async (req, res) => {
   const { healthData, timeRange } = req.body;
+  const { groq } = req;
 
-  if (!process.env.GOOGLE_AI_API_KEY) {
-    return res.status(503).json({
-      error: 'AI service not available',
-      insights: {
-        patterns: ['Unable to analyze patterns - AI service unavailable'],
-        recommendations: ['Please try again later'],
-        correlations: []
-      }
-    });
-  }
+  const days = timeRange || 30;
 
-  try {
-    // Get user's recent health progress data
-    const days = timeRange || 30;
-    const startDate = new Date();
-    startDate.setDate(startDate.getDate() - days);
+  // Ensure healthData is an array before mapping
+  const dataSummary = Array.isArray(healthData) ? healthData.map(p => ({
+    date: p.date,
+    weight: p.metrics?.weight?.value,
+    energy: p.wellness?.energy,
+    sleep: p.wellness?.sleep?.quality,
+    stress: p.wellness?.stress,
+    mood: p.wellness?.mood,
+    exercise: p.activities?.exercise?.length || 0,
+    symptoms: p.symptoms?.length || 0
+  })) : [];
 
-    const progressData = await HealthProgress.find({
-      user: req.user._id,
-      date: { $gte: startDate },
-    }).sort({ date: 1 });
-
-    const prompt = `Analyze the following health progress data and provide insights:
+  const prompt = `Analyze the following health progress data and provide insights:
 
 Health Data Summary:
-${JSON.stringify(progressData.map(p => ({
-  date: p.date,
-  weight: p.metrics?.weight?.value,
-  energy: p.wellness?.energy,
-  sleep: p.wellness?.sleep?.quality,
-  stress: p.wellness?.stress,
-  mood: p.wellness?.mood,
-  exercise: p.activities?.exercise?.length || 0,
-  symptoms: p.symptoms?.length || 0
-})), null, 2)}
+${JSON.stringify(dataSummary, null, 2)}
 
 Please provide analysis in the following JSON format:
 {
@@ -258,33 +245,27 @@ Please provide analysis in the following JSON format:
 
 Focus on natural health approaches and holistic wellness. Be encouraging and provide actionable insights.`;
 
-    const result = await model.generateContent(prompt);
-    const response = result.response;
-    const aiResponse = response.text();
+  try {
+    const completion = await groq.chat.completions.create({
+      messages: [
+        { role: 'user', content: prompt }
+      ],
+      model: 'llama-3.3-70b-versatile',
+      response_format: { type: 'json_object' },
+      temperature: 0.5,
+    });
 
-    let insights;
-    try {
-      const jsonMatch = aiResponse.match(/\{[\s\S]*\}/);
-      if (jsonMatch) {
-        insights = JSON.parse(jsonMatch[0]);
-      } else {
-        throw new Error('No JSON found in response');
-      }
-    } catch (parseError) {
-      console.error('Failed to parse AI insights response:', parseError);
-      insights = {
-        patterns: ['Data analysis completed'],
-        recommendations: ['Continue tracking your health metrics'],
-        correlations: ['More data needed for detailed correlations'],
-        predictions: [],
-        risks: [],
-        strengths: ['Consistent health tracking']
-      };
-    }
+    let aiResponse = completion.choices[0]?.message?.content;
+    if (!aiResponse) throw new Error('No response from AI');
+
+    // Clean up potential markdown formatting
+    aiResponse = aiResponse.replace(/```json\n?|```/g, '').trim();
+
+    const insights = JSON.parse(aiResponse);
 
     res.json({
       insights,
-      dataPoints: progressData.length,
+      dataPoints: dataSummary.length,
       analysisPeriod: `${days} days`,
       generatedAt: new Date()
     });
@@ -293,11 +274,6 @@ Focus on natural health approaches and holistic wellness. Be encouraging and pro
     console.error('AI Health Insights Error:', error);
     res.status(500).json({
       error: 'Failed to generate health insights',
-      insights: {
-        patterns: ['Unable to analyze patterns at this time'],
-        recommendations: ['Please try again later'],
-        correlations: []
-      }
     });
   }
 });
@@ -305,22 +281,11 @@ Focus on natural health approaches and holistic wellness. Be encouraging and pro
 // @desc    Get AI health predictions
 // @route   POST /api/ai/health-predictions
 // @access  Private
-export const getHealthPredictions = asyncHandler(async (req, res) => {
+const getHealthPredictionsHandler = asyncHandler(async (req, res) => {
   const { currentMetrics, goals } = req.body;
+  const { groq } = req;
 
-  if (!process.env.GOOGLE_AI_API_KEY) {
-    return res.status(503).json({
-      error: 'AI service not available',
-      predictions: {
-        shortTerm: ['Predictions unavailable'],
-        longTerm: ['Please try again later'],
-        recommendations: []
-      }
-    });
-  }
-
-  try {
-    const prompt = `Based on current health metrics and goals, predict health outcomes and provide recommendations:
+  const prompt = `Based on current health metrics and goals, predict health outcomes and provide recommendations:
 
 Current Metrics:
 ${JSON.stringify(currentMetrics, null, 2)}
@@ -340,29 +305,23 @@ Please provide predictions in the following JSON format:
 
 Focus on realistic, achievable outcomes and natural health approaches.`;
 
-    const result = await model.generateContent(prompt);
-    const response = result.response;
-    const aiResponse = response.text();
+  try {
+    const completion = await groq.chat.completions.create({
+      messages: [
+        { role: 'user', content: prompt }
+      ],
+      model: 'llama-3.3-70b-versatile',
+      response_format: { type: 'json_object' },
+      temperature: 0.5,
+    });
 
-    let predictions;
-    try {
-      const jsonMatch = aiResponse.match(/\{[\s\S]*\}/);
-      if (jsonMatch) {
-        predictions = JSON.parse(jsonMatch[0]);
-      } else {
-        throw new Error('No JSON found in response');
-      }
-    } catch (parseError) {
-      console.error('Failed to parse AI predictions response:', parseError);
-      predictions = {
-        shortTerm: ['Predictions being calculated'],
-        longTerm: ['Long-term outlook positive with consistent effort'],
-        recommendations: ['Continue current healthy habits'],
-        milestones: [],
-        challenges: [],
-        successFactors: ['Consistency', 'Patience']
-      };
-    }
+    let aiResponse = completion.choices[0]?.message?.content;
+    if (!aiResponse) throw new Error('No response from AI');
+
+    // Clean up potential markdown formatting
+    aiResponse = aiResponse.replace(/```json\n?|```/g, '').trim();
+
+    const predictions = JSON.parse(aiResponse);
 
     res.json({
       predictions,
@@ -373,11 +332,6 @@ Focus on realistic, achievable outcomes and natural health approaches.`;
     console.error('AI Health Predictions Error:', error);
     res.status(500).json({
       error: 'Failed to generate predictions',
-      predictions: {
-        shortTerm: ['Unable to generate predictions at this time'],
-        longTerm: ['Please consult with healthcare professional for long-term planning'],
-        recommendations: ['Focus on consistent healthy habits']
-      }
     });
   }
 });
@@ -385,7 +339,7 @@ Focus on realistic, achievable outcomes and natural health approaches.`;
 // @desc    Get chat history for user
 // @route   GET /api/ai/history
 // @access  Private
-export const getChatHistory = asyncHandler(async (req, res) => {
+const getChatHistoryHandler = asyncHandler(async (req, res) => {
   const pageSize = 20;
   const page = Number(req.query.pageNumber) || 1;
   const category = req.query.category;
@@ -413,7 +367,7 @@ export const getChatHistory = asyncHandler(async (req, res) => {
 // @desc    Get AI statistics (Admin only)
 // @route   GET /api/ai/stats
 // @access  Private/Admin
-export const getAIStats = asyncHandler(async (req, res) => {
+const getAIStatsHandler = asyncHandler(async (req, res) => {
   const totalQueries = await ChatbotQuery.countDocuments();
   const uniqueUsers = await ChatbotQuery.distinct('user').then(users => users.length);
 
@@ -447,7 +401,7 @@ export const getAIStats = asyncHandler(async (req, res) => {
 // @desc    Submit feedback for AI response
 // @route   PUT /api/ai/feedback/:id
 // @access  Private
-export const submitFeedback = asyncHandler(async (req, res) => {
+const submitFeedbackHandler = asyncHandler(async (req, res) => {
   const { feedback } = req.body;
 
   const query = await ChatbotQuery.findById(req.params.id);
@@ -468,68 +422,11 @@ export const submitFeedback = asyncHandler(async (req, res) => {
   }
 });
 
-// @desc    Get AI suggestions for appointments
-// @route   POST /api/ai/appointment-suggestions
-// @access  Private
-export const getAppointmentSuggestions = asyncHandler(async (req, res) => {
-  const { symptoms, preferences } = req.body;
-
-  // Mock AI response - in real implementation, this would call an AI service
-  const suggestions = {
-    recommendedSpecialty: 'General Medicine',
-    urgency: 'medium',
-    suggestedDoctors: ['Dr. Smith', 'Dr. Johnson'],
-    preparationTips: ['Bring medical history', 'List current medications'],
-  };
-
-  res.json(suggestions);
-});
-
-// @desc    Get AI symptom analysis
-// @route   POST /api/ai/symptom-analysis
-// @access  Private
-export const getSymptomAnalysis = asyncHandler(async (req, res) => {
-  const { symptoms, userProfile } = req.body;
-
-  // Mock AI analysis - in real implementation, this would analyze symptoms
-  const analysis = {
-    possibleConditions: ['Common cold', 'Allergies', 'Stress-related symptoms'],
-    severity: 'mild',
-    recommendations: {
-      immediate: 'Rest and hydration',
-      whenToSeeDoctor: 'If symptoms persist beyond 7 days',
-      homeRemedies: ['Warm tea with honey', 'Steam inhalation', 'Adequate rest'],
-    },
-    disclaimer: 'This is not a medical diagnosis. Please consult a healthcare professional.',
-  };
-
-  res.json(analysis);
-});
-
-// @desc    Generate personalized wellness plan
-// @route   POST /api/ai/wellness-plan
-// @access  Private
-export const generateWellnessPlan = asyncHandler(async (req, res) => {
-  const { goals, currentHealth, preferences } = req.body;
-
-  // Mock wellness plan generation
-  const plan = {
-    dailyRoutine: {
-      morning: ['Meditation (10 min)', 'Light exercise', 'Healthy breakfast'],
-      afternoon: ['Short walk', 'Healthy snack'],
-      evening: ['Yoga session', 'Light dinner', 'Reading before bed'],
-    },
-    weeklyGoals: goals.map(goal => ({
-      goal,
-      weeklyTarget: '5 days',
-      activities: [`Activity for ${goal}`],
-    })),
-    nutrition: {
-      focus: preferences?.dietaryPreferences || ['balanced'],
-      sampleMeal: 'Grilled chicken with vegetables and quinoa',
-    },
-    tracking: ['Daily mood', 'Energy levels', 'Sleep quality'],
-  };
-
-  res.json(plan);
-});
+// Export handlers with middleware where needed
+export const chatWithAI = [ensureAIInitialized, chatWithAIHandler];
+export const getChatHistory = getChatHistoryHandler;
+export const getAIStats = [ensureAIInitialized, getAIStatsHandler];
+export const submitFeedback = submitFeedbackHandler;
+export const generateAIDietPlan = [ensureAIInitialized, generateAIDietPlanHandler];
+export const generateAIHealthInsights = [ensureAIInitialized, generateAIHealthInsightsHandler];
+export const getHealthPredictions = [ensureAIInitialized, getHealthPredictionsHandler];

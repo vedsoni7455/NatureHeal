@@ -3,7 +3,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import AuthContext from '../context/AuthContext';
 
 const Login = () => {
-  const [formData, setFormData] = useState({ email: '', password: '' });
+  const [formData, setFormData] = useState({ email: '', password: '', role: 'patient' });
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const { login } = useContext(AuthContext);
@@ -74,6 +74,22 @@ const Login = () => {
                   onChange={handleChange}
                   required
                 />
+              </div>
+            </div>
+
+            <div className="form-group">
+              <label htmlFor="role">Login as</label>
+              <div className="input-wrapper">
+                <span className="input-icon">👤</span>
+                <select
+                  id="role"
+                  name="role"
+                  value={formData.role}
+                  onChange={handleChange}
+                >
+                  <option value="patient">Patient</option>
+                  <option value="doctor">Doctor</option>
+                </select>
               </div>
             </div>
 

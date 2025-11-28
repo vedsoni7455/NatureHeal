@@ -9,6 +9,7 @@ const Therapies = () => {
       title: 'Acupressure Therapy',
       icon: '💆‍♀️',
       image: 'https://images.unsplash.com/photo-1544367567-0f2fcb009e0b?w=400&h=250&fit=crop&crop=center',
+      videoId: 'vDctMOgdwSk',
       description: 'Ancient Chinese healing technique using finger pressure on specific points to promote healing and relieve pain.',
       benefits: [
         'Relieves muscle tension and pain',
@@ -49,6 +50,7 @@ const Therapies = () => {
       title: 'Acupuncture Therapy',
       icon: '🪡',
       image: 'https://images.unsplash.com/photo-1559757148-5c350d0d3c56?w=400&h=250&fit=crop&crop=center',
+      videoId: '3WMZUi_4eF4',
       description: 'Traditional Chinese medicine using thin needles to balance energy flow and promote healing through meridian points.',
       benefits: [
         'Pain relief and management',
@@ -86,6 +88,7 @@ const Therapies = () => {
       title: 'Massage Therapy',
       icon: '💆',
       image: 'https://images.unsplash.com/photo-1600334129128-685c5582fd35?w=400&h=250&fit=crop&crop=center',
+      videoId: 'iYzeKEQ5XhI',
       description: 'Manual manipulation of soft tissues to enhance physical and mental well-being through various massage techniques.',
       benefits: [
         'Reduces muscle tension and pain',
@@ -123,6 +126,7 @@ const Therapies = () => {
       title: 'Mud Therapy',
       icon: '🌿',
       image: 'https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=400&h=250&fit=crop&crop=center',
+      videoId: 'z_1b4vKx_d0',
       description: 'Natural healing using therapeutic mud packs to detoxify, reduce inflammation, and promote skin health.',
       benefits: [
         'Detoxifies the body',
@@ -160,6 +164,7 @@ const Therapies = () => {
       title: 'Color Therapy',
       icon: '🌈',
       image: 'https://images.unsplash.com/photo-1557683316-973673baf926?w=400&h=250&fit=crop&crop=center',
+      videoId: 'C9oeXlBTHv0',
       description: 'Chromotherapy using colors to balance energy, promote healing, and improve emotional well-being.',
       benefits: [
         'Balances energy and chakras',
@@ -197,6 +202,7 @@ const Therapies = () => {
       title: 'Pyramid Therapy',
       icon: '🏛️',
       image: 'https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=400&h=250&fit=crop&crop=center',
+      videoId: '7svM1GfUlNo',
       description: 'Energy healing using pyramid structures to harness cosmic energy for meditation, healing, and spiritual growth.',
       benefits: [
         'Enhances meditation and spiritual awareness',
@@ -228,6 +234,44 @@ const Therapies = () => {
         'Start with short sessions',
         'May cause intense energy sensations',
         'Not recommended for certain mental health conditions'
+      ]
+    },
+    reiki: {
+      title: 'Reiki Therapy',
+      icon: '👐',
+      image: 'https://images.unsplash.com/photo-1515377905703-c4788e51af15?w=400&h=250&fit=crop&crop=center',
+      videoId: '_jvqGejxQ2U',
+      description: 'Japanese energy healing technique that promotes relaxation, reduces stress and anxiety through gentle touch.',
+      benefits: [
+        'Deep relaxation and stress reduction',
+        'Accelerates body\'s self-healing ability',
+        'Aids better sleep',
+        'Reduces blood pressure',
+        'Helps relieve pain',
+        'Removes energy blockages'
+      ],
+      techniques: [
+        {
+          name: 'Hands-on Healing',
+          description: 'Practitioner places hands lightly on or near body',
+          conditions: 'Physical pain, stress, emotional blockage'
+        },
+        {
+          name: 'Distance Reiki',
+          description: 'Sending healing energy across time and space',
+          conditions: 'Remote healing, past trauma, future events'
+        },
+        {
+          name: 'Chakra Balancing',
+          description: 'Focusing energy on specific energy centers',
+          conditions: 'Energy imbalance, emotional instability'
+        }
+      ],
+      precautions: [
+        'Complementary therapy, not a replacement for medical treatment',
+        'May experience emotional release',
+        'Ensure practitioner is certified',
+        'Drink plenty of water after session'
       ]
     }
 
@@ -287,6 +331,13 @@ const Therapies = () => {
             <span className="tab-icon">🏛️</span>
             Pyramid Therapy
           </button>
+          <button
+            className={`tab-btn ${activeTab === 'reiki' ? 'active' : ''}`}
+            onClick={() => setActiveTab('reiki')}
+          >
+            <span className="tab-icon">👐</span>
+            Reiki Therapy
+          </button>
         </div>
 
         {/* Therapy Content */}
@@ -307,6 +358,22 @@ const Therapies = () => {
                   </div>
                 </div>
               </div>
+
+              {/* Video Section */}
+              {therapy.videoId && (
+                <div className="therapy-video-section">
+                  <h3>Watch Demo</h3>
+                  <div className="video-container">
+                    <iframe
+                      src={`https://www.youtube.com/embed/${therapy.videoId}`}
+                      title={`${therapy.title} Demo`}
+                      frameBorder="0"
+                      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                      allowFullScreen
+                    ></iframe>
+                  </div>
+                </div>
+              )}
 
               <div className="therapy-grid">
                 {/* Benefits */}

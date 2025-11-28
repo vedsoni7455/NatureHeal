@@ -39,7 +39,7 @@ const Navbar = () => {
         <div className="navbar-brand">
           <Link to="/" className="brand-link" onClick={closeMenu}>
             <span className="brand-icon">🌿</span>
-            <span className="brand-text">NatureHeal</span>
+            <span className="brand-text">Healora</span>
           </Link>
         </div>
 

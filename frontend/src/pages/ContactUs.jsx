@@ -64,8 +64,8 @@ const ContactUs = () => {
                 <span className="contact-icon">📧</span>
                 <div className="contact-details">
                   <h3>Email Us</h3>
-                  <p>support@natureheal.com</p>
-                  <p>info@natureheal.com</p>
+                  <p>support@healora.com</p>
+                  <p>info@healora.com</p>
                 </div>
               </div>
 

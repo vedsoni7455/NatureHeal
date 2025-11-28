@@ -217,6 +217,49 @@ export const addProgress = asyncHandler(async (req, res) => {
   }
 });
 
+// @desc    Add or update routine in diet plan
+// @route   PUT /api/diet/:id/routine
+// @access  Private
+export const updateRoutine = asyncHandler(async (req, res) => {
+  const dietPlan = await DietPlan.findById(req.params.id);
+
+  if (dietPlan) {
+    // Check authorization - allow doctors to update patient routines
+    const isOwner = dietPlan.user.toString() === req.user._id.toString();
+    const isDoctor = req.user.role === 'doctor';
+    const isAdmin = req.user.role === 'admin';
+
+    if (!isOwner && !isDoctor && !isAdmin) {
+      res.status(401);
+      throw new Error('Not authorized to update this diet plan');
+    }
+
+    // If doctor, verify they have access to this patient
+    if (isDoctor && !isAdmin) {
+      const hasAccess = await Appointment.findOne({
+        doctor: req.user._id,
+        patient: dietPlan.user
+      });
+      if (!hasAccess) {
+        res.status(403);
+        throw new Error('Not authorized to update this patient\'s diet plan');
+      }
+    }
+
+    const { exercise, meditation, sleep } = req.body;
+
+    if (exercise !== undefined) dietPlan.weeklyRoutine.exercise = exercise;
+    if (meditation !== undefined) dietPlan.weeklyRoutine.meditation = meditation;
+    if (sleep !== undefined) dietPlan.weeklyRoutine.sleep = sleep;
+
+    await dietPlan.save();
+    res.json(dietPlan.weeklyRoutine);
+  } else {
+    res.status(404);
+    throw new Error('Diet plan not found');
+  }
+});
+
 // @desc    Get diet plan progress
 // @route   GET /api/diet/:id/progress
 // @access  Private
@@ -240,9 +283,9 @@ export const getProgress = asyncHandler(async (req, res) => {
 // Helper function to generate sample meals
 const generateSampleMeals = (goals, preferences) => {
   const meals = [];
-  const isVegetarian = preferences?.includes('vegetarian') || preferences?.includes('vegan');
-  const isKeto = preferences?.includes('keto');
-
+  // Always treat as vegetarian/vegan for no non-vegetarian food
+  // Remove use of isVegetarian and isKeto flags to include only vegan/vegetarian meals
+  
   for (let day = 1; day <= 7; day++) {
     const dayMeals = {
       day,
@@ -250,23 +293,23 @@ const generateSampleMeals = (goals, preferences) => {
         breakfast: {
           items: [
             {
-              name: isKeto ? 'Avocado and eggs' : 'Oatmeal with fruits',
+              name: 'Oatmeal with fruits and nuts',
               quantity: '1 bowl',
-              calories: isKeto ? 350 : 250,
-              benefits: 'Healthy fats and protein',
+              calories: 300,
+              benefits: 'Rich in fiber and antioxidants',
             },
           ],
-          totalCalories: isKeto ? 350 : 250,
+          totalCalories: 300,
           preparation: 'Simple assembly',
           timing: '7-8 AM',
         },
         lunch: {
           items: [
             {
-              name: isVegetarian ? 'Quinoa salad with vegetables' : 'Grilled chicken salad',
+              name: 'Quinoa salad with mixed vegetables',
               quantity: '1 plate',
               calories: 400,
-              benefits: 'Balanced nutrition',
+              benefits: 'Balanced nutrition with protein and vitamins',
             },
           ],
           totalCalories: 400,
@@ -276,10 +319,10 @@ const generateSampleMeals = (goals, preferences) => {
         dinner: {
           items: [
             {
-              name: isVegetarian ? 'Lentil soup with vegetables' : 'Fish with steamed vegetables',
+              name: 'Lentil stew with steamed vegetables',
               quantity: '1 serving',
               calories: 350,
-              benefits: 'Light and nutritious',
+              benefits: 'Light, nutritious and high in protein',
             },
           ],
           totalCalories: 350,
@@ -288,11 +331,11 @@ const generateSampleMeals = (goals, preferences) => {
         },
         snacks: [
           {
-            name: 'Greek yogurt with nuts',
+            name: 'Mixed nuts and dried fruits',
             quantity: '1 cup',
             calories: 200,
             timing: '4 PM',
-            benefits: 'Protein and healthy fats',
+            benefits: 'Energy-boosting and healthy fats',
           },
         ],
       },

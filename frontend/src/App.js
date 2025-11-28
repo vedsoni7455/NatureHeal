@@ -1,6 +1,7 @@
-import React from 'react';
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import React, { useContext } from 'react';
+import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import { AuthProvider } from './context/AuthContext';
+import AuthContext from './context/AuthContext';
 import Navbar from './components/Navbar';
 import Footer from './components/Footer';
 import Home from './pages/Home';
@@ -23,6 +24,25 @@ import SymptomChecker from './pages/SymptomChecker';
 import DietPlanner from './pages/DietPlanner';
 import './App.css';
 
+// Protected Route Component
+const ProtectedRoute = ({ children, allowedRoles }) => {
+  const { user, loading } = useContext(AuthContext);
+
+  if (loading) {
+    return <div>Loading...</div>;
+  }
+
+  if (!user) {
+    return <Navigate to="/login" />;
+  }
+
+  if (allowedRoles && !allowedRoles.includes(user.role)) {
+    return <Navigate to="/" />;
+  }
+
+  return children;
+};
+
 function App() {
   return (
     <AuthProvider>
@@ -36,9 +56,9 @@ function App() {
               <Route path="/contact" element={<ContactUs />} />
               <Route path="/login" element={<Login />} />
               <Route path="/register" element={<Register />} />
-              <Route path="/dashboard/patient" element={<DashboardPatient />} />
-              <Route path="/dashboard/doctor" element={<DashboardDoctor />} />
-              <Route path="/dashboard/admin" element={<DashboardAdmin />} />
+              <Route path="/dashboard/patient" element={<ProtectedRoute allowedRoles={['patient']}><DashboardPatient /></ProtectedRoute>} />
+              <Route path="/dashboard/doctor" element={<ProtectedRoute allowedRoles={['doctor']}><DashboardDoctor /></ProtectedRoute>} />
+              <Route path="/dashboard/admin" element={<ProtectedRoute allowedRoles={['admin']}><DashboardAdmin /></ProtectedRoute>} />
               <Route path="/appointment" element={<AppointmentForm />} />
               <Route path="/doctors" element={<Doctors />} />
               <Route path="/remedies" element={<Remedies />} />
