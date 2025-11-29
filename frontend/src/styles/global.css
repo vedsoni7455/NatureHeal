@@ -111,31 +111,6 @@ a:hover {
   --neutral-800: #343a40;
   --error-50: #fef2f2;
   --error-600: #dc3545;
-  --error-700: #c82333;
-
-  --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
-  --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
-  --transition-fast: 0.15s ease-in-out;
-  --transition-normal: 0.3s ease-in-out;
-  --spacing-sm: 0.5rem;
-  position: absolute;
-  top: 100%;
-  left: 0;
-  right: 0;
-  background: linear-gradient(135deg, var(--primary-600) 0%, var(--primary-700) 100%);
-  flex-direction: column;
-  padding: var(--spacing-lg);
-  box-shadow: var(--shadow-lg);
-  transform: translateY(-100%);
-  opacity: 0;
-  visibility: hidden;
-  transition: all var(--transition-normal);
-}
-
-.navbar-menu.is-active {
-  transform: translateY(0);
-  opacity: 1;
-  visibility: visible;
 }
 
 .navbar-start {
