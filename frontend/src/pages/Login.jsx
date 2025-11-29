@@ -23,13 +23,21 @@ const Login = () => {
       await login(formData.email, formData.password);
       navigate('/'); // Redirect to home page
     } catch (error) {
-      const errorMessage = error.response?.data?.message || error.message || 'Login failed. Please check your credentials.';
-      console.error('Login Error Details:', {
-        message: error.message,
-        response: error.response,
-        config: error.config
-      });
-      setError(errorMessage);
+      console.error('Login Error:', error);
+      let errorMsg = 'Login failed';
+
+      if (error.response) {
+        // Server responded with a status code outside 2xx
+        errorMsg = `Server Error (${error.response.status}): ${error.response.data?.message || error.response.statusText}`;
+      } else if (error.request) {
+        // Request was made but no response received
+        errorMsg = `Network Error: No response from server. URL: ${error.config?.baseURL || ''}${error.config?.url || ''}`;
+      } else {
+        // Something happened in setting up the request
+        errorMsg = `Error: ${error.message}`;
+      }
+
+      setError(errorMsg);
     } finally {
       setLoading(false);
     }
@@ -48,7 +56,13 @@ const Login = () => {
           </div>
 
           <form className="auth-form" onSubmit={handleSubmit}>
-            {error && <div className="error-message">{error}</div>}
+            {error && (
+              <div className="error-message" style={{ wordBreak: 'break-word', fontSize: '0.8rem' }}>
+                {error}
+                <br />
+                <small>{new Date().toLocaleTimeString()}</small>
+              </div>
+            )}
 
             <div className="form-group">
               <label htmlFor="email">Email Address</label>
