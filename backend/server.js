@@ -69,8 +69,11 @@ app.get("/", (req, res) => {
 });
 
 // Error handling middleware (optional, for later)
-import { errorHandler } from "./middleware/errorMiddleware.js";
-app.use(errorHandler);
+// catch all errors
+app.use((err, req, res, next) => {
+  console.error(err.stack); // log error to console (Render logs will capture it)
+  res.status(500).json({ message: err.message });
+});
 
 // Start server
 const PORT = process.env.PORT || 5000;

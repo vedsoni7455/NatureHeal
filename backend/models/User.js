@@ -86,11 +86,11 @@ const userSchema = new mongoose.Schema({
   // Doctor-specific fields
   specialization: {
     type: String,
-    required: function() { return this.role === 'doctor'; },
+    required: function () { return this.role === 'doctor'; },
   },
   experience: {
     type: Number, // years of experience
-    required: function() { return this.role === 'doctor'; },
+    required: function () { return this.role === 'doctor'; },
   },
   licenseNumber: {
     type: String,
@@ -116,14 +116,14 @@ const userSchema = new mongoose.Schema({
 });
 
 // Sign JWT and return
-userSchema.methods.getSignedJwtToken = function() {
+userSchema.methods.getSignedJwtToken = function () {
   return jwt.sign({ id: this._id }, process.env.JWT_SECRET, {
     expiresIn: process.env.JWT_EXPIRE || '30d',
   });
 };
 
 // Match user entered password to hashed password in database
-userSchema.methods.matchPassword = async function(enteredPassword) {
+userSchema.methods.matchPassword = async function (enteredPassword) {
   return enteredPassword === this.password;
 };
 
