@@ -7,7 +7,8 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 // Load env first - path relative to the script directory
-dotenv.config({ path: path.join(__dirname, '.env') });
+dotenv.config();
+
 
 console.log('Environment loaded - MONGO_URI:', process.env.MONGO_URI ? 'Set' : 'Not set');
 console.log('Environment loaded - GOOGLE_AI_API_KEY:', process.env.GOOGLE_AI_API_KEY ? 'Set' : 'Not set');
@@ -33,7 +34,15 @@ connectDB();
 const app = express();
 
 // Middlewares
-app.use(cors());
+app.use((req, res, next) => {
+  console.log(`[${new Date().toISOString()}] ${req.method} ${req.url}`);
+  next();
+});
+
+app.use(cors({
+  origin: '*', // Allow all origins for debugging
+  credentials: true
+}));
 app.use(express.json());
 
 // Import routes

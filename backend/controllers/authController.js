@@ -84,6 +84,7 @@ export const registerUser = asyncHandler(async (req, res) => {
 // @route   POST /api/auth/login
 // @access  Public
 export const loginUser = asyncHandler(async (req, res) => {
+  console.log('Login attempt:', req.body.email); // Debug log
   const { email, password } = req.body;
 
   // Validate input
@@ -93,34 +94,49 @@ export const loginUser = asyncHandler(async (req, res) => {
   }
 
   // Check for user
+  console.log('Finding user...'); // Debug log
   const user = await User.findOne({ email }).select('+password');
+  console.log('User found:', user ? 'Yes' : 'No'); // Debug log
 
-  if (user && (await user.matchPassword(password))) {
-    const userObj = {
-      _id: user._id,
-      name: user.name,
-      email: user.email,
-      role: user.role,
-      height: user.height,
-      weight: user.weight,
-      age: user.age,
-      disease: user.disease,
-      diseaseDuration: user.diseaseDuration,
-      specialization: user.specialization,
-      experience: user.experience,
-      phone: user.phone,
-      profilePicture: user.profilePicture,
-      isVerified: user.isVerified,
-      createdAt: user.createdAt,
-    };
-    res.json({
-      user: userObj,
-      token: generateToken(user._id),
-    });
-  } else {
-    res.status(401);
-    throw new Error('Invalid email or password');
+  if (user) {
+    console.log('Checking password...'); // Debug log
+    const isMatch = await user.matchPassword(password);
+    console.log('Password match:', isMatch); // Debug log
+
+    if (isMatch) {
+      console.log('Generating token...'); // Debug log
+      const token = generateToken(user._id);
+      console.log('Token generated'); // Debug log
+
+      const userObj = {
+        _id: user._id,
+        name: user.name,
+        email: user.email,
+        role: user.role,
+        height: user.height,
+        weight: user.weight,
+        age: user.age,
+        disease: user.disease,
+        diseaseDuration: user.diseaseDuration,
+        specialization: user.specialization,
+        experience: user.experience,
+        phone: user.phone,
+        profilePicture: user.profilePicture,
+        isVerified: user.isVerified,
+        createdAt: user.createdAt,
+      };
+      res.json({
+        user: userObj,
+        token: token,
+      });
+      return;
+    }
   }
+
+  console.log('Login failed: Invalid credentials'); // Debug log
+  res.status(401).json({
+    message: 'Invalid email or password'
+  });
 });
 
 // @desc    Get user profile

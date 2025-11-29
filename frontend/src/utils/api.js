@@ -1,8 +1,11 @@
 import axios from 'axios';
 
 const api = axios.create({
-  baseURL: process.env.REACT_APP_API_URL || 'http://localhost:5000/api',
+  // Use environment variable if available (local), otherwise fallback to Render (production)
+  baseURL: process.env.REACT_APP_API_URL || 'https://healora-backend-qrms.onrender.com/api',
 });
+
+console.log('API Configured with baseURL:', api.defaults.baseURL);
 
 // Add auth token to requests
 api.interceptors.request.use(
@@ -50,7 +53,5 @@ export const aiAPI = {
   generateAIHealthInsights: (data) => api.post('/ai/health-insights', data),
   getHealthPredictions: (data) => api.post('/ai/health-predictions', data),
 };
-
-
 
 export default api;

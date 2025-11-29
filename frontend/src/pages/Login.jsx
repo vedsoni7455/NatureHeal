@@ -24,6 +24,11 @@ const Login = () => {
       navigate('/'); // Redirect to home page
     } catch (error) {
       const errorMessage = error.response?.data?.message || error.message || 'Login failed. Please check your credentials.';
+      console.error('Login Error Details:', {
+        message: error.message,
+        response: error.response,
+        config: error.config
+      });
       setError(errorMessage);
     } finally {
       setLoading(false);
