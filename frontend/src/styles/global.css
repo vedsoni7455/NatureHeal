@@ -190,7 +190,7 @@ a:hover {
   width: 100%;
   justify-content: center;
 }
-}
+
 
 @media (max-width: 480px) {
   .navbar .container {
