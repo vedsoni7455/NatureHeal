@@ -20,8 +20,8 @@ const Login = () => {
     setError('');
 
     try {
-      await login(formData.email, formData.password);
-      navigate('/'); // Redirect to home page
+      const user = await login(formData.email, formData.password);
+      navigate('/', { state: { welcomeMessage: `Welcome back, ${user.name}!` } }); // Redirect to home page
     } catch (error) {
       console.error('Login Error:', error);
       let errorMsg = 'Login failed';

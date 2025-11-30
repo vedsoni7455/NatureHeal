@@ -24,24 +24,7 @@ import SymptomChecker from './pages/SymptomChecker';
 import DietPlanner from './pages/DietPlanner';
 import './App.css';
 
-// Protected Route Component
-const ProtectedRoute = ({ children, allowedRoles }) => {
-  const { user, loading } = useContext(AuthContext);
-
-  if (loading) {
-    return <div>Loading...</div>;
-  }
-
-  if (!user) {
-    return <Navigate to="/login" />;
-  }
-
-  if (allowedRoles && !allowedRoles.includes(user.role)) {
-    return <Navigate to="/" />;
-  }
-
-  return children;
-};
+import ProtectedRoute from './components/ProtectedRoute';
 
 function App() {
   return (
@@ -56,19 +39,22 @@ function App() {
               <Route path="/contact" element={<ContactUs />} />
               <Route path="/login" element={<Login />} />
               <Route path="/register" element={<Register />} />
+
+              {/* Protected Routes */}
               <Route path="/dashboard/patient" element={<ProtectedRoute allowedRoles={['patient']}><DashboardPatient /></ProtectedRoute>} />
               <Route path="/dashboard/doctor" element={<ProtectedRoute allowedRoles={['doctor']}><DashboardDoctor /></ProtectedRoute>} />
               <Route path="/dashboard/admin" element={<ProtectedRoute allowedRoles={['admin']}><DashboardAdmin /></ProtectedRoute>} />
-              <Route path="/appointment" element={<AppointmentForm />} />
-              <Route path="/doctors" element={<Doctors />} />
-              <Route path="/remedies" element={<Remedies />} />
-              <Route path="/therapies" element={<AlternativeTherapies />} />
-              <Route path="/mudras" element={<Mudras />} />
-              <Route path="/yoga-meditation" element={<YogaMeditation />} />
-              <Route path="/chatbot" element={<ChatbotPage />} />
-              <Route path="/profile" element={<Profile />} />
-              <Route path="/symptom-checker" element={<SymptomChecker />} />
-              <Route path="/diet-planner" element={<DietPlanner />} />
+
+              <Route path="/appointment" element={<ProtectedRoute><AppointmentForm /></ProtectedRoute>} />
+              <Route path="/doctors" element={<ProtectedRoute><Doctors /></ProtectedRoute>} />
+              <Route path="/remedies" element={<ProtectedRoute><Remedies /></ProtectedRoute>} />
+              <Route path="/therapies" element={<ProtectedRoute><AlternativeTherapies /></ProtectedRoute>} />
+              <Route path="/mudras" element={<ProtectedRoute><Mudras /></ProtectedRoute>} />
+              <Route path="/yoga-meditation" element={<ProtectedRoute><YogaMeditation /></ProtectedRoute>} />
+              <Route path="/chatbot" element={<ProtectedRoute><ChatbotPage /></ProtectedRoute>} />
+              <Route path="/profile" element={<ProtectedRoute><Profile /></ProtectedRoute>} />
+              <Route path="/symptom-checker" element={<ProtectedRoute><SymptomChecker /></ProtectedRoute>} />
+              <Route path="/diet-planner" element={<ProtectedRoute><DietPlanner /></ProtectedRoute>} />
             </Routes>
           </main>
           <Footer />

@@ -37,6 +37,7 @@ export const AuthProvider = ({ children }) => {
     localStorage.setItem('token', token);
     api.defaults.headers.common['Authorization'] = `Bearer ${token}`;
     setUser(user);
+    return user;
   };
 
   const register = async (userData) => {
@@ -45,6 +46,7 @@ export const AuthProvider = ({ children }) => {
     localStorage.setItem('token', token);
     api.defaults.headers.common['Authorization'] = `Bearer ${token}`;
     setUser(user);
+    return user;
   };
 
   const logout = () => {

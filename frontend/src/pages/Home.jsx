@@ -1,11 +1,13 @@
 import React, { useState, useEffect, useContext } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 import AuthContext from '../context/AuthContext';
 import '../styles/history.css';
 
 const Home = () => {
   const { user } = useContext(AuthContext);
+  const location = useLocation();
   const [currentSlide, setCurrentSlide] = useState(0);
+  const welcomeMessage = location.state?.welcomeMessage;
 
   const slides = [
     {
@@ -75,10 +77,10 @@ const Home = () => {
               <div className="slide-content">
                 <div className="slide-text">
                   <h1 className="slide-title">
-                    {user ? `Welcome back, ${user.name}!` : slide.title}
+                    {user && index === 0 ? (welcomeMessage || `Welcome back, ${user.name}!`) : slide.title}
                   </h1>
                   <h2 className="slide-subtitle">
-                    {user ? "Continue Your Natural Wellness Journey" : slide.subtitle}
+                    {user && index === 0 ? "Continue Your Natural Wellness Journey" : slide.subtitle}
                   </h2>
                   <p className="slide-description">{slide.description}</p>
                   <Link to={slide.link} className="slide-cta">
