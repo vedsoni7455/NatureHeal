@@ -1416,22 +1416,6 @@ a:hover {
   text-decoration: underline;
 }
 
-/* Users List */
-.users-list {
-  padding: 1.5rem;
-}
-
-.user-item {
-  display: flex;
-  align-items: center;
-  gap: 1rem;
-  padding: 1rem;
-  margin-bottom: 1rem;
-  background: var(--neutral-50);
-  border-radius: var(--radius-md);
-  border: 1px solid var(--neutral-200);
-  transition: all var(--transition-fast);
-}
 
 .user-item:hover {
   box-shadow: var(--shadow-md);
