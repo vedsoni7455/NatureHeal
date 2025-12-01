@@ -122,12 +122,24 @@ const Navbar = () => {
               <div className="navbar-item">
                 <Link to="/contact" onClick={closeMenu}>Contact Us</Link>
               </div>
+
+              {/* Mobile Only Profile & Logout */}
+              <div className="navbar-item is-mobile-only">
+                <Link to="/profile" onClick={closeMenu}>
+                  <span>👤</span> Profile
+                </Link>
+              </div>
+              <div className="navbar-item is-mobile-only">
+                <a onClick={handleLogout} style={{ cursor: 'pointer' }}>
+                  <span>🚪</span> Logout
+                </a>
+              </div>
             </div>
           )}
 
           <div className="navbar-end">
             {user ? (
-              <div className="navbar-item has-dropdown">
+              <div className="navbar-item has-dropdown is-desktop-only">
                 <div className="navbar-link" onClick={toggleDropdown}>
                   <span className="user-icon">👤</span>
                   <span className="user-name">{user.name}</span>

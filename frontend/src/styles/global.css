@@ -2674,3 +2674,15 @@ a:hover {
   color: var(--neutral-700);
   line-height: 1.6;
 }
+/* Utility Classes for Responsiveness */
+@media (max-width: 1023px) {
+  .is-desktop-only {
+    display: none !important;
+  }
+}
+
+@media (min-width: 1024px) {
+  .is-mobile-only {
+    display: none !important;
+  }
+}
