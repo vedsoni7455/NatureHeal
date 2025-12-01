@@ -130,7 +130,7 @@ const Navbar = () => {
               <div className="navbar-item has-dropdown">
                 <div className="navbar-link" onClick={toggleDropdown}>
                   <span className="user-icon">👤</span>
-                  <span className="user-name">{user.name || 'User'}</span>
+                  <span className="user-name">{user.name}</span>
                 </div>
                 {isDropdownOpen && (
                   <div className="navbar-dropdown">
