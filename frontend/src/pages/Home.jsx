@@ -14,32 +14,32 @@ const Home = () => {
       title: "Welcome to Healora",
       subtitle: "Your Journey to Natural Wellness Begins Here",
       description: "Discover the power of natural healing through naturopathy and homeopathy.",
-      cta: "Get Started",
-      link: "/register",
+      cta: user ? "Go to Dashboard" : "Get Started",
+      link: user ? (user.role === 'doctor' ? "/dashboard/doctor" : "/dashboard/patient") : "/register",
       bgImage: "linear-gradient(135deg, #27ae60 0%, #2ecc71 100%)"
     },
     {
       title: "Personalized Health Solutions",
       subtitle: "Tailored Care for Your Unique Needs",
       description: "Share your health details and receive personalized natural remedies and wellness plans.",
-      cta: "Learn More",
-      link: "/remedies",
+      cta: user ? "Learn More" : "Login to Explore",
+      link: user ? "/remedies" : "/login",
       bgImage: "linear-gradient(135deg, #3498db 0%, #5dade2 100%)"
     },
     {
       title: "Expert Doctor Consultations",
       subtitle: "Connect with Experienced Naturopaths",
       description: "Book appointments with certified naturopathy and homeopathy practitioners.",
-      cta: "Book Now",
-      link: "/appointment",
+      cta: user ? "Book Now" : "Login to Book",
+      link: user ? "/appointment" : "/login",
       bgImage: "linear-gradient(135deg, #9b59b6 0%, #bb8fce 100%)"
     },
     {
       title: "AI-Powered Health Assistant",
       subtitle: "Get Instant Health Guidance",
       description: "Ask our intelligent chatbot for natural remedies and wellness advice 24/7.",
-      cta: "Try Now",
-      link: "/chatbot",
+      cta: user ? "Try Now" : "Login to Chat",
+      link: user ? "/chatbot" : "/login",
       bgImage: "linear-gradient(135deg, #e74c3c 0%, #ec7063 100%)"
     }
   ];

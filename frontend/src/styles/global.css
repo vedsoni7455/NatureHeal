@@ -17,14 +17,15 @@ body {
 
 /* Navbar Styles */
 .navbar {
-  background-color: #2ecc71; /* Exact green match */
+  background-color: #2ecc71;
+  /* Exact green match */
   padding: 1rem 0;
   position: fixed;
   top: 0;
   width: 100%;
   z-index: 1000;
   box-shadow: none;
-  border-bottom: 1px solid rgba(255,255,255,0.1);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
 }
 
 .navbar .container {
@@ -88,7 +89,8 @@ body {
   align-items: center;
 }
 
-.navbar-item a, .navbar-link {
+.navbar-item a,
+.navbar-link {
   color: white;
   font-weight: 600;
   font-size: 0.95rem;
@@ -103,9 +105,10 @@ body {
   text-align: center;
 }
 
-.navbar-item a:hover, .navbar-link:hover {
+.navbar-item a:hover,
+.navbar-link:hover {
   opacity: 0.9;
-  background-color: rgba(255,255,255,0.1);
+  background-color: rgba(255, 255, 255, 0.1);
   border-radius: 6px;
   transform: translateY(-1px);
 }
@@ -124,7 +127,7 @@ body {
   transform: translateX(-50%) translateY(10px);
   background: white;
   border-radius: 12px;
-  box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
   padding: 0.5rem;
   min-width: 200px;
   display: flex;
@@ -160,23 +163,9 @@ body {
 /* User Profile */
 .user-icon {
   font-size: 1rem;
-  background: rgba(255,255,255,0.2);
+  background: rgba(255, 255, 255, 0.2);
   width: 28px;
   height: 28px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  border-radius: 50%;
-  margin-right: 0.5rem;
-}
-
-.user-name {
-  font-weight: 700;
-  font-size: 1rem;
-}
-
-/* Auth Buttons in Navbar */
-.buttons {
   display: flex;
   gap: 0.75rem;
 }
@@ -190,11 +179,11 @@ body {
 .buttons .navbar-item:first-child a {
   /* Login */
   background: transparent;
-  border: 2px solid rgba(255,255,255,0.4);
+  border: 2px solid rgba(255, 255, 255, 0.4);
 }
 
 .buttons .navbar-item:first-child a:hover {
-  background: rgba(255,255,255,0.1);
+  background: rgba(255, 255, 255, 0.1);
   border-color: white;
 }
 
@@ -206,7 +195,7 @@ body {
 
 .buttons .navbar-item:last-child a:hover {
   background: var(--neutral-100);
-  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
   transform: translateY(-2px);
 }
 
@@ -219,8 +208,9 @@ body {
   .navbar-start {
     gap: 0.5rem;
   }
-  
-  .navbar-item a, .navbar-link {
+
+  .navbar-item a,
+  .navbar-link {
     font-size: 0.9rem;
     padding: 0.5rem;
   }
@@ -237,7 +227,7 @@ body {
     flex-direction: column;
     padding: 1rem;
     align-items: stretch;
-    box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
     margin-left: 0;
   }
 
@@ -245,35 +235,38 @@ body {
     display: flex;
   }
 
-  .navbar-start, .navbar-end {
+  .navbar-start,
+  .navbar-end {
     flex-direction: column;
     width: 100%;
     align-items: stretch;
     gap: 0;
   }
-  
+
   .navbar-item {
     width: 100%;
   }
-  
-  .navbar-item a, .navbar-link {
+
+  .navbar-item a,
+  .navbar-link {
     padding: 1rem;
     border-radius: 8px;
     justify-content: flex-start;
     width: 100%;
   }
-  
-  .navbar-item a:hover, .navbar-link:hover {
-    background: rgba(255,255,255,0.1);
+
+  .navbar-item a:hover,
+  .navbar-link:hover {
+    background: rgba(255, 255, 255, 0.1);
   }
-  
+
   .navbar-burger {
     display: block;
     cursor: pointer;
     padding: 0.5rem;
     color: white;
   }
-  
+
   .bar {
     display: block;
     width: 25px;
@@ -287,7 +280,7 @@ body {
   .navbar-dropdown {
     position: static;
     box-shadow: none;
-    background: rgba(0,0,0,0.05);
+    background: rgba(0, 0, 0, 0.05);
     margin: 0.5rem;
     width: auto;
     transform: none;
@@ -295,7 +288,7 @@ body {
     visibility: visible;
     display: none;
   }
-  
+
   .navbar-item.has-dropdown.active .navbar-dropdown {
     display: flex;
   }
@@ -705,13 +698,20 @@ a:hover {
   border-radius: 24px;
   box-shadow: 0 20px 60px rgba(0, 0, 0, 0.15);
   padding: 3rem;
-  border: 1px solid rgba(255,255,255,0.5);
+  border: 1px solid rgba(255, 255, 255, 0.5);
   animation: slideUp 0.5s ease-out;
 }
 
 @keyframes slideUp {
-  from { opacity: 0; transform: translateY(20px); }
-  to { opacity: 1; transform: translateY(0); }
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 .auth-header {
