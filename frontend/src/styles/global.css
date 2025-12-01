@@ -348,6 +348,18 @@ a:hover {
     align-items: center;
   }
 
+  .buttons .navbar-item a {
+    color: #ffffff;
+    font-weight: 600;
+    font-size: 1rem;
+    padding: 0.5rem 1rem;
+    transition: opacity 0.2s;
+  }
+
+  .buttons .navbar-item a:hover {
+    opacity: 0.9;
+  }
+
   .navbar-dropdown {
     position: absolute;
     top: 100%;
@@ -2674,6 +2686,7 @@ a:hover {
   color: var(--neutral-700);
   line-height: 1.6;
 }
+
 /* Utility Classes for Responsiveness */
 @media (max-width: 1023px) {
   .is-desktop-only {
