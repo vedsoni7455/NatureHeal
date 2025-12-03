@@ -70,12 +70,28 @@ const Navbar = () => {
                   <Link to="/dashboard/admin" onClick={closeMenu}>Dashboard</Link>
                 </div>
               )}
-              <div className="navbar-item">
-                <Link to="/doctors" onClick={closeMenu}>Doctors</Link>
-              </div>
-              <div className="navbar-item">
-                <Link to="/appointment" onClick={closeMenu}>Book Appointment</Link>
-              </div>
+              {user.role === 'patient' && (
+                <>
+                  <div className="navbar-item">
+                    <Link to="/doctors" onClick={closeMenu}>Doctors</Link>
+                  </div>
+                  <div className="navbar-item">
+                    <Link to="/appointment" onClick={closeMenu}>Book Appointment</Link>
+                  </div>
+                </>
+              )}
+
+              {user.role === 'doctor' && (
+                <>
+                  <div className="navbar-item">
+                    <Link to="/doctor/appointments" onClick={closeMenu}>My Appointments</Link>
+                  </div>
+                  <div className="navbar-item">
+                    <Link to="/doctor/schedule" onClick={closeMenu}>My Schedule</Link>
+                  </div>
+                </>
+              )}
+
               <div className="navbar-item has-dropdown">
                 <div className="navbar-link" onClick={toggleHealthcareDropdown}>
                   Healthcare
@@ -130,9 +146,23 @@ const Navbar = () => {
                 </Link>
               </div>
               <div className="navbar-item is-mobile-only">
-                <a onClick={handleLogout} style={{ cursor: 'pointer' }}>
+                <button
+                  onClick={handleLogout}
+                  style={{
+                    cursor: 'pointer',
+                    background: 'none',
+                    border: 'none',
+                    padding: 0,
+                    font: 'inherit',
+                    color: 'var(--secondary-50)',
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: '0.5rem',
+                    fontWeight: 500
+                  }}
+                >
                   <span>🚪</span> Logout
-                </a>
+                </button>
               </div>
             </div>
           )}

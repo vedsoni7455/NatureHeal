@@ -8,6 +8,8 @@ const AppointmentForm = () => {
   const [doctors, setDoctors] = useState([]);
   const [loading, setLoading] = useState(true);
   const [message, setMessage] = useState('');
+  const [slots, setSlots] = useState([]);
+  const [loadingSlots, setLoadingSlots] = useState(false);
   const [formData, setFormData] = useState({
     doctor: '',
     date: '',
@@ -15,6 +17,7 @@ const AppointmentForm = () => {
     type: 'video',
     notes: ''
   });
+  const [report, setReport] = useState(null);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -33,15 +36,52 @@ const AppointmentForm = () => {
     fetchDoctors();
   }, []);
 
+  useEffect(() => {
+    const fetchSlots = async () => {
+      if (formData.doctor && formData.date) {
+        setLoadingSlots(true);
+        try {
+          const res = await api.get(`/doctor/${formData.doctor}/slots?date=${formData.date}`);
+          setSlots(res.data || []);
+        } catch (error) {
+          console.error('Error fetching slots:', error);
+          setSlots([]);
+        } finally {
+          setLoadingSlots(false);
+        }
+      } else {
+        setSlots([]);
+      }
+    };
+    fetchSlots();
+  }, [formData.doctor, formData.date]);
+
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
+  };
+
+  const handleFileChange = (e) => {
+    setReport(e.target.files[0]);
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setMessage('');
+
+    const data = new FormData();
+    Object.keys(formData).forEach(key => {
+      data.append(key, formData[key]);
+    });
+    if (report) {
+      data.append('report', report);
+    }
+
     try {
-      await api.post('/appointments', formData);
+      await api.post('/appointments', data, {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },
+      });
       setMessage('Appointment booked successfully!');
       setTimeout(() => {
         navigate('/dashboard/patient');
@@ -83,7 +123,7 @@ const AppointmentForm = () => {
               <select name="doctor" id="doctor" value={formData.doctor} onChange={handleChange} required>
                 <option value="">Choose a doctor</option>
                 {doctors.map(doctor => (
-                  <option key={doctor._id} value={doctor._id}>Dr. {doctor.name}</option>
+                  <option key={doctor._id} value={doctor._id}>Dr. {doctor.name} - {doctor.specialization}</option>
                 ))}
               </select>
             </div>
@@ -102,22 +142,33 @@ const AppointmentForm = () => {
           </div>
           <div className="form-row">
             <div className="form-group">
-              <label htmlFor="time">Appointment Time</label>
-              <input
-                type="time"
-                id="time"
-                name="time"
-                value={formData.time}
-                onChange={handleChange}
-                required
-              />
+              <label htmlFor="time">Appointment Time (30 mins)</label>
+              {loadingSlots ? (
+                <div>Loading slots...</div>
+              ) : (
+                <select
+                  id="time"
+                  name="time"
+                  value={formData.time}
+                  onChange={handleChange}
+                  required
+                  disabled={!formData.doctor || !formData.date || slots.length === 0}
+                >
+                  <option value="">Select a time slot</option>
+                  {slots.map((slot, index) => (
+                    <option key={index} value={slot}>{slot}</option>
+                  ))}
+                </select>
+              )}
+              {formData.doctor && formData.date && !loadingSlots && slots.length === 0 && (
+                <small style={{ color: 'red' }}>No slots available for this date.</small>
+              )}
             </div>
             <div className="form-group">
               <label htmlFor="type">Consultation Type</label>
               <select name="type" id="type" value={formData.type} onChange={handleChange}>
                 <option value="video">Video Call</option>
                 <option value="voice">Voice Call</option>
-                <option value="message">Message</option>
               </select>
             </div>
           </div>
@@ -132,9 +183,19 @@ const AppointmentForm = () => {
               rows="4"
             />
           </div>
+          <div className="form-group">
+            <label htmlFor="report">Past Reports (PDF)</label>
+            <input
+              type="file"
+              id="report"
+              name="report"
+              accept=".pdf"
+              onChange={handleFileChange}
+            />
+          </div>
         </div>
 
-        <button type="submit" className="submit-btn" disabled={loading}>
+        <button type="submit" className="submit-btn" disabled={loading || !formData.time}>
           {loading ? 'Loading...' : 'Book Appointment'}
         </button>
       </form>

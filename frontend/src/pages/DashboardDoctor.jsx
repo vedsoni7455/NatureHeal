@@ -59,15 +59,15 @@ const DashboardDoctor = () => {
           <p>Manage your appointments and patient care</p>
         </div>
         <div className="quick-actions">
-          <Link to="/schedule" className="action-btn primary">
+          <Link to="/doctor/schedule" className="action-btn primary">
             <span className="btn-icon">📅</span>
             Manage Schedule
           </Link>
-          <Link to="/patients" className="action-btn secondary">
+          <Link to="/doctor/appointments" className="action-btn secondary">
             <span className="btn-icon">👥</span>
             View Patients
           </Link>
-          <Link to="/profile" className="action-btn secondary">
+          <Link to="/doctor/profile" className="action-btn secondary">
             <span className="btn-icon">⚙️</span>
             Settings
           </Link>
@@ -122,7 +122,7 @@ const DashboardDoctor = () => {
         <div className="dashboard-card profile-card">
           <div className="card-header">
             <h2>Your Profile</h2>
-            <Link to="/profile" className="edit-link">Edit Profile</Link>
+            <Link to="/doctor/profile" className="edit-link">Edit Profile</Link>
           </div>
           <div className="profile-grid">
             <div className="profile-item">
@@ -273,7 +273,7 @@ const DashboardDoctor = () => {
               </div>
             </Link>
 
-            <Link to="/schedule" className="action-item">
+            <Link to="/doctor/schedule" className="action-item">
               <span className="action-icon">🕐</span>
               <div className="action-content">
                 <h4>Schedule</h4>
@@ -305,11 +305,19 @@ const DashboardDoctor = () => {
               </div>
             </Link>
 
-            <Link to="/profile" className="action-item">
+            <Link to="/doctor/profile" className="action-item">
               <span className="action-icon">⚙️</span>
               <div className="action-content">
                 <h4>Profile Settings</h4>
                 <p>Update your professional information</p>
+              </div>
+            </Link>
+
+            <Link to="/doctor/change-password" className="action-item">
+              <span className="action-icon">🔒</span>
+              <div className="action-content">
+                <h4>Change Password</h4>
+                <p>Update your login credentials</p>
               </div>
             </Link>
           </div>

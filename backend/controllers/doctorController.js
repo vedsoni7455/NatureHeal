@@ -386,3 +386,77 @@ export const getPatientDetails = asyncHandler(async (req, res) => {
     symptoms: symptomDetails
   });
 });
+// @desc    Get doctor's available slots for a specific date
+// @route   GET /api/doctor/:id/slots
+// @access  Public
+export const getDoctorSlots = asyncHandler(async (req, res) => {
+  const { id } = req.params;
+  const { date } = req.query;
+
+  if (!date) {
+    res.status(400);
+    throw new Error('Date is required');
+  }
+
+  const doctor = await User.findById(id);
+  if (!doctor || doctor.role !== 'doctor') {
+    res.status(404);
+    throw new Error('Doctor not found');
+  }
+
+  const doctorDetails = await Doctor.findOne({ user: id });
+  if (!doctorDetails) {
+    console.log(`No doctor details found for user ${id}`);
+    res.json([]);
+    return;
+  }
+
+  const dayOfWeek = new Date(date).toLocaleDateString('en-US', { weekday: 'long' });
+  const dayAvailability = doctorDetails.availability.find(d => d.day === dayOfWeek);
+
+  if (!dayAvailability) {
+    console.log(`No availability found for ${dayOfWeek}`);
+    res.json([]); // Not available on this day
+    return;
+  }
+
+  if (!dayAvailability.startTime || !dayAvailability.endTime) {
+    console.log('Incomplete availability data');
+    res.json([]);
+    return;
+  }
+
+  // Generate all 30-min slots
+  const slots = [];
+  let currentTime = new Date(`${date}T${dayAvailability.startTime}`);
+  const endTime = new Date(`${date}T${dayAvailability.endTime}`);
+
+  while (currentTime < endTime) {
+    const timeString = currentTime.toLocaleTimeString('en-US', {
+      hour: '2-digit',
+      minute: '2-digit',
+      hour12: false
+    });
+    slots.push(timeString);
+    currentTime.setMinutes(currentTime.getMinutes() + 30);
+  }
+
+  // Fetch existing appointments for this doctor and date
+  const startOfDay = new Date(date);
+  startOfDay.setHours(0, 0, 0, 0);
+  const endOfDay = new Date(date);
+  endOfDay.setHours(23, 59, 59, 999);
+
+  const appointments = await Appointment.find({
+    doctor: id,
+    date: { $gte: startOfDay, $lte: endOfDay },
+    status: { $in: ['pending', 'confirmed'] }
+  });
+
+  // Filter out booked slots
+  const bookedTimes = appointments.map(apt => apt.time);
+  const availableSlots = slots.filter(slot => !bookedTimes.includes(slot));
+
+  console.log(`Available slots: ${availableSlots.join(', ')}`);
+  res.json(availableSlots);
+});

@@ -1,6 +1,7 @@
 import express from 'express';
 const router = express.Router();
 import { protect } from '../middleware/authMiddleware.js';
+import upload from '../middleware/uploadMiddleware.js';
 
 // Controllers
 import {
@@ -14,7 +15,7 @@ import {
 router
   .route('/')
   .get(protect, getAppointments)
-  .post(protect, createAppointment);
+  .post(protect, upload.single('report'), createAppointment);
 router
   .route('/:id')
   .get(protect, getAppointmentById)

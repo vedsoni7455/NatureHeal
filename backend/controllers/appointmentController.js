@@ -53,8 +53,8 @@ export const getAppointmentById = asyncHandler(async (req, res) => {
   if (appointment) {
     // Check if user is authorized
     if (req.user.role !== 'admin' &&
-        appointment.patient._id.toString() !== req.user._id.toString() &&
-        appointment.doctor._id.toString() !== req.user._id.toString()) {
+      appointment.patient._id.toString() !== req.user._id.toString() &&
+      appointment.doctor._id.toString() !== req.user._id.toString()) {
       res.status(401);
       throw new Error('Not authorized to view this appointment');
     }
@@ -118,6 +118,14 @@ export const createAppointment = asyncHandler(async (req, res) => {
     symptoms,
   });
 
+  if (req.file) {
+    appointment.attachments.push({
+      name: req.file.originalname,
+      url: `/uploads/${req.file.filename}`,
+      type: 'document',
+    });
+  }
+
   const createdAppointment = await appointment.save();
   await createdAppointment.populate('patient', 'name email');
   await createdAppointment.populate('doctor', 'name email specialization');
@@ -134,8 +142,8 @@ export const updateAppointment = asyncHandler(async (req, res) => {
   if (appointment) {
     // Check if user is authorized
     if (req.user.role !== 'admin' &&
-        appointment.patient.toString() !== req.user._id.toString() &&
-        appointment.doctor.toString() !== req.user._id.toString()) {
+      appointment.patient.toString() !== req.user._id.toString() &&
+      appointment.doctor.toString() !== req.user._id.toString()) {
       res.status(401);
       throw new Error('Not authorized to update this appointment');
     }

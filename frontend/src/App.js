@@ -1,7 +1,6 @@
-import React, { useContext } from 'react';
-import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
+import React from 'react';
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import { AuthProvider } from './context/AuthContext';
-import AuthContext from './context/AuthContext';
 import Navbar from './components/Navbar';
 import Footer from './components/Footer';
 import Home from './pages/Home';
@@ -22,6 +21,11 @@ import ChatbotPage from './pages/ChatbotPage';
 import Profile from './pages/Profile';
 import SymptomChecker from './pages/SymptomChecker';
 import DietPlanner from './pages/DietPlanner';
+import DoctorProfile from './pages/doctor/DoctorProfile';
+import DoctorAppointments from './pages/doctor/DoctorAppointments';
+import DoctorSchedule from './pages/doctor/DoctorSchedule';
+import ChangePassword from './pages/doctor/ChangePassword';
+import VideoCall from './pages/VideoCall';
 import './App.css';
 
 import ProtectedRoute from './components/ProtectedRoute';
@@ -55,6 +59,11 @@ function App() {
               <Route path="/profile" element={<ProtectedRoute><Profile /></ProtectedRoute>} />
               <Route path="/symptom-checker" element={<ProtectedRoute><SymptomChecker /></ProtectedRoute>} />
               <Route path="/diet-planner" element={<ProtectedRoute><DietPlanner /></ProtectedRoute>} />
+              <Route path="/doctor/profile" element={<ProtectedRoute allowedRoles={['doctor']}><DoctorProfile /></ProtectedRoute>} />
+              <Route path="/doctor/appointments" element={<ProtectedRoute allowedRoles={['doctor']}><DoctorAppointments /></ProtectedRoute>} />
+              <Route path="/doctor/schedule" element={<ProtectedRoute allowedRoles={['doctor']}><DoctorSchedule /></ProtectedRoute>} />
+              <Route path="/doctor/change-password" element={<ProtectedRoute allowedRoles={['doctor']}><ChangePassword /></ProtectedRoute>} />
+              <Route path="/video-call/:appointmentId" element={<ProtectedRoute><VideoCall /></ProtectedRoute>} />
             </Routes>
           </main>
           <Footer />

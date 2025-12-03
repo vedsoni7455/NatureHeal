@@ -21,7 +21,15 @@ const Login = () => {
 
     try {
       const user = await login(formData.email, formData.password);
-      navigate('/', { state: { welcomeMessage: `Welcome back, ${user.name}!` } }); // Redirect to home page
+
+      // Redirect based on role
+      if (user.role === 'doctor') {
+        navigate('/dashboard/doctor'); // Direct to doctor dashboard
+      } else if (user.role === 'admin') {
+        navigate('/dashboard/admin');
+      } else {
+        navigate('/', { state: { welcomeMessage: `Welcome back, ${user.name}!` } });
+      }
     } catch (error) {
       console.error('Login Error:', error);
       let errorMsg = 'Login failed';

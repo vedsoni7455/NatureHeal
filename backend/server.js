@@ -1,18 +1,3 @@
-// backend/server.js
-import dotenv from "dotenv";
-import path from "path";
-import { fileURLToPath } from "url";
-
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
-
-// Load env first - path relative to the script directory
-dotenv.config();
-
-
-console.log('Environment loaded - MONGO_URI:', process.env.MONGO_URI ? 'Set' : 'Not set');
-console.log('Environment loaded - GOOGLE_AI_API_KEY:', process.env.GOOGLE_AI_API_KEY ? 'Set' : 'Not set');
-
 import express from "express";
 import cors from "cors";
 import connectDB from "./config/db.js";

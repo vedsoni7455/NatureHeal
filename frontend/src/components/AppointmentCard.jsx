@@ -1,4 +1,5 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 
 const AppointmentCard = ({ appointment }) => {
   return (
@@ -9,6 +10,11 @@ const AppointmentCard = ({ appointment }) => {
       <p>Type: {appointment.type}</p>
       <p>Status: {appointment.status}</p>
       {appointment.notes && <p>Notes: {appointment.notes}</p>}
+      {appointment.status === 'confirmed' && (
+        <Link to={`/video-call/${appointment._id}`} className="btn" style={{ marginTop: '1rem', display: 'inline-block', textDecoration: 'none', fontSize: '0.9rem' }}>
+          Join Video Call
+        </Link>
+      )}
     </div>
   );
 };

@@ -13,9 +13,11 @@ import {
   updateDoctorAvailability,
   getDoctorPatients,
   getPatientDetails,
+  getDoctorSlots,
 } from '../controllers/doctorController.js';
 
 router.get('/', getDoctors);
+router.get('/:id/slots', getDoctorSlots);
 router.get('/:id', getDoctorById);
 router.put('/profile', protect, updateDoctorProfile);
 
