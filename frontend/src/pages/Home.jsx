@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useContext } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import AuthContext from '../context/AuthContext';
-import '../styles/history.css';
+import '../styles/doctors.css';
 
 const Home = () => {
   const { user } = useContext(AuthContext);

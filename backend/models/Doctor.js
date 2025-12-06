@@ -16,6 +16,10 @@ const doctorSchema = new mongoose.Schema({
       type: String,
       enum: ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'],
     },
+    isAvailable: {
+      type: Boolean,
+      default: false,
+    },
     startTime: String, // e.g., "09:00"
     endTime: String, // e.g., "17:00"
   }],

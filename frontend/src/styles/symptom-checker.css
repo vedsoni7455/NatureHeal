@@ -1,7 +1,7 @@
-/* Symptom Checker Page Styles */
+/* Symptom Checker Page Styles - Themed */
 .symptom-checker-page {
   min-height: 100vh;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  /* background handled by theme on body */
   padding: 2rem 0;
 }
 
@@ -13,7 +13,7 @@
 
 .symptom-checker-hero {
   text-align: center;
-  color: white;
+  color: var(--text-main);
   margin-bottom: 3rem;
 }
 
@@ -21,7 +21,7 @@
   font-size: 3rem;
   font-weight: 700;
   margin-bottom: 1rem;
-  text-shadow: 0 2px 4px rgba(0,0,0,0.3);
+  color: var(--primary-dark);
 }
 
 .symptom-checker-hero p {
@@ -29,15 +29,17 @@
   opacity: 0.9;
   max-width: 600px;
   margin: 0 auto;
+  color: var(--text-muted);
 }
 
 .symptom-checker-content {
-  background: rgba(255, 255, 255, 0.95);
+  background: var(--card-bg);
   border-radius: 20px;
   padding: 3rem;
-  box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+  box-shadow: var(--shadow-lg);
   backdrop-filter: blur(10px);
   margin-bottom: 2rem;
+  border: 1px solid var(--neutral-100);
 }
 
 .symptom-form-section {
@@ -45,7 +47,7 @@
 }
 
 .symptom-form-section h2 {
-  color: #2c3e50;
+  color: var(--text-main);
   font-size: 1.8rem;
   margin-bottom: 2rem;
   text-align: center;
@@ -59,8 +61,8 @@
 }
 
 .symptom-item {
-  background: white;
-  border: 2px solid #e1e8ed;
+  background: var(--off-white);
+  border: 2px solid var(--neutral-200);
   border-radius: 12px;
   padding: 1rem;
   cursor: pointer;
@@ -71,21 +73,21 @@
 }
 
 .symptom-item:hover {
-  border-color: #667eea;
+  border-color: var(--primary-color);
   transform: translateY(-2px);
-  box-shadow: 0 5px 15px rgba(102, 126, 234, 0.2);
+  box-shadow: 0 5px 15px rgba(var(--primary-color), 0.2);
 }
 
 .symptom-item.selected {
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  color: white;
-  border-color: #667eea;
+  background: linear-gradient(135deg, var(--primary-color) 0%, var(--primary-dark) 100%);
+  color: var(--off-white);
+  border-color: var(--primary-color);
 }
 
 .symptom-checkbox {
   width: 20px;
   height: 20px;
-  border: 2px solid #667eea;
+  border: 2px solid var(--primary-color);
   border-radius: 4px;
   display: flex;
   align-items: center;
@@ -94,12 +96,13 @@
 }
 
 .symptom-item.selected .symptom-checkbox {
-  background: white;
+  background: var(--off-white);
+  border-color: var(--off-white);
 }
 
 .symptom-item.selected .symptom-checkbox::after {
   content: '✓';
-  color: #667eea;
+  color: var(--primary-color);
   font-weight: bold;
 }
 
@@ -107,12 +110,15 @@
   margin: 0;
   font-size: 1rem;
   font-weight: 600;
+  color: inherit;
+  /* Inherits from parent (dark or white based on selection) */
 }
 
 .symptom-info p {
   margin: 0.25rem 0 0 0;
   font-size: 0.85rem;
   opacity: 0.7;
+  color: inherit;
 }
 
 .symptom-item.selected .symptom-info p {
@@ -133,7 +139,7 @@
 
 .form-group label {
   font-weight: 600;
-  color: #2c3e50;
+  color: var(--text-main);
   margin-bottom: 0.5rem;
   font-size: 0.9rem;
 }
@@ -141,23 +147,24 @@
 .form-group select,
 .form-group input {
   padding: 0.75rem;
-  border: 2px solid #e1e8ed;
+  border: 2px solid var(--neutral-200);
   border-radius: 8px;
   font-size: 1rem;
   transition: all 0.3s ease;
-  background: white;
+  background: var(--off-white);
+  color: var(--text-main);
 }
 
 .form-group select:focus,
 .form-group input:focus {
   outline: none;
-  border-color: #667eea;
-  box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+  border-color: var(--primary-color);
+  box-shadow: 0 0 0 3px rgba(var(--primary-color), 0.1);
 }
 
 .analyze-btn {
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  color: white;
+  background: linear-gradient(135deg, var(--primary-color) 0%, var(--primary-dark) 100%);
+  color: var(--off-white);
   border: none;
   padding: 1rem 2rem;
   border-radius: 12px;
@@ -171,7 +178,7 @@
 
 .analyze-btn:hover {
   transform: translateY(-2px);
-  box-shadow: 0 10px 25px rgba(102, 126, 234, 0.3);
+  box-shadow: 0 10px 25px rgba(var(--primary-color), 0.3);
 }
 
 .analyze-btn:disabled {
@@ -185,32 +192,32 @@
 }
 
 .results-card {
-  background: white;
+  background: var(--card-bg);
   border-radius: 16px;
   padding: 2rem;
-  box-shadow: 0 10px 30px rgba(0,0,0,0.1);
-  border: 1px solid #e1e8ed;
+  box-shadow: var(--shadow-md);
+  border: 1px solid var(--neutral-100);
 }
 
 .results-card h2 {
-  color: #2c3e50;
+  color: var(--text-main);
   margin-bottom: 1.5rem;
   text-align: center;
 }
 
 .results-card .urgency-high {
-  border-left: 4px solid #e74c3c;
-  background: linear-gradient(135deg, #ffeaa7 0%, #fab1a0 100%);
+  border-left: 4px solid var(--error);
+  background: linear-gradient(135deg, #FEF2F2 0%, #FEE2E2 100%);
 }
 
 .results-card .urgency-medium {
-  border-left: 4px solid #f39c12;
-  background: linear-gradient(135deg, #fff3cd 0%, #ffeaa7 100%);
+  border-left: 4px solid var(--warning);
+  background: linear-gradient(135deg, #FFFBEB 0%, #FEF3C7 100%);
 }
 
 .results-card .urgency-low {
-  border-left: 4px solid #27ae60;
-  background: linear-gradient(135deg, #d4edda 0%, #a8d5ba 100%);
+  border-left: 4px solid var(--success);
+  background: linear-gradient(135deg, #ECFDF5 0%, #D1FAE5 100%);
 }
 
 .result-header {
@@ -223,7 +230,7 @@
 .result-header h3 {
   margin: 0;
   font-size: 1.5rem;
-  color: #2c3e50;
+  color: var(--text-main);
 }
 
 .urgency-badge {
@@ -235,18 +242,18 @@
 }
 
 .urgency-high .urgency-badge {
-  background: #e74c3c;
-  color: white;
+  background: var(--error);
+  color: var(--off-white);
 }
 
 .urgency-medium .urgency-badge {
-  background: #f39c12;
-  color: white;
+  background: var(--warning);
+  color: var(--off-white);
 }
 
 .urgency-low .urgency-badge {
-  background: #27ae60;
-  color: white;
+  background: var(--success);
+  color: var(--off-white);
 }
 
 .result-details {
@@ -255,18 +262,19 @@
 
 .result-details p {
   margin: 0.5rem 0;
-  color: #34495e;
+  color: var(--text-main);
 }
 
 .recommendations {
-  background: rgba(255, 255, 255, 0.8);
+  background: var(--off-white);
   padding: 1.5rem;
   border-radius: 12px;
   margin-bottom: 1.5rem;
+  border: 1px solid var(--neutral-100);
 }
 
 .recommendations h4 {
-  color: #2c3e50;
+  color: var(--text-main);
   margin-bottom: 1rem;
 }
 
@@ -277,8 +285,8 @@
 
 .recommendations li {
   padding: 0.5rem 0;
-  border-bottom: 1px solid #ecf0f1;
-  color: #34495e;
+  border-bottom: 1px solid var(--neutral-100);
+  color: var(--text-muted);
 }
 
 .recommendations li:last-child {
@@ -286,19 +294,19 @@
 }
 
 .disclaimer {
-  background: rgba(255, 255, 255, 0.9);
+  background: var(--off-white);
   padding: 1.5rem;
   border-radius: 12px;
-  border-left: 4px solid #f39c12;
+  border-left: 4px solid var(--warning);
 }
 
 .disclaimer h4 {
-  color: #e74c3c;
+  color: var(--error);
   margin-bottom: 1rem;
 }
 
 .disclaimer p {
-  color: #34495e;
+  color: var(--text-muted);
   line-height: 1.6;
   margin: 0;
 }
@@ -308,7 +316,7 @@
 }
 
 .next-steps h3 {
-  color: white;
+  color: var(--primary-dark);
   text-align: center;
   margin-bottom: 2rem;
   font-size: 1.8rem;
@@ -321,20 +329,22 @@
 }
 
 .next-step-card {
-  background: rgba(255, 255, 255, 0.95);
+  background: var(--card-bg);
   padding: 2rem;
   border-radius: 16px;
   text-align: center;
   text-decoration: none;
-  color: #2c3e50;
+  color: var(--text-main);
   transition: all 0.3s ease;
-  box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+  box-shadow: var(--shadow-sm);
   backdrop-filter: blur(10px);
+  border: 1px solid var(--neutral-100);
 }
 
 .next-step-card:hover {
   transform: translateY(-5px);
-  box-shadow: 0 15px 35px rgba(0,0,0,0.2);
+  box-shadow: var(--shadow-lg);
+  border-color: var(--primary-color);
 }
 
 .step-icon {
@@ -351,6 +361,7 @@
 .next-step-card p {
   opacity: 0.8;
   margin: 0;
+  color: var(--text-muted);
 }
 
 /* Responsive Design */

@@ -1,20 +1,21 @@
-/* Therapies Page Styles */
+/* Therapies Page Styles - Themed */
 .therapies-page {
   min-height: 100vh;
 }
 
 .therapies-hero {
-  background: linear-gradient(135deg, #e8f4f8 0%, #d1e7f0 50%, #b8d8e6 100%);
-  color: #2c3e50;
+  background: linear-gradient(135deg, var(--page-bg) 0%, var(--card-bg) 100%);
+  color: var(--text-main);
   padding: 4rem 0;
   text-align: center;
-  border-bottom: 1px solid rgba(184, 216, 230, 0.3);
+  border-bottom: 1px solid var(--neutral-100);
 }
 
 .therapies-hero h1 {
   font-size: 3rem;
   font-weight: 700;
   margin-bottom: 1rem;
+  color: var(--primary-dark);
 }
 
 .therapies-hero p {
@@ -22,6 +23,7 @@
   opacity: 0.9;
   max-width: 600px;
   margin: 0 auto;
+  color: var(--text-muted);
 }
 
 /* Tab Navigation */
@@ -30,7 +32,7 @@
   justify-content: center;
   gap: 2rem;
   margin: 3rem 0;
-  border-bottom: 2px solid var(--neutral-200);
+  border-bottom: 2px solid var(--neutral-100);
   flex-wrap: wrap;
 }
 
@@ -40,7 +42,7 @@
   padding: 1rem 2rem;
   font-size: 1.1rem;
   font-weight: 600;
-  color: var(--neutral-600);
+  color: var(--text-muted);
   cursor: pointer;
   transition: all var(--transition-fast);
   border-bottom: 3px solid transparent;
@@ -50,12 +52,12 @@
 }
 
 .tab-btn:hover {
-  color: var(--primary-600);
+  color: var(--primary-color);
 }
 
 .tab-btn.active {
-  color: var(--primary-600);
-  border-bottom-color: var(--primary-500);
+  color: var(--primary-color);
+  border-bottom-color: var(--primary-color);
 }
 
 .tab-icon {
@@ -82,9 +84,10 @@
   align-items: center;
   margin-bottom: 3rem;
   padding: 2rem;
-  background: var(--neutral-50);
+  background: var(--card-bg);
   border-radius: var(--radius-lg);
-  border: 1px solid var(--neutral-200);
+  border: 1px solid var(--neutral-100);
+  box-shadow: var(--shadow-sm);
 }
 
 .therapy-image img {
@@ -109,30 +112,30 @@
 .therapy-intro h2 {
   font-size: 2.5rem;
   font-weight: 700;
-  color: var(--neutral-800);
+  color: var(--primary-dark);
   margin-bottom: 1rem;
 }
 
 .therapy-intro p {
   font-size: 1.1rem;
-  color: var(--neutral-700);
+  color: var(--text-muted);
   line-height: 1.6;
 }
 
 /* Video Section */
 .therapy-video-section {
   margin-bottom: 3rem;
-  background: white;
+  background: var(--card-bg);
   padding: 2rem;
   border-radius: var(--radius-lg);
   box-shadow: var(--shadow-md);
-  border: 1px solid var(--neutral-200);
+  border: 1px solid var(--neutral-100);
 }
 
 .therapy-video-section h3 {
   font-size: 1.5rem;
   font-weight: 600;
-  color: var(--neutral-800);
+  color: var(--text-main);
   margin-bottom: 1.5rem;
   display: flex;
   align-items: center;
@@ -143,17 +146,19 @@
   content: '';
   width: 4px;
   height: 20px;
-  background: var(--primary-500);
+  background: var(--primary-color);
   border-radius: 2px;
 }
 
 .video-container {
   position: relative;
-  padding-bottom: 56.25%; /* 16:9 Aspect Ratio */
+  padding-bottom: 56.25%;
+  /* 16:9 Aspect Ratio */
   height: 0;
   overflow: hidden;
   border-radius: var(--radius-md);
-  background: #000;
+  background: var(--off-black);
+  /* Exception for video background */
 }
 
 .video-container iframe {
@@ -173,11 +178,11 @@
 }
 
 .therapy-card {
-  background: white;
+  background: var(--card-bg);
   padding: 2rem;
   border-radius: var(--radius-lg);
   box-shadow: var(--shadow-md);
-  border: 1px solid var(--neutral-200);
+  border: 1px solid var(--neutral-100);
   transition: all var(--transition-normal);
 }
 
@@ -189,7 +194,7 @@
 .therapy-card h3 {
   font-size: 1.5rem;
   font-weight: 600;
-  color: var(--neutral-800);
+  color: var(--text-main);
   margin-bottom: 1.5rem;
   display: flex;
   align-items: center;
@@ -200,7 +205,7 @@
   content: '';
   width: 4px;
   height: 20px;
-  background: var(--primary-500);
+  background: var(--primary-color);
   border-radius: 2px;
 }
 
@@ -223,7 +228,7 @@
 }
 
 .benefit-icon {
-  color: var(--success-500);
+  color: var(--success);
   font-weight: bold;
   font-size: 1.1rem;
 }
@@ -237,15 +242,15 @@
 
 .technique-item {
   padding: 1.5rem;
-  background: var(--neutral-50);
+  background: var(--off-white);
   border-radius: var(--radius-md);
-  border: 1px solid var(--neutral-200);
+  border: 1px solid var(--neutral-100);
 }
 
 .technique-item h4 {
   font-size: 1.2rem;
   font-weight: 600;
-  color: var(--neutral-800);
+  color: var(--text-main);
   margin-bottom: 0.5rem;
 }
 
@@ -254,7 +259,7 @@
 .technique-conditions,
 .technique-instructions {
   margin: 0.5rem 0;
-  color: var(--neutral-700);
+  color: var(--text-muted);
   line-height: 1.5;
 }
 
@@ -262,7 +267,7 @@
 .technique-description strong,
 .technique-conditions strong,
 .technique-instructions strong {
-  color: var(--primary-600);
+  color: var(--primary-color);
 }
 
 /* Precautions List */
@@ -286,27 +291,30 @@
 .precaution-icon {
   font-size: 1.1rem;
   margin-top: 0.1rem;
+  color: var(--warning);
 }
 
 /* Call to Action */
 .therapy-cta {
-  background: linear-gradient(135deg, var(--primary-50) 0%, var(--accent-50) 100%);
+  background: linear-gradient(135deg, var(--card-bg) 0%, var(--page-bg) 100%);
   padding: 3rem;
   border-radius: var(--radius-lg);
   text-align: center;
   margin-top: 3rem;
+  border: 1px solid var(--neutral-100);
+  box-shadow: var(--shadow-lg);
 }
 
 .cta-content h3 {
   font-size: 2rem;
   font-weight: 700;
-  color: var(--neutral-800);
+  color: var(--primary-dark);
   margin-bottom: 1rem;
 }
 
 .cta-content p {
   font-size: 1.1rem;
-  color: var(--neutral-700);
+  color: var(--text-muted);
   margin-bottom: 2rem;
   max-width: 600px;
   margin-left: auto;
@@ -331,23 +339,23 @@
 }
 
 .cta-primary {
-  background: var(--primary-500);
-  color: white;
+  background: var(--primary-color);
+  color: var(--off-white);
 }
 
 .cta-primary:hover {
-  background: var(--primary-600);
+  background: var(--primary-dark);
   transform: translateY(-2px);
 }
 
 .cta-secondary {
-  background: white;
-  color: var(--primary-600);
-  border: 2px solid var(--primary-500);
+  background: var(--card-bg);
+  color: var(--primary-color);
+  border: 2px solid var(--primary-color);
 }
 
 .cta-secondary:hover {
-  background: var(--primary-50);
+  background: var(--off-white);
   transform: translateY(-2px);
 }
 

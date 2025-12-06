@@ -1,4 +1,4 @@
-/* Doctors Page Styles */
+/* Doctors Page Styles - Themed */
 .doctors-page {
   padding: 2rem 0;
   min-height: 80vh;
@@ -18,14 +18,14 @@
 
 .page-header h1 {
   font-size: 2.5rem;
-  color: #2c3e50;
+  color: var(--primary-dark);
   margin-bottom: 1rem;
   font-weight: 700;
 }
 
 .page-header p {
   font-size: 1.1rem;
-  color: #7f8c8d;
+  color: var(--text-muted);
   max-width: 600px;
   margin: 0 auto;
   line-height: 1.6;
@@ -33,11 +33,12 @@
 
 /* Filters Section */
 .filters-section {
-  background: #f8f9fa;
+  background: var(--card-bg);
   padding: 2rem;
-  border-radius: 12px;
+  border-radius: var(--radius-lg);
   margin-bottom: 2rem;
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+  box-shadow: var(--shadow-sm);
+  border: 1px solid var(--neutral-100);
 }
 
 .filters-grid {
@@ -54,7 +55,7 @@
 
 .filter-group label {
   font-weight: 600;
-  color: #2c3e50;
+  color: var(--text-main);
   margin-bottom: 0.5rem;
   font-size: 0.95rem;
 }
@@ -62,18 +63,19 @@
 .filter-group input,
 .filter-group select {
   padding: 0.75rem 1rem;
-  border: 2px solid #e9ecef;
-  border-radius: 8px;
+  border: 2px solid var(--neutral-200);
+  border-radius: var(--radius-md);
   font-size: 1rem;
   transition: all 0.3s ease;
-  background: white;
+  background: var(--off-white);
+  color: var(--text-main);
 }
 
 .filter-group input:focus,
 .filter-group select:focus {
   outline: none;
-  border-color: #27ae60;
-  box-shadow: 0 0 0 3px rgba(39, 174, 96, 0.1);
+  border-color: var(--primary-color);
+  box-shadow: 0 0 0 3px rgba(var(--primary-color), 0.1);
 }
 
 /* Doctors Grid */
@@ -84,19 +86,20 @@
   margin-bottom: 3rem;
 }
 
-/* Doctor Card */
+/* Doctor Card - Glassy Fusion */
 .doctor-card {
-  background: white;
-  border-radius: 16px;
+  background: var(--card-bg);
+  backdrop-filter: blur(10px);
+  border-radius: var(--radius-lg);
   padding: 1.5rem;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+  box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.1);
   transition: all 0.3s ease;
-  border: 1px solid #e9ecef;
+  border: 1px solid rgba(255, 255, 255, 0.4);
 }
 
 .doctor-card:hover {
   transform: translateY(-5px);
-  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.12);
+  box-shadow: var(--shadow-xl);
 }
 
 .doctor-header {
@@ -115,19 +118,19 @@
   height: 60px;
   border-radius: 50%;
   object-fit: cover;
-  border: 3px solid #27ae60;
+  border: 3px solid var(--primary-color);
 }
 
 .avatar-placeholder {
   width: 60px;
   height: 60px;
   border-radius: 50%;
-  background: linear-gradient(135deg, #27ae60, #2ecc71);
+  background: linear-gradient(135deg, var(--primary-color), var(--primary-dark));
   display: flex;
   align-items: center;
   justify-content: center;
   font-size: 1.5rem;
-  color: white;
+  color: var(--off-white);
 }
 
 .doctor-info {
@@ -137,12 +140,12 @@
 .doctor-info h3 {
   margin: 0 0 0.25rem 0;
   font-size: 1.25rem;
-  color: #2c3e50;
+  color: var(--text-main);
   font-weight: 600;
 }
 
 .doctor-info .specialization {
-  color: #27ae60;
+  color: var(--primary-color);
   font-weight: 500;
   margin-bottom: 0.25rem;
 }
@@ -151,7 +154,7 @@
   display: flex;
   gap: 1rem;
   font-size: 0.9rem;
-  color: #7f8c8d;
+  color: var(--text-muted);
 }
 
 .doctor-meta .experience,
@@ -166,7 +169,7 @@
 }
 
 .doctor-details .bio {
-  color: #555;
+  color: var(--text-muted);
   margin-bottom: 1rem;
   line-height: 1.5;
 }
@@ -183,27 +186,27 @@
 
 .stat-label {
   font-size: 0.85rem;
-  color: #7f8c8d;
+  color: var(--text-muted);
   margin-bottom: 0.25rem;
 }
 
 .stat-value {
   font-weight: 600;
-  color: #2c3e50;
+  color: var(--text-main);
   font-size: 1.1rem;
 }
 
 .contact-info p {
   margin: 0.25rem 0;
   font-size: 0.9rem;
-  color: #555;
+  color: var(--text-muted);
 }
 
 .languages,
 .certifications {
   margin: 0.5rem 0;
   font-size: 0.9rem;
-  color: #555;
+  color: var(--text-muted);
 }
 
 .doctor-actions {
@@ -216,7 +219,7 @@
   flex: 1;
   padding: 0.75rem 1rem;
   border: none;
-  border-radius: 8px;
+  border-radius: var(--radius-md);
   font-weight: 600;
   text-decoration: none;
   text-align: center;
@@ -225,24 +228,24 @@
 }
 
 .book-btn {
-  background: #27ae60;
-  color: white;
+  background: var(--primary-color);
+  color: var(--off-white);
 }
 
 .book-btn:hover {
-  background: #229954;
+  background: var(--primary-dark);
   transform: translateY(-2px);
 }
 
 .view-profile-btn {
-  background: #f8f9fa;
-  color: #2c3e50;
-  border: 2px solid #e9ecef;
+  background: var(--off-white);
+  color: var(--text-main);
+  border: 2px solid var(--neutral-200);
 }
 
 .view-profile-btn:hover {
-  background: #e9ecef;
-  border-color: #dee2e6;
+  background: var(--neutral-100);
+  border-color: var(--neutral-200);
 }
 
 /* Pagination */
@@ -256,24 +259,24 @@
 
 .page-btn {
   padding: 0.5rem 1rem;
-  border: 2px solid #e9ecef;
-  background: white;
-  color: #2c3e50;
-  border-radius: 6px;
+  border: 2px solid var(--neutral-200);
+  background: var(--card-bg);
+  color: var(--text-main);
+  border-radius: var(--radius-md);
   cursor: pointer;
   transition: all 0.3s ease;
   font-weight: 500;
 }
 
 .page-btn:hover:not(:disabled) {
-  background: #f8f9fa;
-  border-color: #dee2e6;
+  background: var(--off-white);
+  border-color: var(--neutral-200);
 }
 
 .page-btn.active {
-  background: #27ae60;
-  color: white;
-  border-color: #27ae60;
+  background: var(--primary-color);
+  color: var(--off-white);
+  border-color: var(--primary-color);
 }
 
 .page-btn:disabled {
@@ -284,10 +287,10 @@
 /* CTA Section */
 .doctors-cta {
   text-align: center;
-  background: linear-gradient(135deg, #27ae60 0%, #2ecc71 100%);
-  color: white;
+  background: linear-gradient(135deg, var(--primary-color) 0%, var(--primary-dark) 100%);
+  color: var(--off-white);
   padding: 3rem 2rem;
-  border-radius: 16px;
+  border-radius: var(--radius-lg);
   margin-top: 3rem;
 }
 
@@ -295,21 +298,23 @@
   font-size: 2rem;
   margin-bottom: 1rem;
   font-weight: 700;
+  color: var(--off-white);
 }
 
 .doctors-cta p {
   font-size: 1.1rem;
   margin-bottom: 2rem;
   opacity: 0.9;
+  color: var(--off-white);
 }
 
 .cta-btn {
   display: inline-block;
   padding: 1rem 2rem;
-  background: white;
-  color: #27ae60;
+  background: var(--off-white);
+  color: var(--primary-color);
   text-decoration: none;
-  border-radius: 8px;
+  border-radius: var(--radius-md);
   font-weight: 600;
   transition: all 0.3s ease;
 }
@@ -323,19 +328,20 @@
 .no-doctors {
   text-align: center;
   padding: 3rem;
-  background: #f8f9fa;
-  border-radius: 12px;
+  background: var(--card-bg);
+  border-radius: var(--radius-lg);
   margin: 2rem 0;
+  border: 1px solid var(--neutral-100);
 }
 
 .no-doctors h3 {
-  color: #2c3e50;
+  color: var(--text-main);
   margin-bottom: 1rem;
   font-size: 1.5rem;
 }
 
 .no-doctors p {
-  color: #7f8c8d;
+  color: var(--text-muted);
   font-size: 1.1rem;
 }
 
@@ -348,27 +354,32 @@
 .spinner {
   width: 40px;
   height: 40px;
-  border: 4px solid #f3f3f3;
-  border-top: 4px solid #27ae60;
+  border: 4px solid var(--neutral-100);
+  border-top: 4px solid var(--primary-color);
   border-radius: 50%;
   animation: spin 1s linear infinite;
   margin: 0 auto 1rem;
 }
 
 @keyframes spin {
-  0% { transform: rotate(0deg); }
-  100% { transform: rotate(360deg); }
+  0% {
+    transform: rotate(0deg);
+  }
+
+  100% {
+    transform: rotate(360deg);
+  }
 }
 
 /* Error Message */
 .error-message {
-  background: #fee;
-  color: #c0392b;
+  background: #FEF2F2;
+  color: var(--error);
   padding: 1rem;
-  border-radius: 8px;
+  border-radius: var(--radius-md);
   margin-bottom: 2rem;
   text-align: center;
-  border: 1px solid #f5c6cb;
+  border: 1px solid #FECACA;
 }
 
 /* Responsive Design */

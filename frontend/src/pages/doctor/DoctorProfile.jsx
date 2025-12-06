@@ -1,11 +1,11 @@
-import React, { useState, useEffect, useContext } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import AuthContext from '../../context/AuthContext';
+// import AuthContext from '../../context/AuthContext'; // Not currently used
 import api from '../../utils/api';
 import '../../styles/global.css'; // Ensure global styles are applied
 
 const DoctorProfile = () => {
-    const { user, login } = useContext(AuthContext); // login used to update context user
+    // const { user, login } = useContext(AuthContext); // Not currently used
     const navigate = useNavigate();
     const [loading, setLoading] = useState(true);
     const [message, setMessage] = useState('');
@@ -80,7 +80,7 @@ const DoctorProfile = () => {
                 languages: formData.languages.split(',').map(lang => lang.trim()).filter(lang => lang),
             };
 
-            const res = await api.put('/doctor/profile', dataToSubmit);
+            await api.put('/doctor/profile', dataToSubmit);
 
             // Update local user context if needed (optional, but good practice)
             // Assuming login function can accept user object to update state without token

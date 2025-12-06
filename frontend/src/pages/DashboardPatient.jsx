@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import AuthContext from '../context/AuthContext';
 import api from '../utils/api';
 import AppointmentCard from '../components/AppointmentCard';
-import '../styles/history.css';
+import '../styles/dashboard-patient.css';
 
 const DashboardPatient = () => {
   const { user } = useContext(AuthContext);
@@ -19,11 +19,12 @@ const DashboardPatient = () => {
     const fetchData = async () => {
       try {
         const res = await api.get('/appointments');
-        const userAppointments = res.data.filter(apt => apt.patient._id === user._id);
-        setAppointments(userAppointments);
+        // Backend already filters appointments by user role, no need to filter again
+        setAppointments(res.data.appointments || []);
 
         // Calculate stats
         const now = new Date();
+        const userAppointments = res.data.appointments || [];
         const upcoming = userAppointments.filter(apt => new Date(apt.date) > now && apt.status !== 'cancelled');
         const completed = userAppointments.filter(apt => apt.status === 'completed');
 

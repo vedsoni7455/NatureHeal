@@ -59,7 +59,7 @@ const symptomSchema = new mongoose.Schema({
 });
 
 // Index for efficient queries
-symptomSchema.index({ name: 1 });
+
 symptomSchema.index({ category: 1 });
 symptomSchema.index({ isActive: 1 });
 

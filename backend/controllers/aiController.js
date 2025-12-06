@@ -11,7 +11,7 @@ const initializeAI = async () => {
   if (!groq && process.env.GROQ_API_KEY) {
     try {
       groq = new Groq({ apiKey: process.env.GROQ_API_KEY });
-      console.log('Groq AI initialized successfully');
+      console.log('Groq AI initialized successfully. Key prefix:', process.env.GROQ_API_KEY.substring(0, 4));
     } catch (error) {
       console.error('Failed to initialize Groq AI:', error);
       throw error;
@@ -105,6 +105,12 @@ const chatWithAIHandler = asyncHandler(async (req, res) => {
       }
     }
 
+    console.log('Creating ChatbotQuery with:', {
+      user: req.user ? req.user._id : 'null',
+      category: queryCategory,
+      isAnonymous: !req.user
+    });
+
     const query = new ChatbotQuery({
       user: req.user ? req.user._id : null,
       sessionId: sessionId || `session_${Date.now()}`,
@@ -115,7 +121,15 @@ const chatWithAIHandler = asyncHandler(async (req, res) => {
       responseTime,
       isAnonymous: !req.user,
     });
-    await query.save();
+    try {
+      console.log('Attempting to save query to DB...');
+      await query.save();
+      console.log('Query saved successfully');
+    } catch (dbError) {
+      console.error('Database Save Error:', dbError);
+      // Continue without saving if DB fails, so user still gets response
+      console.warn('Continuing despite DB save failure');
+    }
 
     res.json({
       reply,
@@ -124,9 +138,11 @@ const chatWithAIHandler = asyncHandler(async (req, res) => {
     });
   } catch (error) {
     console.error('Groq AI API error:', error);
+    console.error('Error details:', JSON.stringify(error, null, 2));
     res.status(500).json({
       error: 'AI service temporarily unavailable',
-      details: error.message || error.toString()
+      details: error.message || error.toString(),
+      fullError: JSON.stringify(error)
     });
   }
 });
@@ -180,18 +196,52 @@ Focus on natural, whole foods and ensure the plan is nutritionally balanced. Con
         { role: 'user', content: prompt }
       ],
       model: 'llama-3.3-70b-versatile',
-      response_format: { type: 'json_object' }, // Force JSON output
       temperature: 0.5,
     });
 
     let aiResponse = completion.choices[0]?.message?.content;
     if (!aiResponse) throw new Error('No response from AI');
 
-    // Clean up potential markdown formatting
-    aiResponse = aiResponse.replace(/```json\n?|```/g, '').trim();
     console.log('Raw AI Diet Plan Response:', aiResponse); // Debug log
 
-    const planData = JSON.parse(aiResponse);
+    // Clean up potential markdown formatting
+    aiResponse = aiResponse.replace(/```json\n?|```/g, '').trim();
+
+    // Try to extract JSON from the response
+    let jsonMatch = aiResponse.match(/\{[\s\S]*\}/);
+    if (jsonMatch) {
+      aiResponse = jsonMatch[0];
+    }
+
+    let planData;
+    try {
+      planData = JSON.parse(aiResponse);
+    } catch (parseError) {
+      console.error('JSON Parse Error:', parseError);
+      console.error('Attempted to parse:', aiResponse);
+
+      // Return a default plan if parsing fails
+      planData = {
+        title: "Personalized Health Plan",
+        description: "A balanced nutrition plan tailored to your needs",
+        duration: 7,
+        dailyCalories: 2000,
+        meals: {
+          breakfast: ["Oatmeal with fruits and nuts", "Whole grain toast with avocado", "Greek yogurt with berries"],
+          lunch: ["Grilled chicken salad", "Quinoa bowl with vegetables", "Lentil soup with whole grain bread"],
+          dinner: ["Baked salmon with vegetables", "Stir-fried tofu with brown rice", "Grilled chicken with sweet potato"],
+          snacks: ["Fresh fruits", "Nuts and seeds", "Vegetable sticks with hummus"]
+        },
+        tips: [
+          "Drink at least 8 glasses of water daily",
+          "Include a variety of colorful vegetables",
+          "Practice portion control",
+          "Eat mindfully and avoid distractions"
+        ],
+        restrictions: [],
+        allergies: []
+      };
+    }
 
     res.json({
       ...planData,
@@ -201,8 +251,11 @@ Focus on natural, whole foods and ensure the plan is nutritionally balanced. Con
 
   } catch (error) {
     console.error('AI Diet Plan Generation Error:', error);
+    console.error('Error details:', JSON.stringify(error, null, 2));
     res.status(500).json({
       error: 'AI service temporarily unavailable or failed to parse response.',
+      details: error.message || error.toString(),
+      fullError: JSON.stringify(error)
     });
   }
 });
@@ -251,7 +304,6 @@ Focus on natural health approaches and holistic wellness. Be encouraging and pro
         { role: 'user', content: prompt }
       ],
       model: 'llama-3.3-70b-versatile',
-      response_format: { type: 'json_object' },
       temperature: 0.5,
     });
 
@@ -261,7 +313,26 @@ Focus on natural health approaches and holistic wellness. Be encouraging and pro
     // Clean up potential markdown formatting
     aiResponse = aiResponse.replace(/```json\n?|```/g, '').trim();
 
-    const insights = JSON.parse(aiResponse);
+    // Try to extract JSON from the response
+    let jsonMatch = aiResponse.match(/\{[\s\S]*\}/);
+    if (jsonMatch) {
+      aiResponse = jsonMatch[0];
+    }
+
+    let insights;
+    try {
+      insights = JSON.parse(aiResponse);
+    } catch (parseError) {
+      console.error('JSON Parse Error:', parseError);
+      insights = {
+        patterns: ["Consistent health tracking", "Regular wellness monitoring"],
+        recommendations: ["Continue tracking your health metrics", "Maintain a balanced lifestyle"],
+        correlations: ["Activity levels may affect energy"],
+        predictions: ["Continued progress expected with current habits"],
+        risks: [],
+        strengths: ["Proactive health management"]
+      };
+    }
 
     res.json({
       insights,
@@ -311,7 +382,6 @@ Focus on realistic, achievable outcomes and natural health approaches.`;
         { role: 'user', content: prompt }
       ],
       model: 'llama-3.3-70b-versatile',
-      response_format: { type: 'json_object' },
       temperature: 0.5,
     });
 
@@ -321,7 +391,26 @@ Focus on realistic, achievable outcomes and natural health approaches.`;
     // Clean up potential markdown formatting
     aiResponse = aiResponse.replace(/```json\n?|```/g, '').trim();
 
-    const predictions = JSON.parse(aiResponse);
+    // Try to extract JSON from the response
+    let jsonMatch = aiResponse.match(/\{[\s\S]*\}/);
+    if (jsonMatch) {
+      aiResponse = jsonMatch[0];
+    }
+
+    let predictions;
+    try {
+      predictions = JSON.parse(aiResponse);
+    } catch (parseError) {
+      console.error('JSON Parse Error:', parseError);
+      predictions = {
+        shortTerm: ["Continued progress in the next 1-2 weeks"],
+        longTerm: ["Sustainable health improvements over 1-3 months"],
+        recommendations: ["Stay consistent with current habits", "Monitor progress regularly"],
+        milestones: ["Improved energy levels", "Better sleep quality"],
+        challenges: ["Maintaining consistency"],
+        successFactors: ["Regular tracking", "Balanced approach"]
+      };
+    }
 
     res.json({
       predictions,
@@ -430,3 +519,74 @@ export const submitFeedback = submitFeedbackHandler;
 export const generateAIDietPlan = [ensureAIInitialized, generateAIDietPlanHandler];
 export const generateAIHealthInsights = [ensureAIInitialized, generateAIHealthInsightsHandler];
 export const getHealthPredictions = [ensureAIInitialized, getHealthPredictionsHandler];
+
+// @desc    Analyze symptoms with AI
+// @route   POST /api/ai/analyze-symptoms
+// @access  Private
+const analyzeSymptomsHandler = asyncHandler(async (req, res) => {
+  const { symptoms, severity, duration } = req.body;
+  const { groq } = req;
+  const user = req.user; // Authenticated user
+
+  const prompt = `Act as an AI Medical Assistant. Analyze the following symptoms and provide a preliminary assessment.
+  
+  Patient Profile:
+  - Age: ${user?.age || 'Not specified'}
+  - Gender: ${user?.gender || 'Not specified'}
+  - Medical History: ${user?.disease || 'None specified'}
+  
+  Symptoms Reported: ${Array.isArray(symptoms) ? symptoms.join(', ') : symptoms}
+  Severity: ${severity}
+  Duration: ${duration}
+  
+  Please provide a structured analysis in the following JSON format:
+  {
+    "condition": "Most likely condition (short title)",
+    "urgency": "low" | "medium" | "high",
+    "explanation": "Brief explanation of why this condition is suspected.",
+    "recommendations": ["Action 1", "Action 2", "Action 3"],
+    "warningSigns": ["If you experience X, seek help immediately"]
+  }
+  
+  IMPORTANT: 
+  - If symptoms suggest a medical emergency (e.g., chest pain, difficulty breathing, severe bleeding), set urgency to "high".
+  - Be conservative and safe in your advice.
+  - This is for informational purposes only.`;
+
+  try {
+    const completion = await groq.chat.completions.create({
+      messages: [{ role: 'user', content: prompt }],
+      model: 'llama-3.3-70b-versatile',
+      temperature: 0.3,
+    });
+
+    let aiResponse = completion.choices[0]?.message?.content;
+    if (!aiResponse) throw new Error('No response from AI');
+
+    aiResponse = aiResponse.replace(/```json\n?|```/g, '').trim();
+    let jsonMatch = aiResponse.match(/\{[\s\S]*\}/);
+    if (jsonMatch) aiResponse = jsonMatch[0];
+
+    let analysis;
+    try {
+      analysis = JSON.parse(aiResponse);
+    } catch (parseError) {
+      console.error('JSON Parse Error:', parseError);
+      analysis = {
+        condition: "Analysis Incomplete",
+        urgency: "medium",
+        explanation: "The AI could not generate a structured response. Please consult a doctor.",
+        recommendations: ["Consult a healthcare professional"],
+        warningSigns: ["Worsening symptoms"]
+      };
+    }
+
+    res.json(analysis);
+
+  } catch (error) {
+    console.error('AI Symptom Analysis Error:', error);
+    res.status(500).json({ error: 'Failed to analyze symptoms' });
+  }
+});
+
+export const analyzeSymptoms = [ensureAIInitialized, analyzeSymptomsHandler];

@@ -4,7 +4,7 @@ import { Link } from 'react-router-dom';
 const AppointmentCard = ({ appointment }) => {
   return (
     <div className="appointment-card">
-      <h3>Appointment with Dr. {appointment.doctor.name}</h3>
+      <h3>Appointment with {appointment.doctor ? `Dr. ${appointment.doctor.name}` : 'Unknown Doctor'}</h3>
       <p>Date: {new Date(appointment.date).toLocaleDateString()}</p>
       <p>Time: {appointment.time}</p>
       <p>Type: {appointment.type}</p>

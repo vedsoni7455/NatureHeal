@@ -57,7 +57,8 @@ const Profile = () => {
 
     try {
       const res = await api.put('/auth/profile', formData);
-      setUser(res.data);
+      // FIXED: The API returns { user, token }, so we must set user to res.data.user
+      setUser(res.data.user);
       setMessage('Profile updated successfully!');
       setIsEditing(false);
     } catch (error) {
@@ -91,7 +92,8 @@ const Profile = () => {
             onClick={toggleEdit}
             className={`btn ${isEditing ? 'secondary' : 'primary'}`}
           >
-            {isEditing ? 'Cancel' : 'Edit Profile'}
+            <span style={{ marginRight: '0.5rem' }}>{isEditing ? '❌' : '✏️'}</span>
+            {isEditing ? 'Cancel Edit' : 'Edit Profile'}
           </button>
         </div>
 
@@ -105,7 +107,7 @@ const Profile = () => {
           <form onSubmit={handleSubmit} className="profile-form">
             {/* Basic Information */}
             <div className="form-section">
-              <h2>Basic Information</h2>
+              <h2>👤 Basic Information</h2>
               <div className="form-grid">
                 <div className="form-group">
                   <label htmlFor="name">Full Name</label>
@@ -121,7 +123,7 @@ const Profile = () => {
                 </div>
 
                 <div className="form-group">
-                  <label htmlFor="email">Email</label>
+                  <label htmlFor="email">📧 Email</label>
                   <input
                     type="email"
                     id="email"
@@ -134,7 +136,7 @@ const Profile = () => {
                 </div>
 
                 <div className="form-group">
-                  <label htmlFor="phone">Phone</label>
+                  <label htmlFor="phone">📱 Phone</label>
                   <input
                     type="tel"
                     id="phone"
@@ -146,7 +148,7 @@ const Profile = () => {
                 </div>
 
                 <div className="form-group">
-                  <label htmlFor="address">Address</label>
+                  <label htmlFor="address">📍 Address</label>
                   <textarea
                     id="address"
                     name="address"
@@ -162,10 +164,10 @@ const Profile = () => {
             {/* Role-specific Information */}
             {user.role === 'patient' && (
               <div className="form-section">
-                <h2>Health Information</h2>
+                <h2>⚕️ Health Information</h2>
                 <div className="form-grid">
                   <div className="form-group">
-                    <label htmlFor="height">Height (cm)</label>
+                    <label htmlFor="height">📏 Height (cm)</label>
                     <input
                       type="number"
                       id="height"
@@ -177,7 +179,7 @@ const Profile = () => {
                   </div>
 
                   <div className="form-group">
-                    <label htmlFor="weight">Weight (kg)</label>
+                    <label htmlFor="weight">⚖️ Weight (kg)</label>
                     <input
                       type="number"
                       id="weight"
@@ -189,7 +191,7 @@ const Profile = () => {
                   </div>
 
                   <div className="form-group">
-                    <label htmlFor="age">Age</label>
+                    <label htmlFor="age">🎂 Age</label>
                     <input
                       type="number"
                       id="age"
@@ -201,7 +203,7 @@ const Profile = () => {
                   </div>
 
                   <div className="form-group">
-                    <label htmlFor="disease">Disease/Condition</label>
+                    <label htmlFor="disease">🏥 Disease/Condition</label>
                     <input
                       type="text"
                       id="disease"
@@ -213,7 +215,7 @@ const Profile = () => {
                   </div>
 
                   <div className="form-group">
-                    <label htmlFor="diseaseDuration">Disease Duration</label>
+                    <label htmlFor="diseaseDuration">⏱️ Disease Duration</label>
                     <input
                       type="text"
                       id="diseaseDuration"
@@ -230,7 +232,7 @@ const Profile = () => {
 
             {user.role === 'doctor' && (
               <div className="form-section">
-                <h2>Professional Information</h2>
+                <h2>🩺 Professional Information</h2>
                 <div className="form-grid">
                   <div className="form-group">
                     <label htmlFor="specialization">Specialization</label>
@@ -245,7 +247,7 @@ const Profile = () => {
                   </div>
 
                   <div className="form-group">
-                    <label htmlFor="experience">Experience (years)</label>
+                    <label htmlFor="experience">⏳ Experience (years)</label>
                     <input
                       type="number"
                       id="experience"
@@ -257,7 +259,7 @@ const Profile = () => {
                   </div>
 
                   <div className="form-group">
-                    <label htmlFor="licenseNumber">License Number</label>
+                    <label htmlFor="licenseNumber">🆔 License Number</label>
                     <input
                       type="text"
                       id="licenseNumber"
@@ -273,7 +275,7 @@ const Profile = () => {
 
             {/* Account Information */}
             <div className="form-section">
-              <h2>Account Information</h2>
+              <h2>🔒 Account Information</h2>
               <div className="form-grid">
                 <div className="form-group">
                   <label>Role</label>

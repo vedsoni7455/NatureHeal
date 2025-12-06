@@ -1,8 +1,8 @@
 import axios from 'axios';
 
 const api = axios.create({
-  // Hardcoded for Android debugging to ensure it hits Render
-  baseURL: 'https://healora-backend-qrms.onrender.com/api',
+  // Use local backend for development
+  baseURL: process.env.REACT_APP_API_URL || 'http://localhost:5000/api',
 });
 
 console.log('API Configured with baseURL:', api.defaults.baseURL);

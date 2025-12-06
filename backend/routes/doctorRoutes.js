@@ -18,7 +18,6 @@ import {
 
 router.get('/', getDoctors);
 router.get('/:id/slots', getDoctorSlots);
-router.get('/:id', getDoctorById);
 router.put('/profile', protect, updateDoctorProfile);
 
 // Doctor-only routes
@@ -30,5 +29,11 @@ router.put('/availability', protect, updateDoctorAvailability);
 // Patient management routes
 router.get('/patients', protect, getDoctorPatients);
 router.get('/patients/:patientId', protect, getPatientDetails);
+
+// Get specific doctor (Must be last to avoid shadowing other routes)
+router.get('/:id', (req, res, next) => {
+  console.log(`🔍 Route /:id matched with ID: ${req.params.id}`);
+  next();
+}, getDoctorById);
 
 export default router;

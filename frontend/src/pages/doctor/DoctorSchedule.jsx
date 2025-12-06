@@ -7,9 +7,9 @@ const DoctorSchedule = () => {
     const [loading, setLoading] = useState(true);
     const [message, setMessage] = useState('');
 
-    const daysOfWeek = [
+    const daysOfWeek = React.useMemo(() => [
         'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'
-    ];
+    ], []);
 
     useEffect(() => {
         const fetchAvailability = async () => {
@@ -31,7 +31,8 @@ const DoctorSchedule = () => {
         };
 
         fetchAvailability();
-    }, []);
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [daysOfWeek]);
 
     const handleChange = (index, field, value) => {
         const newAvailability = [...availability];

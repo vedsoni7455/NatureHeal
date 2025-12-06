@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
+import api from '../utils/api'; // Import API utility
 import '../styles/symptom-checker.css';
 
 const SymptomChecker = () => {
@@ -7,6 +8,8 @@ const SymptomChecker = () => {
   const [severity, setSeverity] = useState('mild');
   const [duration, setDuration] = useState('1-3 days');
   const [results, setResults] = useState(null);
+  const [loading, setLoading] = useState(false); // Add loading state
+  const [error, setError] = useState(''); // Add error state
 
   const symptoms = [
     { id: 'headache', name: 'Headache', category: 'pain' },
@@ -35,58 +38,40 @@ const SymptomChecker = () => {
     );
   };
 
-  const analyzeSymptoms = () => {
-    // Simple analysis logic (in real app, this would be more sophisticated)
-    const symptomCount = selectedSymptoms.length;
-    const hasSevereSymptoms = selectedSymptoms.some(id =>
-      ['chest_pain', 'short_breath', 'severe_headache'].includes(id)
+  const analyzeSymptoms = async () => {
+    if (selectedSymptoms.length === 0) return;
+
+    setLoading(true);
+    setError('');
+    setResults(null);
+
+    // Map IDs to Names for better AI context
+    const symptomNames = selectedSymptoms.map(id =>
+      symptoms.find(s => s.id === id)?.name
     );
 
-    let condition = '';
-    let urgency = 'low';
-    let recommendations = [];
+    try {
+      const res = await api.post('/ai/analyze-symptoms', {
+        symptoms: symptomNames,
+        severity,
+        duration
+      });
 
-    if (hasSevereSymptoms) {
-      condition = 'Potential serious condition';
-      urgency = 'high';
-      recommendations = [
-        'Seek immediate medical attention',
-        'Call emergency services if symptoms worsen',
-        'Do not delay professional medical evaluation'
-      ];
-    } else if (symptomCount >= 3) {
-      condition = 'Multiple symptoms - possible infection or systemic issue';
-      urgency = 'medium';
-      recommendations = [
-        'Consult a healthcare professional',
-        'Monitor symptoms closely',
-        'Rest and stay hydrated'
-      ];
-    } else if (symptomCount > 0) {
-      condition = 'Mild symptoms - likely self-limiting';
-      urgency = 'low';
-      recommendations = [
-        'Try natural remedies',
-        'Rest and monitor symptoms',
-        'Consult doctor if symptoms persist'
-      ];
-    } else {
-      condition = 'No symptoms selected';
-      recommendations = ['Please select symptoms to get analysis'];
+      setResults({
+        ...res.data,
+        selectedSymptoms: symptomNames.join(', ')
+      });
+    } catch (err) {
+      console.error('Symptom Analysis Failed:', err);
+      setError('Failed to analyze symptoms. Please try again later.');
+    } finally {
+      setLoading(false);
     }
-
-    setResults({
-      condition,
-      urgency,
-      recommendations,
-      selectedSymptoms: selectedSymptoms.map(id =>
-        symptoms.find(s => s.id === id)?.name
-      ).join(', ')
-    });
   };
 
   const getUrgencyColor = (urgency) => {
-    switch (urgency) {
+    if (!urgency) return 'blue';
+    switch (urgency.toLowerCase()) {
       case 'high': return 'red';
       case 'medium': return 'orange';
       case 'low': return 'green';
@@ -98,8 +83,8 @@ const SymptomChecker = () => {
     <div className="symptom-checker-page">
       <div className="container">
         <div className="symptom-checker-hero">
-          <h1>Symptom Checker</h1>
-          <p>Understand your symptoms and get preliminary guidance. Remember, this is not a substitute for professional medical advice.</p>
+          <h1>AI Symptom Checker</h1>
+          <p>Describe your symptoms and let our advanced AI provide a preliminary assessment.</p>
         </div>
 
         <div className="symptom-checker-content">
@@ -146,33 +131,51 @@ const SymptomChecker = () => {
             <button
               className="analyze-btn"
               onClick={analyzeSymptoms}
-              disabled={selectedSymptoms.length === 0}
+              disabled={selectedSymptoms.length === 0 || loading}
             >
-              Analyze Symptoms
+              {loading ? (
+                <>
+                  <span className="spinner"></span> Analyzing...
+                </>
+              ) : (
+                'Analyze Symptoms'
+              )}
             </button>
+
+            {error && <div className="error-message" style={{ marginTop: '1rem', color: 'var(--error)' }}>{error}</div>}
           </div>
 
           {results && (
             <div className="results-section">
               <h2>Analysis Results</h2>
-              <div className={`results-card urgency-${results.urgency}`}>
+              <div className={`results-card urgency-${results.urgency?.toLowerCase() || 'medium'}`}>
                 <div className="result-header">
                   <h3>{results.condition}</h3>
                   <span className={`urgency-badge ${getUrgencyColor(results.urgency)}`}>
-                    {results.urgency.toUpperCase()} URGENCY
+                    {results.urgency?.toUpperCase()} URGENCY
                   </span>
                 </div>
 
                 <div className="result-details">
                   <p><strong>Selected Symptoms:</strong> {results.selectedSymptoms}</p>
-                  <p><strong>Severity:</strong> {severity}</p>
-                  <p><strong>Duration:</strong> {duration}</p>
+                  <p><strong>Explanation:</strong> {results.explanation}</p>
                 </div>
+
+                {results.warningSigns && results.warningSigns.length > 0 && (
+                  <div className="warning-signs" style={{ backgroundColor: '#FFF5F5', padding: '1rem', borderRadius: '8px', marginBottom: '1rem', borderLeft: '4px solid var(--error)' }}>
+                    <h4 style={{ color: 'var(--error)', marginTop: 0 }}>⚠️ Warning Signs</h4>
+                    <ul style={{ marginBottom: 0 }}>
+                      {results.warningSigns.map((sign, index) => (
+                        <li key={index}>{sign}</li>
+                      ))}
+                    </ul>
+                  </div>
+                )}
 
                 <div className="recommendations">
                   <h4>Recommendations:</h4>
                   <ul>
-                    {results.recommendations.map((rec, index) => (
+                    {results.recommendations?.map((rec, index) => (
                       <li key={index}>{rec}</li>
                     ))}
                   </ul>
@@ -182,9 +185,8 @@ const SymptomChecker = () => {
               <div className="disclaimer">
                 <h4>⚠️ Important Disclaimer</h4>
                 <p>
-                  This symptom checker is for informational purposes only and is not a substitute for professional medical advice,
-                  diagnosis, or treatment. Always seek the advice of your physician or other qualified health provider with any
-                  questions you may have regarding a medical condition.
+                  This AI symptom checker is for informational purposes only and is not a substitute for professional medical advice,
+                  diagnosis, or treatment. Always seek the advice of your physician.
                 </p>
               </div>
 

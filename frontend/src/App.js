@@ -1,5 +1,5 @@
-import React from 'react';
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import React, { useEffect } from 'react';
+import { BrowserRouter as Router, Routes, Route, useLocation } from 'react-router-dom';
 import { AuthProvider } from './context/AuthContext';
 import Navbar from './components/Navbar';
 import Footer from './components/Footer';
@@ -30,10 +30,40 @@ import './App.css';
 
 import ProtectedRoute from './components/ProtectedRoute';
 
+// --- Theme Controller Component ---
+const ThemeController = () => {
+  const location = useLocation();
+
+  useEffect(() => {
+    const path = location.pathname;
+    let theme = 'theme-nature'; // Default
+
+    if (path === '/' || path === '/about' || path === '/contact') {
+      theme = 'theme-nature';
+    } else if (path === '/login' || path === '/register') {
+      theme = 'theme-sunset';
+    } else if (path.startsWith('/dashboard/patient') || path === '/symptom-checker' || path === '/diet-planner' || path === '/chatbot' || path === '/profile') {
+      theme = 'theme-ocean';
+    } else if (path.startsWith('/dashboard/doctor') || path.startsWith('/doctor/')) {
+      theme = 'theme-professional';
+    } else if (path === '/doctors' || path === '/appointment') {
+      theme = 'theme-lavender';
+    } else if (path === '/therapies' || path === '/remedies' || path === '/mudras' || path === '/yoga-meditation') {
+      theme = 'theme-earth';
+    }
+
+    // Apply theme to body
+    document.body.className = theme;
+  }, [location]);
+
+  return null;
+};
+
 function App() {
   return (
     <AuthProvider>
       <Router>
+        <ThemeController />
         <div className="App">
           <Navbar />
           <main>

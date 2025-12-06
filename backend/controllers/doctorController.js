@@ -263,6 +263,11 @@ export const getDoctorPatients = asyncHandler(async (req, res) => {
   // Get unique patients
   const patientMap = new Map();
   for (const appointment of appointments) {
+    // Skip if patient is deleted or null
+    if (!appointment.patient) {
+      continue;
+    }
+
     const patientId = appointment.patient._id.toString();
     if (!patientMap.has(patientId)) {
       patientMap.set(patientId, {
@@ -414,8 +419,8 @@ export const getDoctorSlots = asyncHandler(async (req, res) => {
   const dayOfWeek = new Date(date).toLocaleDateString('en-US', { weekday: 'long' });
   const dayAvailability = doctorDetails.availability.find(d => d.day === dayOfWeek);
 
-  if (!dayAvailability) {
-    console.log(`No availability found for ${dayOfWeek}`);
+  if (!dayAvailability || !dayAvailability.isAvailable) {
+    console.log(`Doctor not available on ${dayOfWeek}`);
     res.json([]); // Not available on this day
     return;
   }

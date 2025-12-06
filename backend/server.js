@@ -1,10 +1,11 @@
+import "dotenv/config";
 import express from "express";
 import cors from "cors";
 import connectDB from "./config/db.js";
 
 // Debug: Check env vars again after imports
 console.log('After imports - MONGO_URI:', process.env.MONGO_URI ? 'Set' : 'Not set');
-console.log('After imports - GOOGLE_AI_API_KEY:', process.env.GOOGLE_AI_API_KEY ? 'Set' : 'Not set');
+console.log('After imports - GROQ_API_KEY:', process.env.GROQ_API_KEY ? 'Set' : 'Not set');
 
 // Check if env vars are available before connecting
 if (!process.env.MONGO_URI) {

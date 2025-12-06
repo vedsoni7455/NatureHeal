@@ -90,11 +90,16 @@ const DietPlanner = () => {
         }
       };
 
+      console.log('Sending diet plan request:', dietData);
       const response = await aiAPI.generateAIDietPlan(dietData);
+      console.log('Diet plan response:', response.data);
       setGeneratedPlan(response.data);
       setActiveTab('plan'); // Switch to plan view
     } catch (err) {
-      setError(err.response?.data?.message || 'Failed to generate diet plan. Please try again.');
+      console.error('Diet plan error:', err);
+      console.error('Error response:', err.response?.data);
+      console.error('Error status:', err.response?.status);
+      setError(err.response?.data?.error || err.response?.data?.message || 'Failed to generate diet plan. Please try again.');
     } finally {
       setLoading(false);
     }
