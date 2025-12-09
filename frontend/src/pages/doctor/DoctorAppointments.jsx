@@ -1,8 +1,10 @@
 import React, { useState, useEffect, useCallback } from 'react';
+import { useNavigate } from 'react-router-dom';
 import api from '../../utils/api';
 import '../../styles/global.css';
 
 const DoctorAppointments = () => {
+    const navigate = useNavigate();
     const [appointments, setAppointments] = useState([]);
     const [loading, setLoading] = useState(true);
     const [activeTab, setActiveTab] = useState('upcoming'); // upcoming, completed, cancelled
@@ -63,6 +65,27 @@ const DoctorAppointments = () => {
         } catch (error) {
             console.error(`Error updating appointment to ${newStatus}:`, error);
             setMessage('Failed to update appointment status.');
+        }
+    };
+
+    const [meetingLinks, setMeetingLinks] = useState({});
+
+    const handleLinkChange = (id, value) => {
+        setMeetingLinks(prev => ({ ...prev, [id]: value }));
+    };
+
+    const handleLinkSave = async (id) => {
+        try {
+            const link = meetingLinks[id];
+            if (!link) return;
+
+            await api.put(`/appointments/${id}`, { meetingLink: link });
+            setMessage('Meeting link saved successfully.');
+            // Clear the input for this ID to disable the save button or show it's done
+            fetchAppointments();
+        } catch (error) {
+            console.error('Error saving meeting link:', error);
+            setMessage('Failed to save meeting link.');
         }
     };
 
@@ -177,6 +200,94 @@ const DoctorAppointments = () => {
                                                     Accept
                                                 </button>
                                             )}
+
+                                            {/* Google Meet Link Section for Confirmed Appointments */}
+                                            {apt.status === 'confirmed' && (
+                                                <div style={{ marginBottom: '1rem', width: '100%' }}>
+                                                    {apt.meetingLink ? (
+                                                        <div style={{ marginBottom: '0.5rem' }}>
+                                                            <a
+                                                                href={apt.meetingLink.startsWith('http') ? apt.meetingLink : `https://${apt.meetingLink}`}
+                                                                target="_blank"
+                                                                rel="noopener noreferrer"
+                                                                className="btn"
+                                                                style={{
+                                                                    display: 'block',
+                                                                    textAlign: 'center',
+                                                                    padding: '0.5rem',
+                                                                    fontSize: '0.9rem',
+                                                                    background: '#34a853', // Google Green
+                                                                    color: 'white',
+                                                                    textDecoration: 'none',
+                                                                    borderRadius: '4px'
+                                                                }}
+                                                            >
+                                                                Join Google Meet
+                                                            </a>
+                                                            <button
+                                                                onClick={() => {
+                                                                    // Allow editing existing link
+                                                                    setMeetingLinks(prev => ({ ...prev, [apt._id]: apt.meetingLink }));
+                                                                    // We need a way to "unset" the link in UI to show input, 
+                                                                    // but here we can just show input below if we want to change it
+                                                                }}
+                                                                style={{ fontSize: '0.8rem', color: '#666', border: 'none', background: 'none', cursor: 'pointer', textDecoration: 'underline', marginTop: '0.25rem', width: '100%' }}
+                                                            >
+                                                                Change Link
+                                                            </button>
+                                                        </div>
+                                                    ) : (
+                                                        <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem', marginBottom: '0.5rem' }}>
+                                                            <input
+                                                                type="text"
+                                                                placeholder="Paste Google Meet Link"
+                                                                value={meetingLinks[apt._id] || ''}
+                                                                onChange={(e) => handleLinkChange(apt._id, e.target.value)}
+                                                                style={{
+                                                                    padding: '0.5rem',
+                                                                    borderRadius: '4px',
+                                                                    border: '1px solid #ccc',
+                                                                    fontSize: '0.9rem'
+                                                                }}
+                                                            />
+                                                            <button
+                                                                onClick={() => handleLinkSave(apt._id)}
+                                                                disabled={!meetingLinks[apt._id]}
+                                                                className="btn"
+                                                                style={{
+                                                                    padding: '0.5rem',
+                                                                    fontSize: '0.9rem',
+                                                                    background: !meetingLinks[apt._id] ? '#ccc' : '#4caf50',
+                                                                    color: 'white',
+                                                                    cursor: !meetingLinks[apt._id] ? 'not-allowed' : 'pointer'
+                                                                }}
+                                                            >
+                                                                Save Link
+                                                            </button>
+                                                        </div>
+                                                    )}
+
+                                                    {/* Show input if "Change Link" was clicked (implied by having value in state but meetingLink exists) */}
+                                                    {apt.meetingLink && meetingLinks[apt._id] && meetingLinks[apt._id] !== apt.meetingLink && (
+                                                        <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem', marginBottom: '0.5rem' }}>
+                                                            <input
+                                                                type="text"
+                                                                value={meetingLinks[apt._id]}
+                                                                onChange={(e) => handleLinkChange(apt._id, e.target.value)}
+                                                                style={{ padding: '0.5rem', borderRadius: '4px', border: '1px solid #ccc', fontSize: '0.9rem' }}
+                                                            />
+                                                            <button
+                                                                onClick={() => handleLinkSave(apt._id)}
+                                                                className="btn"
+                                                                style={{ padding: '0.5rem', background: '#4caf50', color: 'white' }}
+                                                            >
+                                                                Update Link
+                                                            </button>
+                                                        </div>
+                                                    )}
+                                                </div>
+                                            )}
+
                                             <button
                                                 onClick={() => handleStatusChange(apt._id, 'cancelled')}
                                                 className="btn"
@@ -185,22 +296,13 @@ const DoctorAppointments = () => {
                                                 Cancel
                                             </button>
                                             {apt.status === 'confirmed' && (
-                                                <>
-                                                    <button
-                                                        onClick={() => window.open(`/video-call/${apt._id}`, '_blank')}
-                                                        className="btn"
-                                                        style={{ padding: '0.5rem', fontSize: '0.9rem', background: '#3b82f6', color: 'white', marginBottom: '0.5rem' }}
-                                                    >
-                                                        Join Video Call
-                                                    </button>
-                                                    <button
-                                                        onClick={() => handleStatusChange(apt._id, 'completed')}
-                                                        className="btn"
-                                                        style={{ padding: '0.5rem', fontSize: '0.9rem', background: '#dbeafe', color: '#1e40af' }}
-                                                    >
-                                                        Mark Complete
-                                                    </button>
-                                                </>
+                                                <button
+                                                    onClick={() => handleStatusChange(apt._id, 'completed')}
+                                                    className="btn"
+                                                    style={{ padding: '0.5rem', fontSize: '0.9rem', background: '#dbeafe', color: '#1e40af' }}
+                                                >
+                                                    Mark Complete
+                                                </button>
                                             )}
                                         </>
                                     )}

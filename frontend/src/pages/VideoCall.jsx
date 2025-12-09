@@ -7,25 +7,68 @@ import '../styles/global.css';
 const VideoCall = () => {
     const { appointmentId } = useParams();
     const { user } = useContext(AuthContext);
-    const navigate = useNavigate();
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState('');
-    const [appointment, setAppointment] = useState(null);
 
     useEffect(() => {
         const fetchAppointment = async () => {
             try {
                 const res = await api.get(`/appointments/${appointmentId}`);
-                setAppointment(res.data);
+                const apt = res.data;
 
                 // Verify user is part of this appointment
-                if (res.data.patient._id !== user._id && res.data.doctor._id !== user._id) {
+                const userId = user._id.toString();
+                const patientId = apt.patient._id.toString();
+                const doctorId = apt.doctor._id.toString();
+
+                if (patientId !== userId && doctorId !== userId) {
                     setError('You are not authorized to join this call.');
+                    setLoading(false);
+                    return;
+                }
+
+                // Time-based access control
+                const appointmentDateTime = new Date(apt.date);
+                // Parse time string (e.g., "10:00 AM")
+                const [time, modifier] = apt.time.split(' ');
+                let [hours, minutes] = time.split(':');
+                if (hours === '12') {
+                    hours = '00';
+                }
+                if (modifier === 'PM') {
+                    hours = parseInt(hours, 10) + 12;
+                }
+
+                appointmentDateTime.setHours(hours, minutes, 0, 0);
+
+                const now = new Date();
+                const timeDiff = appointmentDateTime - now;
+                const minutesDiff = Math.floor(timeDiff / 1000 / 60);
+
+                // Allow 10 minutes before and up to duration (default 30 mins) after start
+                const duration = apt.duration || 30;
+
+                if (minutesDiff > 10) {
+                    setError(`You can join the meeting 10 minutes before the scheduled time. (Starts in ${minutesDiff} mins)`);
+                    setLoading(false);
+                    return;
+                } else if (minutesDiff < -duration) {
+                    setError('This appointment has ended.');
+                    setLoading(false);
+                    return;
+                }
+
+                if (apt.meetingLink) {
+                    // Redirect to the Google Meet link
+                    const link = apt.meetingLink.startsWith('http') ? apt.meetingLink : `https://${apt.meetingLink}`;
+                    window.location.href = link;
+                } else {
+                    setError('The doctor has not provided a video call link yet. Please check back later.');
+                    setLoading(false);
                 }
             } catch (err) {
                 console.error('Error fetching appointment:', err);
                 setError('Failed to load appointment details.');
-            } finally {
                 setLoading(false);
             }
         };
@@ -35,67 +78,18 @@ const VideoCall = () => {
         }
     }, [appointmentId, user]);
 
-    useEffect(() => {
-        if (!loading && !error && appointment) {
-            const initJitsi = () => {
-                const domain = 'meet.jit.si';
-                const options = {
-                    roomName: `Healora-Appointment-${appointmentId}`,
-                    width: '100%',
-                    height: '100%',
-                    parentNode: document.getElementById('jitsi-container'),
-                    userInfo: {
-                        displayName: user.name,
-                        email: user.email
-                    },
-                    configOverwrite: {
-                        startWithAudioMuted: false,
-                        startWithVideoMuted: false,
-                    },
-                    interfaceConfigOverwrite: {
-                        SHOW_JITSI_WATERMARK: false,
-                        SHOW_WATERMARK_FOR_GUESTS: false,
-                        TOOLBAR_BUTTONS: [
-                            'microphone', 'camera', 'closedcaptions', 'desktop', 'fullscreen',
-                            'fodeviceselection', 'hangup', 'profile', 'chat', 'recording',
-                            'livestreaming', 'etherpad', 'sharedvideo', 'settings', 'raisehand',
-                            'videoquality', 'filmstrip', 'invite', 'feedback', 'stats', 'shortcuts',
-                            'tileview', 'videobackgroundblur', 'download', 'help', 'mute-everyone',
-                            'security'
-                        ],
-                    },
-                };
-
-                const api = new window.JitsiMeetExternalAPI(domain, options);
-
-                api.addEventListeners({
-                    videoConferenceLeft: () => {
-                        navigate(user.role === 'doctor' ? '/doctor/appointments' : '/dashboard/patient');
-                    },
-                });
-            };
-
-            // Load Jitsi script
-            const script = document.createElement('script');
-            script.src = 'https://meet.jit.si/external_api.js';
-            script.async = true;
-            script.onload = initJitsi;
-            document.body.appendChild(script);
-
-            return () => {
-                document.body.removeChild(script);
-            };
-        }
-    }, [loading, error, appointment, appointmentId, user, navigate]);
-
-    if (loading) return <div className="loading">Loading call details...</div>;
-    if (error) return <div className="error-message" style={{ padding: '2rem', textAlign: 'center' }}>{error}</div>;
-
-    return (
-        <div style={{ height: 'calc(100vh - 80px)', width: '100%', background: '#000' }}>
-            <div id="jitsi-container" style={{ height: '100%', width: '100%' }}></div>
+    if (loading) return <div className="loading">Redirecting to video call...</div>;
+    if (error) return (
+        <div className="error-message" style={{ padding: '2rem', textAlign: 'center' }}>
+            <h2>Video Call Unavailable</h2>
+            <p>{error}</p>
+            <button onClick={() => window.history.back()} style={{ marginTop: '1rem', padding: '0.5rem 1rem', cursor: 'pointer' }}>
+                Go Back
+            </button>
         </div>
     );
+
+    return null;
 };
 
 export default VideoCall;
