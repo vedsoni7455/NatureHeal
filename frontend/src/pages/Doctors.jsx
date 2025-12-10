@@ -15,30 +15,30 @@ const Doctors = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
 
+  const fetchDoctors = React.useCallback(async () => {
+    try {
+      setLoading(true);
+      const params = new URLSearchParams({
+        pageNumber: currentPage,
+        ...filters
+      });
+
+      const res = await api.get(`/doctor?${params}`);
+      setDoctors(res.data.doctors || []);
+      setTotalPages(res.data.pages || 1);
+      setError('');
+    } catch (error) {
+      console.error('Error fetching doctors:', error);
+      setDoctors([]);
+      setError('Failed to load doctors. Please try again.');
+    } finally {
+      setLoading(false);
+    }
+  }, [currentPage, filters]);
+
   useEffect(() => {
-    const fetchDoctors = async () => {
-      try {
-        setLoading(true);
-        const params = new URLSearchParams({
-          pageNumber: currentPage,
-          ...filters
-        });
-
-        const res = await api.get(`/doctor?${params}`);
-        setDoctors(res.data.doctors || []);
-        setTotalPages(res.data.pages || 1);
-        setError('');
-      } catch (error) {
-        console.error('Error fetching doctors:', error);
-        setDoctors([]);
-        setError('Failed to load doctors. Please try again.');
-      } finally {
-        setLoading(false);
-      }
-    };
-
     fetchDoctors();
-  }, [filters, currentPage]);
+  }, [fetchDoctors]);
 
   const handleFilterChange = (e) => {
     const { name, value } = e.target;

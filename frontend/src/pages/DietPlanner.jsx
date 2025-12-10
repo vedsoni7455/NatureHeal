@@ -27,10 +27,10 @@ const DietPlanner = () => {
     const steps = 60;
     const increment = duration / steps;
 
-    let currentStep = 0;
+    let step = 0;
     const timer = setInterval(() => {
-      currentStep++;
-      const progress = currentStep / steps;
+      step++;
+      const progress = step / steps;
 
       setAnimatedStats({
         users: Math.floor(targetStats.users * progress),
@@ -38,7 +38,7 @@ const DietPlanner = () => {
         satisfaction: Math.floor(targetStats.satisfaction * progress)
       });
 
-      if (currentStep >= steps) {
+      if (step >= steps) {
         clearInterval(timer);
         setAnimatedStats(targetStats);
       }
