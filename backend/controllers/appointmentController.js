@@ -28,12 +28,15 @@ export const getAppointments = asyncHandler(async (req, res) => {
   if (type) query.type = type;
 
   const count = await Appointment.countDocuments(query);
-  const appointments = await Appointment.find(query)
+  const rawAppointments = await Appointment.find(query)
     .populate('patient', 'name email phone')
     .populate('doctor', 'name email specialization phone')
     .limit(pageSize)
     .skip(pageSize * (page - 1))
     .sort({ date: -1, time: -1 });
+
+  // Filter out appointments where patient or doctor is null (deleted users)
+  const appointments = rawAppointments.filter(apt => apt.patient && apt.doctor);
 
   res.json({
     appointments,
@@ -52,6 +55,12 @@ export const getAppointmentById = asyncHandler(async (req, res) => {
     .populate('doctor', 'name email specialization phone address');
 
   if (appointment) {
+    // Check if patient or doctor exists (in case they were deleted)
+    if (!appointment.patient || !appointment.doctor) {
+      res.status(404);
+      throw new Error('Appointment details incomplete (User may be deleted)');
+    }
+
     // Check if user is authorized
     if (req.user.role !== 'admin' &&
       appointment.patient._id.toString() !== req.user._id.toString() &&
