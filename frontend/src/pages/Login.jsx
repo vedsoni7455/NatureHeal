@@ -4,23 +4,18 @@ import AuthContext from '../context/AuthContext';
 
 const Login = () => {
   const [formData, setFormData] = useState({ email: '', password: '', role: 'patient' });
-  const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
-  const { login } = useContext(AuthContext);
+  const { login, user, loading } = useContext(AuthContext);
   const navigate = useNavigate();
 
   // Redirect if already logged in
   useEffect(() => {
-    // If user is already logged in, redirect them based on their role
-    // This prevents a logged-in patient from seeing the doctor login screen and vice versa
-    const savedUser = localStorage.getItem('user') || sessionStorage.getItem('user');
-    if (savedUser) {
-      const parsedUser = JSON.parse(savedUser);
-      if (parsedUser.role === 'doctor') navigate('/dashboard/doctor');
-      else if (parsedUser.role === 'admin') navigate('/dashboard/admin');
+    if (!loading && user) {
+      if (user.role === 'doctor') navigate('/dashboard/doctor');
+      else if (user.role === 'admin') navigate('/dashboard/admin');
       else navigate('/');
     }
-  }, [navigate]);
+  }, [user, loading, navigate]);
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -33,45 +28,47 @@ const Login = () => {
     setError('');
 
     try {
-      const user = await login(formData.email, formData.password);
+      const loggedInUser = await login(formData.email, formData.password);
 
       // Enforce Role Match
-      if (user.role !== formData.role) {
+      if (loggedInUser.role !== formData.role) {
         // Automatically logout if role doesn't match to clear the session
-        // This effectively "blocks" the login
-        localStorage.removeItem('user');
         localStorage.removeItem('token');
-        sessionStorage.removeItem('user');
-        sessionStorage.removeItem('token');
 
-        throw new Error(`Unauthorized: This account is registered as a ${user.role}, not a ${formData.role}.`);
+        throw new Error(`Unauthorized: This account is registered as a ${loggedInUser.role}, not a ${formData.role}.`);
       }
 
       // Redirect based on role
-      if (user.role === 'doctor') {
+      if (loggedInUser.role === 'doctor') {
         navigate('/dashboard/doctor'); // Direct to doctor dashboard
-      } else if (user.role === 'admin') {
+      } else if (loggedInUser.role === 'admin') {
         navigate('/dashboard/admin');
       } else {
-        navigate('/', { state: { welcomeMessage: `Welcome back, ${user.name}!` } });
+        navigate('/', { state: { welcomeMessage: `Welcome back, ${loggedInUser.name}!` } });
       }
     } catch (error) {
-      console.error('Login Error:', error);
+      console.error('Login Error Full Object:', error);
+      if (error.response) {
+        console.error('Server Response Data:', error.response.data);
+        console.error('Server Response Status:', error.response.status);
+      }
+
       let errorMsg = 'Login failed';
 
       if (error.response) {
         // Server responded with a status code outside 2xx
-        errorMsg = `Server Error (${error.response.status}): ${error.response.data?.message || error.response.statusText}`;
+        errorMsg = `Server Error (${error.response.status}): ${error.response.data?.message || 'Unknown server error'}`;
       } else if (error.request) {
         // Request was made but no response received
-        errorMsg = `Network Error: No response from server. URL: ${error.config?.baseURL || ''}${error.config?.url || ''}`;
+        errorMsg = `Network Error: No response from server. Please check your internet connection.`;
       } else {
         // Something happened in setting up the request
-        errorMsg = `Error: ${error.message}`;
+        errorMsg = error.message;
       }
 
       setError(errorMsg);
     } finally {
+      // Only set loading to false if we didn't redirect (component might unmount on redirect)
       setLoading(false);
     }
   };
