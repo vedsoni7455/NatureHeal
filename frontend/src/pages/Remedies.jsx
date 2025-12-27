@@ -1,6 +1,10 @@
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
+import '../styles/remedies.css';
+import AuthContext from '../context/AuthContext';
+import api from '../utils/api';
 
 const Remedies = () => {
+  const { user } = useContext(AuthContext);
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedCategory, setSelectedCategory] = useState('all');
 
@@ -97,10 +101,25 @@ const Remedies = () => {
 
   const filteredRemedies = remedies.filter(remedy => {
     const matchesSearch = remedy.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                         remedy.description.toLowerCase().includes(searchTerm.toLowerCase());
+      remedy.description.toLowerCase().includes(searchTerm.toLowerCase());
     const matchesCategory = selectedCategory === 'all' || remedy.category === selectedCategory;
     return matchesSearch && matchesCategory;
   });
+
+  const handleSaveRemedy = async (remedy) => {
+    if (!user) {
+      alert('Please login to save remedies');
+      return;
+    }
+
+    try {
+      await api.post('/user/saved-remedies', remedy);
+      alert('Remedy saved successfully!');
+    } catch (error) {
+      console.error(error);
+      alert(error.response?.data?.message || 'Error saving remedy');
+    }
+  };
 
   return (
     <div className="remedies-page">
@@ -204,7 +223,10 @@ const Remedies = () => {
                 </div>
 
                 <div className="card-actions">
-                  <button className="remedy-btn">
+                  <button
+                    className="remedy-btn"
+                    onClick={() => handleSaveRemedy(remedy)}
+                  >
                     <span>📋</span> Save Remedy
                   </button>
                 </div>

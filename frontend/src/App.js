@@ -21,6 +21,7 @@ import ChatbotPage from './pages/ChatbotPage';
 import Profile from './pages/Profile';
 import SymptomChecker from './pages/SymptomChecker';
 import DietPlanner from './pages/DietPlanner';
+import DoctorProfilePublic from './pages/DoctorProfilePublic';
 import DoctorProfile from './pages/doctor/DoctorProfile';
 import DoctorAppointments from './pages/doctor/DoctorAppointments';
 import DoctorSchedule from './pages/doctor/DoctorSchedule';
@@ -66,7 +67,7 @@ function App() {
         <ThemeController />
         <div className="App">
           <Navbar />
-          <main>
+          <main className="main-content">
             <Routes>
               <Route path="/" element={<Home />} />
               <Route path="/about" element={<AboutUs />} />
@@ -81,6 +82,7 @@ function App() {
 
               <Route path="/appointment" element={<ProtectedRoute><AppointmentForm /></ProtectedRoute>} />
               <Route path="/doctors" element={<ProtectedRoute><Doctors /></ProtectedRoute>} />
+              <Route path="/doctor/:id" element={<ProtectedRoute><DoctorProfilePublic /></ProtectedRoute>} />
               <Route path="/remedies" element={<ProtectedRoute><Remedies /></ProtectedRoute>} />
               <Route path="/therapies" element={<ProtectedRoute><AlternativeTherapies /></ProtectedRoute>} />
               <Route path="/mudras" element={<ProtectedRoute><Mudras /></ProtectedRoute>} />

@@ -111,6 +111,14 @@
 }
 
 
+
+/* --- LAYOUT UTILITIES --- */
+.main-content {
+  padding-top: 80px;
+  /* Navbar approx 60px + 20px gap */
+  min-height: calc(100vh - 60px);
+}
+
 /* --- GLOBAL RESET & BASE STYLES --- */
 
 * {
@@ -590,7 +598,8 @@ a:hover {
 /* Slide/Home Overrides */
 .home {
   min-height: 100vh;
-  padding-top: 60px;
+  /* padding-top: 60px; */
+  /* Removed to avoid double padding with .main-content */
 }
 
 .hero-slideshow {

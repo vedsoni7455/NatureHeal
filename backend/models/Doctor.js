@@ -43,6 +43,15 @@ const doctorSchema = new mongoose.Schema({
   },
   languages: [String],
   certifications: [String],
+  verificationStatus: {
+    type: String,
+    enum: ['Verified', 'Pending', 'Not Submitted'],
+    default: 'Not Submitted'
+  },
+  certificateImage: {
+    type: String,
+    default: ''
+  }
 }, {
   timestamps: true,
 });

@@ -12,10 +12,10 @@ const Footer = () => {
             <p className="footer-tagline">Promoting Natural Health through Naturopathy and Homeopathy.</p>
             <p className="footer-desc">Your trusted partner in holistic wellness and natural healing solutions.</p>
             <div className="social-icons">
-              <a href="#" className="social-icon"><span>📱</span></a>
-              <a href="#" className="social-icon"><span>🐦</span></a>
-              <a href="#" className="social-icon"><span>📸</span></a>
-              <a href="#" className="social-icon"><span>💼</span></a>
+              <span className="social-icon"><span>📱</span></span>
+              <span className="social-icon"><span>🐦</span></span>
+              <span className="social-icon"><span>📸</span></span>
+              <span className="social-icon"><span>💼</span></span>
             </div>
           </div>
 
@@ -45,7 +45,7 @@ const Footer = () => {
             <ul className="contact-list">
               <li>
                 <span className="contact-icon">📧</span>
-                <a href="mailto:support@healora.com">support@healora.com</a>
+                <a href="mailto:healora8144@gmail.com">healora8144@gmail.com</a>
               </li>
               <li>
                 <span className="contact-icon">📞</span>
@@ -62,9 +62,9 @@ const Footer = () => {
         <div className="footer-bottom">
           <p>&copy; {new Date().getFullYear()} Healora. All rights reserved.</p>
           <div className="footer-legal">
-            <a href="#">Privacy Policy</a>
-            <a href="#">Terms of Service</a>
-            <a href="#">Cookie Policy</a>
+            <Link to="/privacy">Privacy Policy</Link>
+            <Link to="/terms">Terms of Service</Link>
+            <Link to="/cookies">Cookie Policy</Link>
           </div>
         </div>
       </div>

@@ -9,6 +9,7 @@ const DoctorProfile = () => {
     const navigate = useNavigate();
     const [loading, setLoading] = useState(true);
     const [message, setMessage] = useState('');
+    const [doctorDetails, setDoctorDetails] = useState({});
     const [formData, setFormData] = useState({
         name: '',
         email: '',
@@ -68,6 +69,37 @@ const DoctorProfile = () => {
         setFormData({ ...formData, [e.target.name]: e.target.value });
     };
 
+    const uploadFileHandler = async (e) => {
+        const file = e.target.files[0];
+        const formDataUpload = new FormData();
+        formDataUpload.append('image', file);
+        setLoading(true);
+
+        try {
+            const config = {
+                headers: {
+                    'Content-Type': 'multipart/form-data',
+                },
+            };
+
+            const { data } = await api.post('/upload', formDataUpload, config);
+
+            // Set the returned image path to state
+            // Note: Since we are saving to frontend/public/uploads, the path returned is /uploads/filename
+            setDoctorDetails(prev => ({
+                ...prev,
+                certificateImage: data
+            }));
+
+            setLoading(false);
+            setMessage('Certificate uploaded successfully (click Save Changes to confirm)');
+        } catch (error) {
+            console.error(error);
+            setLoading(false);
+            setMessage('File upload failed');
+        }
+    };
+
     const handleSubmit = async (e) => {
         e.preventDefault();
         setMessage('');
@@ -78,6 +110,7 @@ const DoctorProfile = () => {
             const dataToSubmit = {
                 ...formData,
                 languages: formData.languages.split(',').map(lang => lang.trim()).filter(lang => lang),
+                certificateImage: doctorDetails?.certificateImage // Include the certificate image path
             };
 
             await api.put('/doctor/profile', dataToSubmit);
@@ -276,6 +309,37 @@ const DoctorProfile = () => {
                                 fontFamily: 'inherit'
                             }}
                         />
+                    </div>
+
+                    <div className="form-group" style={{ marginTop: '20px' }}>
+                        <label>Verification Certificate</label>
+                        <p style={{ fontSize: '0.9rem', color: '#666', marginBottom: '10px' }}>
+                            Upload your medical license or certificate to get the "Verified" badge.
+                        </p>
+
+                        {doctorDetails?.certificateImage && (
+                            <div style={{ marginBottom: '10px' }}>
+                                <p style={{ color: 'green', display: 'flex', alignItems: 'center', gap: '5px' }}>
+                                    ✅ Certificate Uploaded
+                                </p>
+                                <img
+                                    src={doctorDetails.certificateImage}
+                                    alt="Current Certificate"
+                                    style={{ height: '100px', border: '1px solid #ddd', marginTop: '5px' }}
+                                />
+                            </div>
+                        )}
+
+                        <div className="input-wrapper">
+                            <span className="input-icon">📎</span>
+                            <input
+                                type="file"
+                                id="certificate-file"
+                                onChange={uploadFileHandler}
+                                accept="image/png, image/jpeg, image/jpg"
+                                style={{ padding: '10px' }}
+                            />
+                        </div>
                     </div>
 
                     <div className="form-actions" style={{ display: 'flex', gap: '1rem', marginTop: '1rem' }}>

@@ -8,7 +8,7 @@ export const AuthProvider = ({ children }) => {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const token = localStorage.getItem('token');
+    const token = sessionStorage.getItem('token');
     if (token) {
       api.defaults.headers.common['Authorization'] = `Bearer ${token}`;
       // Verify token and get user data
@@ -24,7 +24,7 @@ export const AuthProvider = ({ children }) => {
       setUser(res.data);
     } catch (error) {
       // Token is invalid, remove it
-      localStorage.removeItem('token');
+      sessionStorage.removeItem('token');
       delete api.defaults.headers.common['Authorization'];
     } finally {
       setLoading(false);
@@ -34,7 +34,7 @@ export const AuthProvider = ({ children }) => {
   const login = async (email, password) => {
     const res = await api.post('/auth/login', { email, password });
     const { token, user } = res.data;
-    localStorage.setItem('token', token);
+    sessionStorage.setItem('token', token);
     api.defaults.headers.common['Authorization'] = `Bearer ${token}`;
     setUser(user);
     return user;
@@ -43,14 +43,14 @@ export const AuthProvider = ({ children }) => {
   const register = async (userData) => {
     const res = await api.post('/auth/register', userData);
     const { token, user } = res.data;
-    localStorage.setItem('token', token);
+    sessionStorage.setItem('token', token);
     api.defaults.headers.common['Authorization'] = `Bearer ${token}`;
     setUser(user);
     return user;
   };
 
   const logout = () => {
-    localStorage.removeItem('token');
+    sessionStorage.removeItem('token');
     delete api.defaults.headers.common['Authorization'];
     setUser(null);
   };

@@ -13,14 +13,17 @@ const DashboardPatient = () => {
     upcomingAppointments: 0,
     completedAppointments: 0
   });
+  const [savedRemedies, setSavedRemedies] = useState([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const fetchData = async () => {
       try {
         const res = await api.get('/appointments');
+        const remediesRes = await api.get('/user/saved-remedies');
         // Backend already filters appointments by user role, no need to filter again
         setAppointments(res.data.appointments || []);
+        setSavedRemedies(remediesRes.data || []);
 
         // Calculate stats
         const now = new Date();
@@ -245,6 +248,35 @@ const DashboardPatient = () => {
               <h3>No appointments yet</h3>
               <p>Book your first consultation to start your healing journey</p>
               <Link to="/appointment" className="cta-btn">Book Appointment</Link>
+            </div>
+          )}
+        </div>
+
+        {/* Saved Remedies Card */}
+        <div className="dashboard-card remedies-card">
+          <div className="card-header">
+            <h2>Saved Remedies</h2>
+            <Link to="/remedies" className="view-all-link">Browse More</Link>
+          </div>
+
+          {savedRemedies.length > 0 ? (
+            <div className="saved-remedies-list">
+              {savedRemedies.map((remedy) => (
+                <div key={remedy._id} className="saved-remedy-item">
+                  <span className="remedy-icon">{remedy.icon}</span>
+                  <div className="remedy-info">
+                    <h4>{remedy.title}</h4>
+                    <span className="remedy-category">{remedy.category}</span>
+                  </div>
+                </div>
+              ))}
+            </div>
+          ) : (
+            <div className="empty-state">
+              <div className="empty-icon">🌿</div>
+              <h3>No saved remedies</h3>
+              <p>Save remedies from the Remedies page for quick access</p>
+              <Link to="/remedies" className="cta-btn">Explore Remedies</Link>
             </div>
           )}
         </div>

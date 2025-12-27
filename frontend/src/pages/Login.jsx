@@ -1,4 +1,4 @@
-import React, { useState, useContext } from 'react';
+import React, { useState, useContext, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import AuthContext from '../context/AuthContext';
 
@@ -8,6 +8,19 @@ const Login = () => {
   const [error, setError] = useState('');
   const { login } = useContext(AuthContext);
   const navigate = useNavigate();
+
+  // Redirect if already logged in
+  useEffect(() => {
+    // If user is already logged in, redirect them based on their role
+    // This prevents a logged-in patient from seeing the doctor login screen and vice versa
+    const savedUser = localStorage.getItem('user') || sessionStorage.getItem('user');
+    if (savedUser) {
+      const parsedUser = JSON.parse(savedUser);
+      if (parsedUser.role === 'doctor') navigate('/dashboard/doctor');
+      else if (parsedUser.role === 'admin') navigate('/dashboard/admin');
+      else navigate('/');
+    }
+  }, [navigate]);
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -21,6 +34,18 @@ const Login = () => {
 
     try {
       const user = await login(formData.email, formData.password);
+
+      // Enforce Role Match
+      if (user.role !== formData.role) {
+        // Automatically logout if role doesn't match to clear the session
+        // This effectively "blocks" the login
+        localStorage.removeItem('user');
+        localStorage.removeItem('token');
+        sessionStorage.removeItem('user');
+        sessionStorage.removeItem('token');
+
+        throw new Error(`Unauthorized: This account is registered as a ${user.role}, not a ${formData.role}.`);
+      }
 
       // Redirect based on role
       if (user.role === 'doctor') {

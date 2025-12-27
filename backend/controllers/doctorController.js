@@ -114,6 +114,16 @@ export const updateDoctorProfile = asyncHandler(async (req, res) => {
     doctorDetails.certifications = req.body.certifications || doctorDetails.certifications;
     doctorDetails.availability = req.body.availability || doctorDetails.availability;
 
+    // Update certificate if provided
+    if (req.body.certificateImage) {
+      doctorDetails.certificateImage = req.body.certificateImage;
+      // If a new certificate is uploaded, reset status to Pending (unless it was already verified, but usually re-upload means re-verify)
+      // For now, let's set it to Pending to trigger admin review
+      if (doctorDetails.verificationStatus !== 'Verified') {
+        doctorDetails.verificationStatus = 'Pending';
+      }
+    }
+
     await doctorDetails.save();
 
     res.json({

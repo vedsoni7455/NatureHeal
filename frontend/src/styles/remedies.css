@@ -1,0 +1,457 @@
+/* Remedies Page - Premium Design */
+
+.remedies-page {
+    min-height: 100vh;
+    padding-bottom: 4rem;
+}
+
+/* Hero Section */
+.page-hero {
+    position: relative;
+    padding: 4rem 2rem;
+    text-align: center;
+    overflow: hidden;
+    margin-bottom: 2rem;
+    background: radial-gradient(circle at top right, rgba(16, 185, 129, 0.1), transparent 40%),
+        radial-gradient(circle at bottom left, rgba(5, 150, 105, 0.05), transparent 40%);
+}
+
+.hero-content {
+    position: relative;
+    z-index: 2;
+    max-width: 900px;
+    margin: 0 auto;
+}
+
+.page-hero h1 {
+    font-size: 3.5rem;
+    margin-bottom: 1.5rem;
+    background: linear-gradient(135deg, var(--primary-700), var(--primary-500));
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    animation: fadeInDown 0.8s ease-out;
+}
+
+.page-hero p {
+    font-size: 1.25rem;
+    color: var(--text-main);
+    opacity: 0.8;
+    max-width: 700px;
+    margin: 0 auto 3rem;
+    line-height: 1.6;
+    animation: fadeInUp 0.8s ease-out 0.2s backwards;
+}
+
+.hero-stats {
+    display: flex;
+    justify-content: center;
+    gap: 3rem;
+    flex-wrap: wrap;
+    animation: fadeInUp 0.8s ease-out 0.4s backwards;
+}
+
+.stat {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.stat-number {
+    font-size: 2.5rem;
+    font-weight: 700;
+    color: var(--primary-600);
+}
+
+.stat-label {
+    font-size: 0.9rem;
+    color: var(--text-muted);
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+/* Floating Elements */
+.hero-visual {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 1;
+}
+
+.floating-elements {
+    width: 100%;
+    height: 100%;
+    position: relative;
+}
+
+.floating-icon {
+    position: absolute;
+    font-size: 3rem;
+    opacity: 0.15;
+    animation: float 8s ease-in-out infinite;
+}
+
+.floating-icon:nth-child(1) {
+    top: 15%;
+    left: 10%;
+    animation-delay: 0s;
+}
+
+.floating-icon:nth-child(2) {
+    top: 25%;
+    right: 15%;
+    animation-delay: 2s;
+}
+
+.floating-icon:nth-child(3) {
+    bottom: 20%;
+    left: 20%;
+    animation-delay: 4s;
+}
+
+.floating-icon:nth-child(4) {
+    bottom: 30%;
+    right: 10%;
+    animation-delay: 1s;
+}
+
+/* Search & Filter Section */
+.search-filter-section {
+    max-width: 1200px;
+    margin: 0 auto 3rem;
+    padding: 0 1.5rem;
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+    align-items: center;
+}
+
+.search-container {
+    width: 100%;
+    max-width: 600px;
+}
+
+.search-input-wrapper {
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+
+.search-icon {
+    position: absolute;
+    left: 1.5rem;
+    font-size: 1.2rem;
+    color: var(--text-muted);
+    pointer-events: none;
+}
+
+.search-input {
+    width: 100%;
+    padding: 1.25rem 1.25rem 1.25rem 3.5rem;
+    font-size: 1.1rem;
+    border: none;
+    border-radius: 50px;
+    background: white;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+    transition: all 0.3s ease;
+}
+
+.search-input:focus {
+    outline: none;
+    box-shadow: 0 15px 40px rgba(16, 185, 129, 0.15);
+    transform: translateY(-2px);
+}
+
+.category-filters {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 1rem;
+}
+
+.filter-btn {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.75rem 1.5rem;
+    border: none;
+    border-radius: 50px;
+    background: white;
+    color: var(--text-muted);
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+}
+
+.filter-btn:hover {
+    transform: translateY(-2px);
+    color: var(--primary-600);
+}
+
+.filter-btn.active {
+    background: var(--primary-500);
+    color: white;
+    box-shadow: 0 8px 20px rgba(16, 185, 129, 0.3);
+}
+
+/* Remedies List */
+.remedies-section {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 1.5rem;
+}
+
+.remedies-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+    gap: 2rem;
+}
+
+.remedy-card {
+    background: rgba(255, 255, 255, 0.7);
+    backdrop-filter: blur(12px);
+    border-radius: 24px;
+    padding: 2rem;
+    border: 1px solid rgba(255, 255, 255, 0.5);
+    box-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.05);
+    transition: all 0.3s ease;
+    display: flex;
+    flex-direction: column;
+}
+
+.remedy-card:hover {
+    transform: translateY(-10px);
+    box-shadow: 0 20px 40px -10px rgba(0, 0, 0, 0.1);
+    background: white;
+}
+
+.card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 1.5rem;
+}
+
+.card-icon {
+    font-size: 2.5rem;
+    background: var(--off-white);
+    width: 70px;
+    height: 70px;
+    border-radius: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.category-badge {
+    padding: 0.4rem 1rem;
+    border-radius: 50px;
+    font-size: 0.8rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.category-badge.respiratory {
+    background: #E0F2F1;
+    color: #00897B;
+}
+
+.category-badge.digestive {
+    background: #FFF3E0;
+    color: #FB8C00;
+}
+
+.category-badge.pain {
+    background: #FFEBEE;
+    color: #E53935;
+}
+
+.category-badge.sleep {
+    background: #E8EAF6;
+    color: #3949AB;
+}
+
+.category-badge.skin {
+    background: #FCE4EC;
+    color: #D81B60;
+}
+
+.category-badge.energy {
+    background: #FFF8E1;
+    color: #FBC02D;
+}
+
+.card-content h3 {
+    font-size: 1.5rem;
+    margin-bottom: 0.5rem;
+    color: var(--text-main);
+}
+
+.card-content .description {
+    color: var(--text-muted);
+    font-size: 1rem;
+    margin-bottom: 1.5rem;
+}
+
+.remedies-list h4,
+.precautions h4 {
+    font-size: 1rem;
+    color: var(--text-main);
+    margin-bottom: 0.75rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.remedies-list ul {
+    list-style: none;
+    margin-bottom: 1.5rem;
+}
+
+.remedies-list li {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.75rem;
+    margin-bottom: 0.5rem;
+    font-size: 0.95rem;
+    color: var(--off-black-light);
+}
+
+.remedy-check {
+    color: var(--success);
+    font-weight: 800;
+}
+
+.precautions {
+    background: rgba(254, 242, 242, 0.7);
+    padding: 1rem;
+    border-radius: 12px;
+    border-left: 4px solid var(--error);
+}
+
+.precautions p {
+    font-size: 0.9rem;
+    color: #7F1D1D;
+    margin: 0;
+}
+
+.card-actions {
+    margin-top: auto;
+    padding-top: 1.5rem;
+}
+
+.remedy-btn {
+    width: 100%;
+    padding: 1rem;
+    border: none;
+    border-radius: 12px;
+    background: var(--off-white);
+    color: var(--text-main);
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.remedy-btn:hover {
+    background: var(--neutral-100);
+}
+
+/* Tips Section */
+.tips-section {
+    max-width: 1200px;
+    margin: 6rem auto 0;
+    padding: 0 1.5rem;
+}
+
+.tips-section h2 {
+    text-align: center;
+    font-size: 2.5rem;
+    margin-bottom: 3rem;
+    background: linear-gradient(135deg, var(--text-main), var(--text-muted));
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+.tips-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 2rem;
+}
+
+.tip-card {
+    background: white;
+    padding: 2rem;
+    border-radius: 20px;
+    text-align: center;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+    transition: transform 0.3s ease;
+}
+
+.tip-card:hover {
+    transform: translateY(-5px);
+}
+
+.tip-icon {
+    font-size: 2.5rem;
+    margin-bottom: 1rem;
+    display: inline-block;
+}
+
+.tip-card h3 {
+    font-size: 1.25rem;
+    margin-bottom: 0.75rem;
+    color: var(--primary-dark);
+}
+
+.tip-card p {
+    font-size: 0.95rem;
+    color: var(--text-muted);
+}
+
+/* Animations */
+@keyframes fadeInDown {
+    from {
+        opacity: 0;
+        transform: translateY(-30px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes float {
+
+    0%,
+    100% {
+        transform: translateY(0);
+    }
+
+    50% {
+        transform: translateY(-20px);
+    }
+}

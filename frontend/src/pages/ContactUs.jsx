@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import '../styles/contact.css';
 
 const ContactUs = () => {
   const [formData, setFormData] = useState({
@@ -8,6 +9,9 @@ const ContactUs = () => {
     message: ''
   });
 
+  const [status, setStatus] = useState(null); // null, 'success', 'error'
+  const [loading, setLoading] = useState(false);
+
   const handleChange = (e) => {
     setFormData({
       ...formData,
@@ -15,17 +19,42 @@ const ContactUs = () => {
     });
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    // Handle form submission here
-    console.log('Form submitted:', formData);
-    alert('Thank you for your message! We will get back to you soon.');
-    setFormData({
-      name: '',
-      email: '',
-      subject: '',
-      message: ''
-    });
+    setLoading(true);
+    setStatus(null);
+
+    try {
+      const response = await fetch('http://localhost:5000/api/contact', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(formData),
+      });
+
+      const data = await response.json();
+
+      if (response.ok) {
+        setStatus('success');
+        alert('Thank you for your message! We will get back to you soon.');
+        setFormData({
+          name: '',
+          email: '',
+          subject: '',
+          message: ''
+        });
+      } else {
+        setStatus('error');
+        alert(data.message || 'Something went wrong. Please try again.');
+      }
+    } catch (error) {
+      console.error('Error submitting form:', error);
+      setStatus('error');
+      alert('Network error. Please try again later.');
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -64,7 +93,7 @@ const ContactUs = () => {
                 <span className="contact-icon">📧</span>
                 <div className="contact-details">
                   <h3>Email Us</h3>
-                  <p>support@healora.com</p>
+                  <p>healora8144@gmail.com</p>
                   <p>info@healora.com</p>
                 </div>
               </div>

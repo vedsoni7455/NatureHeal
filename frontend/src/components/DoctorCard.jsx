@@ -4,6 +4,14 @@ import { Link } from 'react-router-dom';
 const DoctorCard = ({ doctor }) => {
   const doctorDetails = doctor.doctorDetails || {};
 
+  /* Modal State */
+  const [showCertificate, setShowCertificate] = React.useState(false);
+
+  const toggleCertificate = (e) => {
+    e.preventDefault();
+    setShowCertificate(!showCertificate);
+  };
+
   return (
     <div className="doctor-card">
       <div className="doctor-header">
@@ -15,7 +23,14 @@ const DoctorCard = ({ doctor }) => {
           )}
         </div>
         <div className="doctor-info">
-          <h3>Dr. {doctor.name}</h3>
+          <div className="name-wrapper">
+            <h3>Dr. {doctor.name}</h3>
+            {doctorDetails.verificationStatus === 'Verified' && (
+              <span className="verified-badge" title="Verified Doctor">
+                ✅
+              </span>
+            )}
+          </div>
           <p className="specialization">{doctor.specialization}</p>
           <div className="doctor-meta">
             <span className="experience">{doctor.experience} years experience</span>
@@ -69,6 +84,18 @@ const DoctorCard = ({ doctor }) => {
             <strong>Certifications:</strong> {doctorDetails.certifications.join(', ')}
           </div>
         )}
+
+        {/* Verification Certificate Link */}
+        {doctorDetails.verificationStatus === 'Verified' && doctorDetails.certificateImage && (
+          <div className="certificate-link">
+            <button
+              onClick={toggleCertificate}
+              className="view-cert-btn"
+            >
+              📜 View Certificate
+            </button>
+          </div>
+        )}
       </div>
 
       <div className="doctor-actions">
@@ -79,6 +106,20 @@ const DoctorCard = ({ doctor }) => {
           View Profile
         </Link>
       </div>
+
+      {/* Certificate Modal */}
+      {showCertificate && (
+        <div className="cert-modal-overlay" onClick={toggleCertificate}>
+          <div className="cert-modal-content" onClick={e => e.stopPropagation()}>
+            <button className="cert-modal-close" onClick={toggleCertificate}>×</button>
+            <img
+              src={doctorDetails.certificateImage}
+              alt={`Certificate for Dr. ${doctor.name}`}
+              className="cert-image"
+            />
+          </div>
+        </div>
+      )}
     </div>
   );
 };

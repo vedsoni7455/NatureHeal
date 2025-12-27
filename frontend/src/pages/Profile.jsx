@@ -23,6 +23,9 @@ const Profile = () => {
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState('');
 
+  const [doctorDetails, setDoctorDetails] = useState(null);
+  const [showCertificate, setShowCertificate] = useState(false);
+
   useEffect(() => {
     if (user) {
       setFormData({
@@ -39,8 +42,27 @@ const Profile = () => {
         experience: user.experience || '',
         licenseNumber: user.licenseNumber || '',
       });
+
+      if (user.role === 'doctor') {
+        const fetchDoctorDetails = async () => {
+          try {
+            const res = await api.get(`/doctor/${user._id}`);
+            if (res.data && res.data.doctorDetails) {
+              setDoctorDetails(res.data.doctorDetails);
+            }
+          } catch (err) {
+            console.error("Failed to fetch doctor details", err);
+          }
+        };
+        fetchDoctorDetails();
+      }
     }
   }, [user]);
+
+  const toggleCertificate = (e) => {
+    e?.preventDefault();
+    setShowCertificate(!showCertificate);
+  };
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -297,11 +319,39 @@ const Profile = () => {
 
                 <div className="form-group">
                   <label>Verification Status</label>
-                  <input
-                    type="text"
-                    value={user.isVerified ? 'Verified' : 'Not Verified'}
-                    disabled
-                  />
+                  <div style={{ display: 'flex', flexDirection: 'column', gap: '5px' }}>
+                    <input
+                      type="text"
+                      value={
+                        user.role === 'doctor' && doctorDetails
+                          ? doctorDetails.verificationStatus
+                          : (user.isVerified ? 'Verified' : 'Not Verified')
+                      }
+                      style={{
+                        color: user.role === 'doctor' && doctorDetails?.verificationStatus === 'Verified' ? '#1eff00' : 'inherit',
+                        fontWeight: user.role === 'doctor' && doctorDetails?.verificationStatus === 'Verified' ? 'bold' : 'normal'
+                      }}
+                      disabled
+                    />
+                    {user.role === 'doctor' && doctorDetails?.verificationStatus === 'Verified' && doctorDetails.certificateImage && (
+                      <button
+                        onClick={toggleCertificate}
+                        type="button"
+                        style={{
+                          alignSelf: 'flex-start',
+                          background: 'none',
+                          border: '1px solid #4CAF50',
+                          color: '#4CAF50',
+                          padding: '5px 10px',
+                          borderRadius: '4px',
+                          cursor: 'pointer',
+                          marginTop: '5px'
+                        }}
+                      >
+                        📜 View Verified Certificate
+                      </button>
+                    )}
+                  </div>
                 </div>
               </div>
             </div>
@@ -319,6 +369,54 @@ const Profile = () => {
           </form>
         </div>
       </div>
+
+      {/* Certificate Modal */}
+      {showCertificate && doctorDetails && (
+        <div style={{
+          position: 'fixed',
+          top: 0,
+          left: 0,
+          right: 0,
+          bottom: 0,
+          backgroundColor: 'rgba(0,0,0,0.8)',
+          zIndex: 1000,
+          display: 'flex',
+          justifyContent: 'center',
+          alignItems: 'center',
+          padding: '20px'
+        }} onClick={toggleCertificate}>
+          <div style={{
+            position: 'relative',
+            maxWidth: '100%',
+            maxHeight: '90vh',
+            backgroundColor: 'white',
+            padding: '10px',
+            borderRadius: '8px'
+          }} onClick={e => e.stopPropagation()}>
+            <button style={{
+              position: 'absolute',
+              top: '-15px',
+              right: '-15px',
+              background: 'white',
+              border: 'none',
+              borderRadius: '50%',
+              width: '30px',
+              height: '30px',
+              cursor: 'pointer',
+              fontWeight: 'bold',
+              fontSize: '18px',
+              lineHeight: '30px',
+              textAlign: 'center',
+              boxShadow: '0 2px 5px rgba(0,0,0,0.2)'
+            }} onClick={toggleCertificate}>×</button>
+            <img
+              src={doctorDetails.certificateImage}
+              alt="Verification Certificate"
+              style={{ maxWidth: '100%', maxHeight: '80vh', display: 'block' }}
+            />
+          </div>
+        </div>
+      )}
     </div>
   );
 };

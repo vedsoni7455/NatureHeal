@@ -297,7 +297,6 @@ const Mudras = () => {
                   <h3>Begin Your Mudra Practice</h3>
                   <p>Join our yoga classes to learn proper mudra techniques and experience their transformative power.</p>
                   <div className="cta-buttons">
-                    <button className="cta-primary">Book Yoga Class</button>
                     <button className="cta-secondary">Learn More</button>
                   </div>
                 </div>

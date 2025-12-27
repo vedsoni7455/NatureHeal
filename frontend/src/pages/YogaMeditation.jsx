@@ -1,7 +1,17 @@
 import React, { useState } from 'react';
+import '../styles/yoga.css';
 
 const YogaMeditation = () => {
   const [activeTab, setActiveTab] = useState('yoga');
+  const [selectedVideo, setSelectedVideo] = useState(null);
+
+  const handleOpenVideo = (videoId, title) => {
+    setSelectedVideo({ videoId, title });
+  };
+
+  const handleCloseVideo = () => {
+    setSelectedVideo(null);
+  };
 
   const breathingExercises = [
     {
@@ -10,7 +20,8 @@ const YogaMeditation = () => {
       instructions: 'Inhale for 4 counts, hold for 4, exhale for 4. Repeat 5-10 times.',
       icon: '🌬️',
       duration: '5-10 min',
-      benefits: 'Reduces stress, improves lung capacity'
+      benefits: 'Reduces stress, improves lung capacity',
+      videoId: 'Oy4wvF9Z24A' // Deep Breathing
     },
     {
       name: '4-7-8 Breathing',
@@ -18,7 +29,8 @@ const YogaMeditation = () => {
       instructions: 'Inhale for 4, hold for 7, exhale for 8. Repeat 4 times.',
       icon: '🫁',
       duration: '2-4 min',
-      benefits: 'Calms nervous system, aids sleep'
+      benefits: 'Calms nervous system, aids sleep',
+      videoId: 'YRPh_GaiL8s' // 4-7-8 Breathing
     },
     {
       name: 'Box Breathing',
@@ -26,7 +38,8 @@ const YogaMeditation = () => {
       instructions: 'Inhale 4, hold 4, exhale 4, hold 4. Repeat in square pattern.',
       icon: '⬜',
       duration: '5 min',
-      benefits: 'Enhances concentration, reduces anxiety'
+      benefits: 'Enhances concentration, reduces anxiety',
+      videoId: 'tEmt1Znux58' // Box Breathing
     },
     {
       name: 'Alternate Nostril Breathing',
@@ -34,7 +47,8 @@ const YogaMeditation = () => {
       instructions: 'Close right nostril, inhale left; close left, exhale right. Alternate.',
       icon: '👃',
       duration: '5-10 min',
-      benefits: 'Balances mind, improves focus'
+      benefits: 'Balances mind, improves focus',
+      videoId: '8VwufJrUhic' // Nadi Shodhana
     },
     {
       name: 'Lion\'s Breath',
@@ -42,15 +56,17 @@ const YogaMeditation = () => {
       instructions: 'Inhale deeply, then exhale forcefully with tongue out. Repeat 3-5 times.',
       icon: '🦁',
       duration: '2-3 min',
-      benefits: 'Releases tension, energizes'
+      benefits: 'Releases tension, energizes',
+      videoId: 'xdUyHPa66A4' // Lion's Breath
     },
     {
-      name: 'Pursued Lip Breathing',
+      name: 'Pursed Lip Breathing',
       description: 'Controls breath for better lung function.',
       instructions: 'Inhale through nose, exhale slowly through pursed lips. Repeat.',
       icon: '👄',
       duration: '5-10 min',
-      benefits: 'Improves breathing efficiency, reduces shortness of breath'
+      benefits: 'Improves breathing efficiency, reduces shortness of breath',
+      videoId: 'dDpX7pGdPR4' // Pursed Lip Breathing
     }
   ];
 
@@ -61,7 +77,8 @@ const YogaMeditation = () => {
       instructions: 'Tense muscles for 5 seconds, then release. Work from toes to head.',
       icon: '💪',
       duration: '10-15 min',
-      benefits: 'Reduces physical tension, promotes deep relaxation'
+      benefits: 'Reduces physical tension, promotes deep relaxation',
+      videoId: '1nZEdqcGVzo' // PMR
     },
     {
       name: 'Autogenic Training',
@@ -69,7 +86,8 @@ const YogaMeditation = () => {
       instructions: 'Repeat phrases like "My arms are heavy and warm" while relaxing.',
       icon: '🧠',
       duration: '10-20 min',
-      benefits: 'Self-induced relaxation, stress reduction'
+      benefits: 'Self-induced relaxation, stress reduction',
+      videoId: '74aXSxyi8oo' // Autogenic Training
     },
     {
       name: 'Guided Imagery',
@@ -77,7 +95,8 @@ const YogaMeditation = () => {
       instructions: 'Close eyes and imagine a serene beach or forest. Focus on details.',
       icon: '🌊',
       duration: '10-15 min',
-      benefits: 'Mental relaxation, reduces anxiety'
+      benefits: 'Mental relaxation, reduces anxiety',
+      videoId: 't1rRo6cgM_E' // Guided Imagery
     },
     {
       name: 'Biofeedback Training',
@@ -85,7 +104,8 @@ const YogaMeditation = () => {
       instructions: 'Use monitors to observe and control heart rate, muscle tension.',
       icon: '📊',
       duration: '15-30 min',
-      benefits: 'Control over body responses, pain management'
+      benefits: 'Control over body responses, pain management',
+      videoId: 'eYenOwiZy8c' // Biofeedback
     },
     {
       name: 'Aromatherapy Massage',
@@ -93,7 +113,8 @@ const YogaMeditation = () => {
       instructions: 'Apply diluted essential oils (lavender, chamomile) with circular motions.',
       icon: '🕯️',
       duration: '20-30 min',
-      benefits: 'Physical and emotional relaxation, improved circulation'
+      benefits: 'Physical and emotional relaxation, improved circulation',
+      videoId: 'mMnraaKUJFE' // Aromatherapy Massage
     },
     {
       name: 'Sound Therapy',
@@ -101,7 +122,8 @@ const YogaMeditation = () => {
       instructions: 'Listen to nature sounds, Tibetan bowls, or binaural beats.',
       icon: '🎵',
       duration: '15-30 min',
-      benefits: 'Mental calmness, improved sleep quality'
+      benefits: 'Mental calmness, improved sleep quality',
+      videoId: 'MC70R_OVymM' // Sound Therapy
     }
   ];
 
@@ -112,7 +134,8 @@ const YogaMeditation = () => {
       benefits: 'Strengthens legs, improves posture, reduces stress.',
       icon: '🏔️',
       difficulty: 'Beginner',
-      duration: '1-2 min'
+      duration: '1-2 min',
+      videoId: '5NxDs-ovJU8' // Mountain Pose
     },
     {
       name: 'Tree Pose (Vrksasana)',
@@ -120,7 +143,8 @@ const YogaMeditation = () => {
       benefits: 'Improves balance, strengthens legs, enhances focus.',
       icon: '🌳',
       difficulty: 'Intermediate',
-      duration: '30-60 sec'
+      duration: '30-60 sec',
+      videoId: 'yVE4XXFFO70'
     },
     {
       name: 'Child\'s Pose (Balasana)',
@@ -128,7 +152,8 @@ const YogaMeditation = () => {
       benefits: 'Relieves stress, stretches back, promotes relaxation.',
       icon: '🧘',
       difficulty: 'Beginner',
-      duration: '1-3 min'
+      duration: '1-3 min',
+      videoId: '2MJGg-dUKh0' // Child's Pose
     },
     {
       name: 'Warrior Pose (Virabhadrasana)',
@@ -136,7 +161,8 @@ const YogaMeditation = () => {
       benefits: 'Builds strength, improves stamina, boosts confidence.',
       icon: '⚔️',
       difficulty: 'Intermediate',
-      duration: '30-60 sec'
+      duration: '30-60 sec',
+      videoId: 'kkGY3xBnaGc' // Warrior Pose
     },
     {
       name: 'Downward Dog (Adho Mukha Svanasana)',
@@ -144,7 +170,8 @@ const YogaMeditation = () => {
       benefits: 'Stretches entire body, strengthens arms and legs.',
       icon: '🐕',
       difficulty: 'Beginner',
-      duration: '1-2 min'
+      duration: '1-2 min',
+      videoId: 'j97SSGsnCAQ' // Downward Dog
     },
     {
       name: 'Lotus Pose (Padmasana)',
@@ -152,7 +179,8 @@ const YogaMeditation = () => {
       benefits: 'Improves flexibility, aids meditation, calms mind.',
       icon: '🪷',
       difficulty: 'Advanced',
-      duration: '5-10 min'
+      duration: '5-10 min',
+      videoId: 'gr7HIwxigpA' // Lotus Pose
     }
   ];
 
@@ -163,7 +191,8 @@ const YogaMeditation = () => {
       instructions: 'Sit comfortably, close eyes, count breaths from 1 to 10.',
       icon: '🌬️',
       duration: '5-10 min',
-      benefits: 'Reduces anxiety, improves focus'
+      benefits: 'Reduces anxiety, improves focus',
+      videoId: 'I-SFdhVwrVA' // 5 Min Mindful Breathing
     },
     {
       name: 'Body Scan',
@@ -171,7 +200,8 @@ const YogaMeditation = () => {
       instructions: 'Lie down, focus on each body part, relax as you go.',
       icon: '🔍',
       duration: '10-15 min',
-      benefits: 'Releases physical tension, promotes sleep'
+      benefits: 'Releases physical tension, promotes sleep',
+      videoId: 'u4gZgnCy5ew' // Body Scan
     },
     {
       name: 'Loving-Kindness Meditation',
@@ -179,7 +209,8 @@ const YogaMeditation = () => {
       instructions: 'Repeat phrases like "May I be happy, may I be healthy."',
       icon: '❤️',
       duration: '10-20 min',
-      benefits: 'Increases compassion, reduces negative emotions'
+      benefits: 'Increases compassion, reduces negative emotions',
+      videoId: '-d_AA9H4z9U' // Loving Kindness
     },
     {
       name: 'Transcendental Meditation',
@@ -187,7 +218,8 @@ const YogaMeditation = () => {
       instructions: 'Sit comfortably, repeat your mantra silently.',
       icon: '🧘‍♀️',
       duration: '15-20 min',
-      benefits: 'Reduces stress, improves creativity'
+      benefits: 'Reduces stress, improves creativity',
+      videoId: 'ZuoMXHhyMMs' // TM Introduction
     },
     {
       name: 'Guided Visualization',
@@ -195,7 +227,8 @@ const YogaMeditation = () => {
       instructions: 'Listen to a guide or imagine serene places.',
       icon: '🌅',
       duration: '10-15 min',
-      benefits: 'Enhances relaxation, boosts mood'
+      benefits: 'Enhances relaxation, boosts mood',
+      videoId: 'zSkFFW--Ma0' // Guided Visualization
     },
     {
       name: 'Walking Meditation',
@@ -203,12 +236,32 @@ const YogaMeditation = () => {
       instructions: 'Walk slowly, focus on each step and breath.',
       icon: '🚶',
       duration: '10-20 min',
-      benefits: 'Combines movement with mindfulness'
+      benefits: 'Combines movement with mindfulness',
+      videoId: 'sSSyvmBCTj8' // Walking Meditation
     }
   ];
 
   return (
     <div className="yoga-meditation-page">
+      {/* Video Modal */}
+      {selectedVideo && (
+        <div className="video-modal-overlay" onClick={handleCloseVideo}>
+          <div className="video-modal" onClick={(e) => e.stopPropagation()}>
+            <button className="close-modal-btn" onClick={handleCloseVideo}>
+              &times;
+            </button>
+            <div className="video-container">
+              <iframe
+                src={`https://www.youtube.com/embed/${selectedVideo.videoId}?autoplay=1`}
+                title={selectedVideo.title}
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                allowFullScreen
+              ></iframe>
+            </div>
+          </div>
+        </div>
+      )}
+
       {/* Hero Section */}
       <div className="page-hero">
         <div className="hero-content">
@@ -307,7 +360,10 @@ const YogaMeditation = () => {
                   </div>
                 </div>
                 <div className="card-actions">
-                  <button className="practice-btn">
+                  <button
+                    className="practice-btn"
+                    onClick={() => handleOpenVideo(pose.videoId, pose.name)}
+                  >
                     <span>▶️</span> Practice Now
                   </button>
                 </div>
@@ -345,7 +401,10 @@ const YogaMeditation = () => {
                   </div>
                 </div>
                 <div className="card-actions">
-                  <button className="practice-btn">
+                  <button
+                    className="practice-btn"
+                    onClick={() => handleOpenVideo(technique.videoId, technique.name)}
+                  >
                     <span>🔔</span> Start Session
                   </button>
                 </div>
@@ -383,7 +442,10 @@ const YogaMeditation = () => {
                   </div>
                 </div>
                 <div className="card-actions">
-                  <button className="practice-btn">
+                  <button
+                    className="practice-btn"
+                    onClick={() => handleOpenVideo(exercise.videoId, exercise.name)}
+                  >
                     <span>🌬️</span> Start Breathing
                   </button>
                 </div>
@@ -421,7 +483,10 @@ const YogaMeditation = () => {
                   </div>
                 </div>
                 <div className="card-actions">
-                  <button className="practice-btn">
+                  <button
+                    className="practice-btn"
+                    onClick={() => handleOpenVideo(therapy.videoId, therapy.name)}
+                  >
                     <span>😌</span> Begin Session
                   </button>
                 </div>

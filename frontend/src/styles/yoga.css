@@ -1,0 +1,409 @@
+/* Yoga & Meditation Page - Premium Design */
+
+.yoga-meditation-page {
+    /* Inherits theme-earth/nature variables */
+    min-height: 100vh;
+    padding-bottom: 4rem;
+}
+
+/* Hero Section (Reused structure from Remedies with Yoga specifics) */
+.page-hero {
+    position: relative;
+    padding: 5rem 2rem 4rem;
+    text-align: center;
+    overflow: hidden;
+    margin-bottom: 2rem;
+    background: radial-gradient(circle at top center, rgba(167, 243, 208, 0.2), transparent 50%);
+}
+
+.hero-content {
+    position: relative;
+    z-index: 2;
+    max-width: 900px;
+    margin: 0 auto;
+}
+
+.page-hero h1 {
+    font-size: 3.5rem;
+    margin-bottom: 1.5rem;
+    background: linear-gradient(135deg, var(--primary-700), #0d9488);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    animation: fadeInDown 0.8s ease-out;
+}
+
+.page-hero p {
+    font-size: 1.25rem;
+    color: var(--text-main);
+    opacity: 0.8;
+    max-width: 700px;
+    margin: 0 auto 3rem;
+    line-height: 1.6;
+    animation: fadeInUp 0.8s ease-out 0.2s backwards;
+}
+
+.hero-stats {
+    display: flex;
+    justify-content: center;
+    gap: 2rem;
+    flex-wrap: wrap;
+    animation: fadeInUp 0.8s ease-out 0.4s backwards;
+}
+
+.stat {
+    background: rgba(255, 255, 255, 0.4);
+    backdrop-filter: blur(8px);
+    padding: 1rem 1.5rem;
+    border-radius: 16px;
+    border: 1px solid rgba(255, 255, 255, 0.4);
+    min-width: 140px;
+}
+
+.stat-number {
+    display: block;
+    font-size: 2rem;
+    font-weight: 800;
+    color: var(--primary-600);
+}
+
+.stat-label {
+    font-size: 0.8rem;
+    color: var(--text-main);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    font-weight: 600;
+}
+
+/* Tab Navigation */
+.content-tabs {
+    display: flex;
+    justify-content: center;
+    gap: 1rem;
+    padding: 0 1.5rem;
+    margin-bottom: 4rem;
+    flex-wrap: wrap;
+}
+
+.tab-btn {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 1rem 2rem;
+    border: none;
+    border-radius: 20px;
+    background: rgba(255, 255, 255, 0.6);
+    color: var(--text-muted);
+    font-size: 1.1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.02);
+}
+
+.tab-btn:hover {
+    background: white;
+    transform: translateY(-2px);
+    color: var(--primary-dark);
+}
+
+.tab-btn.active {
+    background: var(--primary-500);
+    color: white;
+    box-shadow: 0 10px 20px rgba(16, 185, 129, 0.25);
+    transform: scale(1.05);
+}
+
+.tab-icon {
+    font-size: 1.25rem;
+}
+
+/* Content Sections */
+.content-section {
+    max-width: 1300px;
+    margin: 0 auto;
+    padding: 0 1.5rem;
+    animation: fadeIn 0.5s ease-out;
+}
+
+.section-header {
+    text-align: center;
+    margin-bottom: 3rem;
+}
+
+.section-header h2 {
+    font-size: 2.5rem;
+    margin-bottom: 1rem;
+    color: var(--text-main);
+}
+
+.section-header p {
+    font-size: 1.1rem;
+    color: var(--text-muted);
+}
+
+/* Grids - Consistent for all tabs */
+.poses-grid,
+.techniques-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
+    gap: 2rem;
+}
+
+.practice-card {
+    background: white;
+    border-radius: 24px;
+    padding: 2.5rem;
+    position: relative;
+    overflow: hidden;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.03);
+    border: 1px solid rgba(0, 0, 0, 0.03);
+    transition: all 0.4s ease;
+    display: flex;
+    flex-direction: column;
+}
+
+.practice-card:hover {
+    transform: translateY(-10px);
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.08);
+}
+
+.practice-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 6px;
+    background: linear-gradient(90deg, var(--primary-400), var(--accent-color));
+}
+
+.card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 1.5rem;
+}
+
+.card-icon {
+    font-size: 3rem;
+    background: var(--off-white-2);
+    width: 80px;
+    height: 80px;
+    border-radius: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.card-meta {
+    text-align: right;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.difficulty {
+    padding: 0.25rem 0.75rem;
+    border-radius: 50px;
+    font-size: 0.8rem;
+    font-weight: 700;
+    text-transform: uppercase;
+}
+
+.difficulty.beginner {
+    background: #E0F2F1;
+    color: #00897B;
+}
+
+.difficulty.intermediate {
+    background: #FFF3E0;
+    color: #F57C00;
+}
+
+.difficulty.advanced {
+    background: #FFEBEE;
+    color: #D32F2F;
+}
+
+.duration {
+    font-size: 0.9rem;
+    color: var(--text-muted);
+    font-weight: 500;
+}
+
+.card-content h3 {
+    font-size: 1.5rem;
+    margin-bottom: 0.75rem;
+    color: var(--text-main);
+}
+
+.description {
+    color: var(--text-muted);
+    margin-bottom: 1.5rem;
+    line-height: 1.6;
+}
+
+.benefits,
+.instructions {
+    background: var(--off-white);
+    padding: 1.25rem;
+    border-radius: 16px;
+    margin-bottom: 1rem;
+}
+
+.benefits h4,
+.instructions h4 {
+    font-size: 0.95rem;
+    margin-bottom: 0.5rem;
+    color: var(--primary-dark);
+}
+
+.benefits p,
+.instructions p {
+    font-size: 0.95rem;
+    margin: 0;
+    color: var(--off-black-light);
+}
+
+.card-actions {
+    margin-top: auto;
+    padding-top: 1.5rem;
+}
+
+.practice-btn {
+    width: 100%;
+    padding: 1rem;
+    border: none;
+    border-radius: 16px;
+    background: var(--text-main);
+    color: white;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.75rem;
+}
+
+.practice-btn:hover {
+    background: black;
+    transform: scale(1.02);
+}
+
+/* Video Modal Styles */
+.video-modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.8);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 2000;
+    backdrop-filter: blur(5px);
+    animation: fadeIn 0.3s ease-out;
+}
+
+.video-modal {
+    background: white;
+    width: 90%;
+    max-width: 900px;
+    border-radius: 20px;
+    overflow: hidden;
+    position: relative;
+    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+    animation: slideUp 0.3s ease-out;
+}
+
+.video-container {
+    position: relative;
+    padding-bottom: 56.25%;
+    /* 16:9 aspect ratio */
+    height: 0;
+    background: black;
+}
+
+.video-container iframe {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    border: none;
+}
+
+.close-modal-btn {
+    position: absolute;
+    top: -40px;
+    right: 0;
+    background: transparent;
+    border: none;
+    color: white;
+    font-size: 2rem;
+    cursor: pointer;
+    transition: transform 0.2s ease;
+}
+
+.close-modal-btn:hover {
+    transform: scale(1.1);
+}
+
+/* Animations */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+
+    to {
+        opacity: 1;
+    }
+}
+
+@keyframes slideUp {
+    from {
+        opacity: 0;
+        transform: translateY(50px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@media (max-width: 768px) {
+    .page-hero h1 {
+        font-size: 2.5rem;
+    }
+
+    .content-tabs {
+        flex-direction: column;
+        padding: 0 2rem;
+    }
+
+    .tab-btn {
+        width: 100%;
+        justify-content: center;
+    }
+
+    .video-modal {
+        width: 95%;
+    }
+
+    .close-modal-btn {
+        top: 10px;
+        right: 10px;
+        z-index: 10;
+        background: rgba(0, 0, 0, 0.5);
+        border-radius: 50%;
+        width: 40px;
+        height: 40px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+}

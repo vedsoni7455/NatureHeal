@@ -17,8 +17,8 @@
     color: white;
     text-align: center;
     overflow: hidden;
-    padding-top: 60px;
-    /* Offset for navbar */
+    /* padding-top: 60px; */
+    /* Offset for navbar handled by main-content global padding now */
 }
 
 .hero-overlay {

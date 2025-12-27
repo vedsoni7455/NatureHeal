@@ -39,6 +39,8 @@ import appointmentRoutes from "./routes/appointmentRoutes.js";
 import adminRoutes from "./routes/adminRoutes.js";
 import aiRoutes from "./routes/aiRoutes.js";
 import dietRoutes from "./routes/dietRoutes.js";
+import contactRoutes from "./routes/contactRoutes.js";
+import uploadRoutes from "./routes/uploadRoutes.js";
 
 // Use routes
 app.use("/api/auth", authRoutes);             // Register/Login
@@ -48,6 +50,9 @@ app.use("/api/appointments", appointmentRoutes); // Book/manage appointments
 app.use("/api/admin", adminRoutes);           // Admin analytics
 app.use("/api/ai", aiRoutes);                 // AI chatbot
 app.use("/api/diet", dietRoutes);             // Diet plans
+app.use("/api/diet", dietRoutes);             // Diet plans
+app.use("/api/contact", contactRoutes);       // Contact form
+app.use("/api/upload", uploadRoutes);         // File upload
 
 // Basic test route
 app.get("/", (req, res) => {
