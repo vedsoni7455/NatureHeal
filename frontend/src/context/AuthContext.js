@@ -11,8 +11,9 @@ export const AuthProvider = ({ children }) => {
     const token = localStorage.getItem('token');
     if (token) {
       api.defaults.headers.common['Authorization'] = `Bearer ${token}`;
-      // Verify token and get user data
-      verifyToken();
+      // Verify token and get user data - Commented out to prevent auto-login
+      // verifyToken();
+      setLoading(false); // Stop loading since we're not auto-logging in
     } else {
       setLoading(false);
     }

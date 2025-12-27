@@ -25,7 +25,8 @@ const ContactUs = () => {
     setStatus(null);
 
     try {
-      const response = await fetch('http://localhost:5000/api/contact', {
+      const apiUrl = (process.env.REACT_APP_API_URL || 'http://localhost:5000/api').replace(/\/$/, "");
+      const response = await fetch(`${apiUrl}/contact`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

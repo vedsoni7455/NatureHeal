@@ -25,10 +25,13 @@ app.use((req, res, next) => {
   next();
 });
 
-app.use(cors({
-  origin: '*', // Allow all origins for debugging
-  credentials: true
-}));
+// CORS Configuration for Production Readiness
+const corsOptions = {
+  origin: process.env.FRONTEND_URL || '*', // Allow specific frontend URL or all in dev
+  credentials: true,
+  optionsSuccessStatus: 200
+};
+app.use(cors(corsOptions));
 app.use(express.json());
 
 // Import routes

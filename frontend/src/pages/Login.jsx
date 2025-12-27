@@ -9,7 +9,8 @@ const Login = () => {
   const { login, user, loading } = useContext(AuthContext);
   const navigate = useNavigate();
 
-  // Redirect if already logged in
+  // Redirect if already logged in - Removed to ensure credentials are always asked for
+  /*
   useEffect(() => {
     if (!loading && user) {
       if (user.role === 'doctor') navigate('/dashboard/doctor');
@@ -17,6 +18,7 @@ const Login = () => {
       else navigate('/');
     }
   }, [user, loading, navigate]);
+  */
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
