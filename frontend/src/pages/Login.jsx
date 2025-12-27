@@ -4,6 +4,7 @@ import AuthContext from '../context/AuthContext';
 
 const Login = () => {
   const [formData, setFormData] = useState({ email: '', password: '', role: 'patient' });
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState('');
   const { login, user, loading } = useContext(AuthContext);
   const navigate = useNavigate();
@@ -24,7 +25,7 @@ const Login = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setLoading(true);
+    setIsSubmitting(true);
     setError('');
 
     try {
@@ -69,7 +70,7 @@ const Login = () => {
       setError(errorMsg);
     } finally {
       // Only set loading to false if we didn't redirect (component might unmount on redirect)
-      setLoading(false);
+      setIsSubmitting(false);
     }
   };
 
@@ -142,8 +143,8 @@ const Login = () => {
               </div>
             </div>
 
-            <button type="submit" className="auth-btn" disabled={loading}>
-              {loading ? (
+            <button type="submit" className="auth-btn" disabled={loading || isSubmitting}>
+              {loading || isSubmitting ? (
                 <>
                   <span className="spinner"></span>
                   Signing In...
