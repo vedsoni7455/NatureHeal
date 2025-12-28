@@ -28,12 +28,21 @@ app.use((req, res, next) => {
 // CORS Configuration for Production Readiness
 const corsOptions = {
   origin: function (origin, callback) {
-    const allowedOrigins = [process.env.FRONTEND_URL, 'http://localhost:3000'].filter(Boolean);
-    // If no origin (like mobile apps or curl requests) or origin is in allowed list
-    if (!origin || allowedOrigins.indexOf(origin) !== -1 || !process.env.FRONTEND_URL) {
-      callback(null, origin || '*');
+    // List of allowed origins
+    const frontendUrl = process.env.FRONTEND_URL ? process.env.FRONTEND_URL.replace(/\/$/, "") : null;
+    const allowedOrigins = [frontendUrl, 'http://localhost:3000'].filter(Boolean);
+
+    // If no origin (like server-to-server) or origin is in allowed list
+    if (!origin || allowedOrigins.includes(origin)) {
+      callback(null, true);
     } else {
-      callback(new Error('Not allowed by CORS'));
+      // In development, if FRONTEND_URL is not set, allow everything (but reflect origin for credentials)
+      if (!process.env.FRONTEND_URL) {
+        callback(null, true);
+      } else {
+        console.error(`CORS Blocked: Origin ${origin} not in allowed list:`, allowedOrigins);
+        callback(new Error('Not allowed by CORS'));
+      }
     }
   },
   credentials: true,

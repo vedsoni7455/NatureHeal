@@ -2,7 +2,7 @@ import axios from 'axios';
 
 const api = axios.create({
   // Priority: Environment Variable (for Vercel/Netlify), Fallback: Local for development
-  baseURL: process.env.REACT_APP_API_URL || 'http://localhost:5000/api',
+  baseURL: (process.env.REACT_APP_API_URL || 'http://localhost:5000/api').replace(/\/$/, ""),
 });
 
 console.log('API Configured with baseURL:', api.defaults.baseURL);
