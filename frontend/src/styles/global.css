@@ -37,10 +37,25 @@
 
   /* Dimensions & Effects */
   --radius-md: 1rem;
-  /* Softer corners */
   --radius-lg: 1.5rem;
   --transition-fast: 0.2s ease;
   --transition-normal: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+
+  /* Fluid Spacing & Typography */
+  --spacing-xs: clamp(0.5rem, 1vw, 0.75rem);
+  --spacing-sm: clamp(0.75rem, 2vw, 1rem);
+  --spacing-md: clamp(1rem, 3vw, 1.5rem);
+  --spacing-lg: clamp(1.5rem, 5vw, 3rem);
+  --spacing-xl: clamp(3rem, 8vw, 6rem);
+
+  /* Responsive Font Sizes */
+  --font-xs: clamp(0.75rem, 0.7rem + 0.25vw, 0.875rem);
+  --font-sm: clamp(0.875rem, 0.8rem + 0.375vw, 1rem);
+  --font-base: clamp(1rem, 0.95rem + 0.25vw, 1.125rem);
+  --font-md: clamp(1.125rem, 1.05rem + 0.375vw, 1.25rem);
+  --font-lg: clamp(1.25rem, 1.1rem + 0.75vw, 1.5rem);
+  --font-xl: clamp(1.5rem, 1.25rem + 1.25vw, 2rem);
+  --font-xxl: clamp(2rem, 1.5rem + 2.5vw, 3.5rem);
 
   /* --- THEME VARIABLES (Dynamic) --- */
   --page-bg: var(--off-white);
@@ -129,6 +144,7 @@
 
 body {
   font-family: 'Inter', sans-serif;
+  font-size: var(--font-base);
   line-height: 1.6;
   margin: 0 auto;
   padding: 0;
@@ -139,6 +155,22 @@ body {
   color: var(--text-main);
   overflow-x: hidden;
   transition: background 0.5s ease, color 0.5s ease;
+}
+
+h1 {
+  font-size: var(--font-xxl);
+}
+
+h2 {
+  font-size: var(--font-xl);
+}
+
+h3 {
+  font-size: var(--font-lg);
+}
+
+h4 {
+  font-size: var(--font-md);
 }
 
 h1,
@@ -325,14 +357,29 @@ a:hover {
   left: 0;
   width: 100%;
   background-color: var(--primary-500);
-  padding: 1rem;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  padding: 1.5rem;
+  box-shadow: 0 10px 15px rgba(0, 0, 0, 0.1);
   flex-direction: column;
-  gap: 1rem;
+  gap: 0.75rem;
+  max-height: 80vh;
+  overflow-y: auto;
 }
 
 .navbar-menu.is-active {
   display: flex;
+  animation: slideDown 0.3s ease-out;
+}
+
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 .navbar-item {
@@ -400,7 +447,7 @@ a:hover {
 }
 
 /* Desktop Navbar */
-@media (min-width: 1024px) {
+@media (min-width: 1025px) {
 
   /* HIDE MOBILE ONLY ITEMS ON DESKTOP */
   .is-mobile-only {
@@ -422,7 +469,7 @@ a:hover {
     flex-direction: row;
     padding: 0;
     box-shadow: none;
-    margin-left: 2rem;
+    margin-left: 1.5rem;
     overflow: visible;
     max-height: none;
     justify-content: space-between;
@@ -515,7 +562,6 @@ a:hover {
 
 /* Auth Page Overrides via vars */
 .auth-page {
-  /* Inherits theme-sunset variables if applied correctly */
   background: radial-gradient(circle at top right, var(--primary-color), transparent),
     radial-gradient(circle at bottom left, var(--accent-color), transparent),
     var(--page-bg);
@@ -523,7 +569,7 @@ a:hover {
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: var(--spacing-lg);
+  padding: var(--spacing-md);
 }
 
 .auth-card {
@@ -532,14 +578,14 @@ a:hover {
   border: 1px solid rgba(253, 251, 247, 0.5);
   border-radius: var(--radius-lg);
   box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.15);
-  padding: 3rem;
+  padding: var(--spacing-lg);
   width: 100%;
   max-width: 500px;
 }
 
 .auth-header {
   text-align: center;
-  margin-bottom: 2rem;
+  margin-bottom: 1.5rem;
 }
 
 .auth-icon {
