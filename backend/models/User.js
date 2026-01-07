@@ -63,18 +63,6 @@ const userSchema = new mongoose.Schema({
     },
     notes: String,
   }],
-  savedRemedies: [{
-    title: String,
-    description: String,
-    category: String,
-    icon: String,
-    remedies: [String],
-    precautions: String,
-    savedAt: {
-      type: Date,
-      default: Date.now
-    }
-  }],
   currentMedications: [{
     name: String,
     dosage: String,

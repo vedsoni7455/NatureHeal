@@ -193,11 +193,6 @@ const SymptomChecker = () => {
               <div className="next-steps">
                 <h3>What to do next?</h3>
                 <div className="next-steps-grid">
-                  <Link to="/remedies" className="next-step-card">
-                    <span className="step-icon">🌿</span>
-                    <h4>Natural Remedies</h4>
-                    <p>Explore home remedies for your symptoms</p>
-                  </Link>
                   <Link to="/appointment" className="next-step-card">
                     <span className="step-icon">👨‍⚕️</span>
                     <h4>Book Appointment</h4>
@@ -207,6 +202,11 @@ const SymptomChecker = () => {
                     <span className="step-icon">🤖</span>
                     <h4>AI Health Assistant</h4>
                     <p>Get instant guidance from our AI</p>
+                  </Link>
+                  <Link to="/wellness-hub" className="next-step-card" style={{ background: 'var(--primary-5)', border: '1px solid var(--primary-50)' }}>
+                    <span className="step-icon">✨</span>
+                    <h4>AI Wellness Hub</h4>
+                    <p>Get a full plan covering yoga, diet, and mudras</p>
                   </Link>
                 </div>
               </div>

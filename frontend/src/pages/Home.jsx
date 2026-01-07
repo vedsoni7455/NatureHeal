@@ -56,8 +56,8 @@ const Home = () => {
             <Link to={user ? "/dashboard/patient" : "/register"} className="btn-hero-primary">
               {user ? "Go to Dashboard" : "Get Started"}
             </Link>
-            <Link to="/remedies" className="btn-hero-secondary">
-              Explore Remedies
+            <Link to="/wellness-hub" className="btn-hero-secondary">
+              Wellness Hub
             </Link>
           </div>
         </div>
@@ -82,10 +82,10 @@ const Home = () => {
 
             <div className="feature-card">
               <div className="feature-icon-wrapper">
-                <span>🌿</span>
+                <span>✨</span>
               </div>
-              <h3 className="feature-title">Natural Remedies</h3>
-              <p className="feature-text">Access a vast library of home remedies and traditional cures for common ailments.</p>
+              <h3 className="feature-title">Wellness Hub</h3>
+              <p className="feature-text">Access a unified AI-powered holistic guide for remedies, yoga, diet, and lifestyle.</p>
             </div>
 
             <div className="feature-card">
@@ -98,10 +98,10 @@ const Home = () => {
 
             <div className="feature-card">
               <div className="feature-icon-wrapper">
-                <span>🧘‍♀️</span>
+                <span>🙏</span>
               </div>
-              <h3 className="feature-title">Yoga & Meditation</h3>
-              <p className="feature-text">Enhance your specialized wellness programs with guided yoga and meditation.</p>
+              <h3 className="feature-title">Healing Mudras</h3>
+              <p className="feature-text">Discover ancient hand gestures to balance your energy and improve vitality.</p>
             </div>
           </div>
         </div>
@@ -138,7 +138,7 @@ const Home = () => {
             <div className="info-content">
               <h2 className="section-title">The Power of Homeopathy</h2>
               <p className="feature-text">Founded by Samuel Hahnemann in 1796, homeopathy is based on the principle of "like cures like". It uses highly diluted substances to trigger the body's natural healing processes.</p>
-              <Link to="/remedies" className="btn" style={{ marginTop: '1rem' }}>Learn More</Link>
+              <Link to="/wellness-hub" className="btn" style={{ marginTop: '1rem' }}>Enter Wellness Hub</Link>
             </div>
             <div className="info-visual">
               <div className="info-visual-placeholder">🧪</div>
@@ -149,7 +149,7 @@ const Home = () => {
             <div className="info-content">
               <h2 className="section-title">Naturopathy: Healing by Nature</h2>
               <p className="feature-text">Naturopathy focuses on natural healing methods including herbal medicine, nutrition, and lifestyle counseling to support the body's self-healing abilities, originating from the 19th century.</p>
-              <Link to="/therapies" className="btn" style={{ marginTop: '1rem' }}>Explore Therapies</Link>
+              <Link to="/wellness-hub" className="btn" style={{ marginTop: '1rem' }}>Enter Wellness Hub</Link>
             </div>
             <div className="info-visual">
               <div className="info-visual-placeholder">🌱</div>

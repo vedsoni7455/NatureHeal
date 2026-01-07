@@ -13,10 +13,7 @@ import DashboardDoctor from './pages/DashboardDoctor';
 import DashboardAdmin from './pages/DashboardAdmin';
 import AppointmentForm from './pages/AppointmentForm';
 import Doctors from './pages/Doctors';
-import Remedies from './pages/Remedies';
-import AlternativeTherapies from './pages/AlternativeTherapies';
-import Mudras from './pages/Mudras';
-import YogaMeditation from './pages/YogaMeditation';
+import WellnessHub from './pages/WellnessHub';
 import ChatbotPage from './pages/ChatbotPage';
 import Profile from './pages/Profile';
 import SymptomChecker from './pages/SymptomChecker';
@@ -49,7 +46,7 @@ const ThemeController = () => {
       theme = 'theme-professional';
     } else if (path === '/doctors' || path === '/appointment') {
       theme = 'theme-lavender';
-    } else if (path === '/therapies' || path === '/remedies' || path === '/mudras' || path === '/yoga-meditation') {
+    } else if (path === '/wellness-hub') {
       theme = 'theme-earth';
     }
 
@@ -83,10 +80,7 @@ function App() {
               <Route path="/appointment" element={<ProtectedRoute><AppointmentForm /></ProtectedRoute>} />
               <Route path="/doctors" element={<ProtectedRoute><Doctors /></ProtectedRoute>} />
               <Route path="/doctor/:id" element={<ProtectedRoute><DoctorProfilePublic /></ProtectedRoute>} />
-              <Route path="/remedies" element={<ProtectedRoute><Remedies /></ProtectedRoute>} />
-              <Route path="/therapies" element={<ProtectedRoute><AlternativeTherapies /></ProtectedRoute>} />
-              <Route path="/mudras" element={<ProtectedRoute><Mudras /></ProtectedRoute>} />
-              <Route path="/yoga-meditation" element={<ProtectedRoute><YogaMeditation /></ProtectedRoute>} />
+              <Route path="/wellness-hub" element={<ProtectedRoute><WellnessHub /></ProtectedRoute>} />
               <Route path="/chatbot" element={<ProtectedRoute><ChatbotPage /></ProtectedRoute>} />
               <Route path="/profile" element={<ProtectedRoute><Profile /></ProtectedRoute>} />
               <Route path="/symptom-checker" element={<ProtectedRoute><SymptomChecker /></ProtectedRoute>} />

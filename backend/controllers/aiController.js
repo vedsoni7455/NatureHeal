@@ -39,6 +39,35 @@ const ensureAIInitialized = asyncHandler(async (req, res, next) => {
   next(); // Proceed to the actual route handler
 });
 
+/**
+ * Utility to call Groq with automatic fallback on rate limit (429)
+ * @param {Object} groq - Groq instance
+ * @param {Object} params - Completion parameters
+ * @returns {Promise<Object>} - Groq completion response
+ */
+const callGroqWithFallback = async (groq, params) => {
+  const primaryModel = params.model || 'llama-3.3-70b-versatile';
+  const fallbackModel = 'llama-3.1-8b-instant';
+
+  try {
+    console.log(`AI Call: Attempting with ${primaryModel}...`);
+    return await groq.chat.completions.create({ ...params, model: primaryModel });
+  } catch (error) {
+    console.warn(`AI Call: ${primaryModel} failed. Status: ${error.status || 'N/A'}. Message: ${error.message}`);
+
+    // If it's a 401, re-throw immediately (unrecoverable)
+    if (error.status === 401) throw error;
+
+    try {
+      console.log(`AI Call: Falling back to ${fallbackModel}...`);
+      return await groq.chat.completions.create({ ...params, model: fallbackModel });
+    } catch (fallbackError) {
+      console.error('AI Call: Fallback failed:', fallbackError.message);
+      throw fallbackError;
+    }
+  }
+};
+
 
 // @desc    Chat with AI assistant
 // @route   POST /api/ai/chat
@@ -72,7 +101,7 @@ const chatWithAIHandler = asyncHandler(async (req, res) => {
   Always be polite, accurate, and helpful. Do not refuse to answer questions unless they are harmful or illegal.`;
 
   try {
-    const completion = await groq.chat.completions.create({
+    const completion = await callGroqWithFallback(groq, {
       messages: [
         { role: 'system', content: systemPrompt },
         { role: 'user', content: message }
@@ -191,7 +220,7 @@ Please provide a comprehensive diet plan in the following JSON format:
 Focus on natural, whole foods and ensure the plan is nutritionally balanced. Consider any restrictions and preferences provided.`;
 
   try {
-    const completion = await groq.chat.completions.create({
+    const completion = await callGroqWithFallback(groq, {
       messages: [
         { role: 'user', content: prompt }
       ],
@@ -299,7 +328,7 @@ Please provide analysis in the following JSON format:
 Focus on natural health approaches and holistic wellness. Be encouraging and provide actionable insights.`;
 
   try {
-    const completion = await groq.chat.completions.create({
+    const completion = await callGroqWithFallback(groq, {
       messages: [
         { role: 'user', content: prompt }
       ],
@@ -377,7 +406,7 @@ Please provide predictions in the following JSON format:
 Focus on realistic, achievable outcomes and natural health approaches.`;
 
   try {
-    const completion = await groq.chat.completions.create({
+    const completion = await callGroqWithFallback(groq, {
       messages: [
         { role: 'user', content: prompt }
       ],
@@ -520,6 +549,7 @@ export const generateAIDietPlan = [ensureAIInitialized, generateAIDietPlanHandle
 export const generateAIHealthInsights = [ensureAIInitialized, generateAIHealthInsightsHandler];
 export const getHealthPredictions = [ensureAIInitialized, getHealthPredictionsHandler];
 
+
 // @desc    Analyze symptoms with AI
 // @route   POST /api/ai/analyze-symptoms
 // @access  Private
@@ -554,10 +584,10 @@ const analyzeSymptomsHandler = asyncHandler(async (req, res) => {
   - This is for informational purposes only.`;
 
   try {
-    const completion = await groq.chat.completions.create({
+    const completion = await callGroqWithFallback(groq, {
       messages: [{ role: 'user', content: prompt }],
       model: 'llama-3.3-70b-versatile',
-      temperature: 0.3,
+      temperature: 0.5,
     });
 
     let aiResponse = completion.choices[0]?.message?.content;
@@ -589,4 +619,92 @@ const analyzeSymptomsHandler = asyncHandler(async (req, res) => {
   }
 });
 
+// @desc    Generate a unified AI health plan
+// @route   POST /api/ai/unified-plan
+// @access  Private
+const generateUnifiedHealthPlanHandler = asyncHandler(async (req, res) => {
+  const { query } = req.body;
+  const { groq } = req;
+  const user = req.user;
+
+  if (!query) {
+    return res.status(400).json({ error: 'Query is required for health plan generation' });
+  }
+
+  const prompt = `Act as a Holistic AI Health Consultant. Based on the user's concern and profile, generate a comprehensive, multi-disciplinary wellness plan.
+
+  USER CONCERN: "${query}"
+  
+  PATIENT PROFILE:
+  - Age: ${user?.age || 'Not specified'}
+  - Gender: ${user?.gender || 'Not specified'}
+  - Existing Conditions: ${user?.disease || 'None specified'}
+
+  Your plan MUST be a single, valid JSON object following this EXACT structure:
+  {
+    "analysis": "A brief 2-3 sentence analysis of the concern and holistic approach.",
+    "remedies": [ { "name": "Remedy Name", "ingredients": "Key ingredients", "instructions": "Preparation and usage" } ],
+    "yoga": { 
+      "poses": [ { "name": "Asana Name", "duration": "Duration/Reps", "instructions": "Mandatory step-by-step guide on how to perform this asana", "benefits": "Brief benefit" } ], 
+      "breathing": { "name": "Pranayama Name", "instructions": "Step-by-step guide on how to perform this breathing technique" } 
+    },
+    "mudras": [ { "name": "Mudra Name", "instructions": "Step-by-step guide on how to hold this mudra", "benefits": "Target benefit" } ],
+    "diet": [ { "food": "Food item", "advice": "Why to include/avoid" } ],
+    "lifestyle": [ "Specific daily habit change 1", "Specific daily habit change 2" ]
+  }
+
+  IMPORTANT:
+  - Provide 2-3 items for each list.
+  - You MUST provide detailed instructions for EVERY yoga pose and remedy.
+  - Return ONLY the JSON object. No preamble.`;
+
+  try {
+    console.log(`Wellness Hub: Generating plan for query: "${query}"`);
+    const completion = await callGroqWithFallback(groq, {
+      messages: [{ role: 'system', content: 'You are a professional holistic health assistant that only outputs valid JSON.' }, { role: 'user', content: prompt }],
+      model: 'llama-3.3-70b-versatile',
+      temperature: 0.4,
+    });
+
+    let aiResponse = completion.choices[0]?.message?.content;
+    if (!aiResponse) throw new Error('No response from AI');
+
+    // Robust JSON extraction
+    let cleanJson = aiResponse.trim();
+    const jsonStart = cleanJson.indexOf('{');
+    const jsonEnd = cleanJson.lastIndexOf('}');
+
+    if (jsonStart !== -1 && jsonEnd !== -1) {
+      cleanJson = cleanJson.substring(jsonStart, jsonEnd + 1);
+    } else {
+      console.error('Wellness Hub: Could not find JSON boundaries in AI response.\nRaw response:', aiResponse);
+      throw new Error('AI response was not in the expected format. Please try rephrasing your concern.');
+    }
+
+    console.log(`Wellness Hub: Successfully extracted JSON for "${query.substring(0, 20)}..."`);
+
+    try {
+      const plan = JSON.parse(cleanJson);
+      res.json(plan);
+    } catch (parseError) {
+      console.error('JSON Parse Error:', parseError, '\nAttempted to parse:', cleanJson);
+      res.status(500).json({
+        error: 'AI generated an invalid data format',
+        details: 'The intelligence service returned a response that could not be read. Rephrasing your health goal may help.'
+      });
+    }
+  } catch (error) {
+    console.error('Unified Health Plan Error:', error);
+    const status = error.status || 500;
+    const message = error.message || 'An unexpected error occurred while generating your plan.';
+
+    res.status(status).json({
+      error: 'Failed to generate unified health plan',
+      details: message,
+      type: error.code || 'UNKNOWN_ERROR'
+    });
+  }
+});
+
+export const generateUnifiedHealthPlan = [ensureAIInitialized, generateUnifiedHealthPlanHandler];
 export const analyzeSymptoms = [ensureAIInitialized, analyzeSymptomsHandler];

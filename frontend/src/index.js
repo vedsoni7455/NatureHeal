@@ -4,7 +4,6 @@ import './index.css';
 import './styles/global.css';
 import App from './App';
 import { AuthProvider } from './context/AuthContext';
-import reportWebVitals from './reportWebVitals';
 import * as serviceWorkerRegistration from './serviceWorkerRegistration';  // <-- add this
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
@@ -16,6 +15,6 @@ root.render(
   </React.StrictMode>
 );
 
-reportWebVitals();
+// removed reportWebVitals call
 
 serviceWorkerRegistration.register(); // <-- register service worker

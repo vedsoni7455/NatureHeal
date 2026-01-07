@@ -250,29 +250,6 @@ const DashboardDoctor = () => {
         <div className="dashboard-card actions-card">
           <h2>Doctor Tools</h2>
           <div className="actions-grid">
-            <Link to="/diet-planner" className="action-item">
-              <span className="action-icon">🥗</span>
-              <div className="action-content">
-                <h4>Diet Planner</h4>
-                <p>Create personalized diet plans for patients</p>
-              </div>
-            </Link>
-
-            <Link to="/prescriptions" className="action-item">
-              <span className="action-icon">💊</span>
-              <div className="action-content">
-                <h4>Prescriptions</h4>
-                <p>Manage patient prescriptions and remedies</p>
-              </div>
-            </Link>
-
-            <Link to="/reports" className="action-item">
-              <span className="action-icon">📋</span>
-              <div className="action-content">
-                <h4>Medical Reports</h4>
-                <p>View and generate patient reports</p>
-              </div>
-            </Link>
 
             <Link to="/doctor/schedule" className="action-item">
               <span className="action-icon">🕐</span>
@@ -282,29 +259,6 @@ const DashboardDoctor = () => {
               </div>
             </Link>
 
-            <Link to="/resources" className="action-item">
-              <span className="action-icon">📚</span>
-              <div className="action-content">
-                <h4>Resources</h4>
-                <p>Access medical resources and guidelines</p>
-              </div>
-            </Link>
-
-            <Link to="/symptom-checker" className="action-item">
-              <span className="action-icon">🔍</span>
-              <div className="action-content">
-                <h4>Symptom Checker</h4>
-                <p>Analyze patient symptoms and conditions</p>
-              </div>
-            </Link>
-
-            <Link to="/chatbot" className="action-item">
-              <span className="action-icon">🤖</span>
-              <div className="action-content">
-                <h4>AI Assistant</h4>
-                <p>Get AI-powered medical insights</p>
-              </div>
-            </Link>
 
             <Link to="/doctor/profile" className="action-item">
               <span className="action-icon">⚙️</span>

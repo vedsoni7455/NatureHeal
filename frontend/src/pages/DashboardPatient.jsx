@@ -13,17 +13,14 @@ const DashboardPatient = () => {
     upcomingAppointments: 0,
     completedAppointments: 0
   });
-  const [savedRemedies, setSavedRemedies] = useState([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const fetchData = async () => {
       try {
         const res = await api.get('/appointments');
-        const remediesRes = await api.get('/user/saved-remedies');
         // Backend already filters appointments by user role, no need to filter again
         setAppointments(res.data.appointments || []);
-        setSavedRemedies(remediesRes.data || []);
 
         // Calculate stats
         const now = new Date();
@@ -68,9 +65,9 @@ const DashboardPatient = () => {
             <span className="btn-icon">📅</span>
             Book Appointment
           </Link>
-          <Link to="/remedies" className="action-btn secondary">
-            <span className="btn-icon">🌿</span>
-            View Remedies
+          <Link to="/wellness-hub" className="action-btn secondary">
+            <span className="btn-icon">✨</span>
+            Wellness Hub
           </Link>
           <Link to="/chatbot" className="action-btn secondary">
             <span className="btn-icon">🤖</span>
@@ -252,54 +249,18 @@ const DashboardPatient = () => {
           )}
         </div>
 
-        {/* Saved Remedies Card */}
-        <div className="dashboard-card remedies-card">
-          <div className="card-header">
-            <h2>Saved Remedies</h2>
-            <Link to="/remedies" className="view-all-link">Browse More</Link>
-          </div>
-
-          {savedRemedies.length > 0 ? (
-            <div className="saved-remedies-list">
-              {savedRemedies.map((remedy) => (
-                <div key={remedy._id} className="saved-remedy-item">
-                  <span className="remedy-icon">{remedy.icon}</span>
-                  <div className="remedy-info">
-                    <h4>{remedy.title}</h4>
-                    <span className="remedy-category">{remedy.category}</span>
-                  </div>
-                </div>
-              ))}
-            </div>
-          ) : (
-            <div className="empty-state">
-              <div className="empty-icon">🌿</div>
-              <h3>No saved remedies</h3>
-              <p>Save remedies from the Remedies page for quick access</p>
-              <Link to="/remedies" className="cta-btn">Explore Remedies</Link>
-            </div>
-          )}
-        </div>
 
         {/* Quick Actions Card */}
         <div className="dashboard-card actions-card">
-          <h2>Quick Actions</h2>
           <div className="actions-grid">
-            <Link to="/remedies" className="action-item">
-              <span className="action-icon">🌿</span>
+            <Link to="/wellness-hub" className="action-item" style={{ border: '2px solid var(--primary-50)', background: 'var(--primary-5)' }}>
+              <span className="action-icon">✨</span>
               <div className="action-content">
-                <h4>Home Remedies</h4>
-                <p>Discover natural remedies for common ailments</p>
+                <h4>AI Wellness Hub</h4>
+                <p>Unified AI plans for remedies, yoga, and diet</p>
               </div>
             </Link>
 
-            <Link to="/yoga-meditation" className="action-item">
-              <span className="action-icon">🧘‍♀️</span>
-              <div className="action-content">
-                <h4>Yoga & Meditation</h4>
-                <p>Practice wellness exercises for mind and body</p>
-              </div>
-            </Link>
 
             <Link to="/chatbot" className="action-item">
               <span className="action-icon">🤖</span>
@@ -341,13 +302,6 @@ const DashboardPatient = () => {
               </div>
             </Link>
 
-            <Link to="/reminders" className="action-item">
-              <span className="action-icon">⏰</span>
-              <div className="action-content">
-                <h4>Health Reminders</h4>
-                <p>Manage medication and appointment reminders</p>
-              </div>
-            </Link>
           </div>
         </div>
       </div>

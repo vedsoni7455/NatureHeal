@@ -8,17 +8,14 @@ export const AuthProvider = ({ children }) => {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const token = localStorage.getItem('token');
-    if (token) {
-      api.defaults.headers.common['Authorization'] = `Bearer ${token}`;
-      // Verify token and get user data - Commented out to prevent auto-login
-      // verifyToken();
-      setLoading(false); // Stop loading since we're not auto-logging in
-    } else {
-      setLoading(false);
-    }
+    // Force logout on every refresh as per user request ("it should first ask about register/login")
+    localStorage.removeItem('token');
+    delete api.defaults.headers.common['Authorization'];
+    setUser(null);
+    setLoading(false);
   }, []);
 
+  /*
   const verifyToken = async () => {
     try {
       const res = await api.get('/auth/profile');
@@ -31,6 +28,7 @@ export const AuthProvider = ({ children }) => {
       setLoading(false);
     }
   };
+  */
 
   const login = async (email, password) => {
     const res = await api.post('/auth/login', { email, password });

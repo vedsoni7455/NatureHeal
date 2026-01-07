@@ -32,20 +32,11 @@ const AboutUs = () => {
 
         <div className="features-grid">
           <div className="feature-card">
-            <span className="feature-icon">🌿</span>
-            <h3>Natural Remedies</h3>
+            <span className="feature-icon">✨</span>
+            <h3>AI Wellness Hub</h3>
             <p>
-              Discover time-tested natural remedies and homeopathic treatments
-              that work in harmony with your body's healing abilities.
-            </p>
-          </div>
-
-          <div className="feature-card">
-            <span className="feature-icon">🧘‍♀️</span>
-            <h3>Yoga & Meditation</h3>
-            <p>
-              Explore yoga asanas and meditation techniques that promote
-              physical health, mental clarity, and spiritual well-being.
+              A unified gateway to personalized natural remedies,
+              yoga sequences, and holistic dietary advice generated for you.
             </p>
           </div>
 
@@ -71,12 +62,8 @@ const AboutUs = () => {
         <div className="stats-section">
           <div className="stats-grid">
             <div className="stat-item">
-              <span className="stat-number">1000+</span>
-              <span className="stat-label">Natural Remedies</span>
-            </div>
-            <div className="stat-item">
-              <span className="stat-number">500+</span>
-              <span className="stat-label">Yoga Asanas</span>
+              <span className="stat-number">Infinite</span>
+              <span className="stat-label">AI Wellness Plans</span>
             </div>
             <div className="stat-item">
               <span className="stat-number">200+</span>
@@ -98,7 +85,7 @@ const AboutUs = () => {
             </p>
             <div className="cta-buttons">
               <a href="/register" className="cta-primary">Get Started</a>
-              <a href="/remedies" className="cta-secondary">Explore Remedies</a>
+              <a href="/ai-health-hub" className="cta-secondary">Wellness Hub</a>
             </div>
           </div>
         </div>
