@@ -315,19 +315,20 @@ export const updateAppointment = asyncHandler(async (req, res) => {
         if (!patientEmail) {
           console.error('Recipient email (patient) missing, cannot send cancellation.');
         } else {
+          // If the cancellation is done by a doctor/admin, we definitely want to notify the patient
           const message = `
                 Dear ${patientName},
 
-                Your appointment has been cancelled.
+                Your appointment with Dr. ${doctorName} has been cancelled by the doctor.
                 
-                Doctor: Dr. ${doctorName}
+                Appointment Details:
                 Date: ${new Date(updatedAppointment.date).toLocaleDateString()}
                 Time: ${updatedAppointment.time}
                 
-                Reason: The doctor has cancelled this appointment. Please reschedule if necessary.
+                Reason: The doctor has cancelled this appointment. Please login to your dashboard to reschedule if necessary.
               `;
 
-          console.log(`Sending Cancellation Email to Patient: ${patientEmail}`);
+          console.log(`Sending Cancellation Email to Patient: ${patientEmail} from Dr. ${doctorName}`);
 
           await sendEmail({
             email: patientEmail,
@@ -335,10 +336,10 @@ export const updateAppointment = asyncHandler(async (req, res) => {
             message,
             html: `<h1>Appointment Cancelled</h1>
                        <p>Dear ${patientName},</p>
-                       <p>Your appointment with Dr. ${doctorName} has been cancelled.</p>
+                       <p>Your appointment with Dr. ${doctorName} has been cancelled by the doctor.</p>
                        <p><strong>Date:</strong> ${new Date(updatedAppointment.date).toLocaleDateString()}</p>
                        <p><strong>Time:</strong> ${updatedAppointment.time}</p>
-                       <p><em>Reason: The doctor has cancelled this appointment. Please reschedule if necessary.</em></p>`
+                       <p><em>Reason: The doctor has cancelled this appointment. Please login to your dashboard to reschedule if necessary.</em></p>`
           });
           console.log('--- CANCELLATION EMAIL SENT TO PATIENT ---');
         }
