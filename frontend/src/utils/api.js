@@ -5,6 +5,8 @@ const api = axios.create({
   baseURL: (process.env.REACT_APP_API_URL || 'http://localhost:5000/api').replace(/\/$/, ""),
 });
 
+export const BASE_URL = api.defaults.baseURL.replace('/api', '');
+
 console.log('API Configured with baseURL:', api.defaults.baseURL);
 
 // Add auth token to requests

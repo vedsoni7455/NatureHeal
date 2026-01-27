@@ -1,5 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
+import { BASE_URL } from '../utils/api';
 
 const DoctorCard = ({ doctor }) => {
   const doctorDetails = doctor.doctorDetails || {};
@@ -113,7 +114,7 @@ const DoctorCard = ({ doctor }) => {
           <div className="cert-modal-content" onClick={e => e.stopPropagation()}>
             <button className="cert-modal-close" onClick={toggleCertificate}>×</button>
             <img
-              src={doctorDetails.certificateImage}
+              src={`${BASE_URL}${doctorDetails.certificateImage}`}
               alt={`Certificate for Dr. ${doctor.name}`}
               className="cert-image"
             />

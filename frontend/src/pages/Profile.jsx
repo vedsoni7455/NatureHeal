@@ -1,6 +1,6 @@
 import React, { useState, useContext, useEffect } from 'react';
 import AuthContext from '../context/AuthContext';
-import api from '../utils/api';
+import api, { BASE_URL } from '../utils/api';
 import '../styles/profile.css';
 
 const Profile = () => {
@@ -410,7 +410,7 @@ const Profile = () => {
               boxShadow: '0 2px 5px rgba(0,0,0,0.2)'
             }} onClick={toggleCertificate}>×</button>
             <img
-              src={doctorDetails.certificateImage}
+              src={`${BASE_URL}${doctorDetails.certificateImage}`}
               alt="Verification Certificate"
               style={{ maxWidth: '100%', maxHeight: '80vh', display: 'block' }}
             />

@@ -54,6 +54,7 @@ const Doctors = () => {
     'Naturopathy',
     'Homeopathy',
     'Ayurveda',
+    'Ayurvedic Doctor',
     'Acupressure',
     'Acupuncture',
     'Herbal Medicine',

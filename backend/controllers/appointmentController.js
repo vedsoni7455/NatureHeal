@@ -218,37 +218,48 @@ export const updateAppointment = asyncHandler(async (req, res) => {
     if (req.body.status === 'confirmed' && originalStatus !== 'confirmed') {
       console.log('--- ENTERING CONFIRMATION EMAIL BLOCK ---');
       try {
-        let message = `
-          Your appointment has been confirmed!
-          
-          Doctor: ${appointment.doctor.name}
-          Date: ${new Date(appointment.date).toLocaleDateString()}
-          Time: ${appointment.time}
-        `;
+        const doctorName = updatedAppointment.doctor?.name || 'Your Doctor';
+        const patientEmail = updatedAppointment.patient?.email;
+        const patientName = updatedAppointment.patient?.name || 'Patient';
 
-        let htmlContent = `<h1>Appointment Confirmed</h1>
-                 <p>Your appointment has been confirmed by Dr. ${appointment.doctor.name}.</p>
-                 <p><strong>Date:</strong> ${new Date(appointment.date).toLocaleDateString()}</p>
-                 <p><strong>Time:</strong> ${appointment.time}</p>`;
+        if (!patientEmail) {
+          console.error('Recipient email (patient) missing, cannot send confirmation.');
+        } else {
+          let message = `
+            Dear ${patientName},
+            
+            Your appointment has been confirmed!
+            
+            Doctor: Dr. ${doctorName}
+            Date: ${new Date(updatedAppointment.date).toLocaleDateString()}
+            Time: ${updatedAppointment.time}
+          `;
 
-        // If meeting link is also provided during confirmation
-        if (req.body.meetingLink) {
-          message += `\nMeeting Link: ${req.body.meetingLink}`;
-          htmlContent += `<p><strong>Link:</strong> <a href="${req.body.meetingLink}">${req.body.meetingLink}</a></p>`;
+          let htmlContent = `<h1>Appointment Confirmed</h1>
+                   <p>Dear ${patientName},</p>
+                   <p>Your appointment has been confirmed by Dr. ${doctorName}.</p>
+                   <p><strong>Date:</strong> ${new Date(updatedAppointment.date).toLocaleDateString()}</p>
+                   <p><strong>Time:</strong> ${updatedAppointment.time}</p>`;
+
+          // If meeting link is also provided during confirmation
+          if (updatedAppointment.meetingLink) {
+            message += `\nMeeting Link: ${updatedAppointment.meetingLink}`;
+            htmlContent += `<p><strong>Link:</strong> <a href="${updatedAppointment.meetingLink}">${updatedAppointment.meetingLink}</a></p>`;
+          }
+
+          message += `\nPlease be ready 10 minutes before the scheduled time.`;
+          htmlContent += `<p>Please be ready 10 minutes before the scheduled time.</p>`;
+
+          console.log(`Sending Confirmation Email to Patient: ${patientEmail} (Name: ${patientName})`);
+
+          await sendEmail({
+            email: patientEmail,
+            subject: 'Appointment Confirmed - Healora',
+            message,
+            html: htmlContent
+          });
+          console.log('--- CONFIRMATION EMAIL SENT TO PATIENT ---');
         }
-
-        message += `\nPlease be ready 10 minutes before the scheduled time.`;
-        htmlContent += `<p>Please be ready 10 minutes before the scheduled time.</p>`;
-
-        console.log('Sending Confirmation Email to:', updatedAppointment.patient.email); // Debug Log
-
-        await sendEmail({
-          email: updatedAppointment.patient.email,
-          subject: 'Appointment Confirmed - Healora',
-          message,
-          html: htmlContent
-        });
-        console.log('--- CONFIRMATION EMAIL SENT ---');
       } catch (error) {
         console.error('Confirmation email send failed:', error);
       }
@@ -257,27 +268,38 @@ export const updateAppointment = asyncHandler(async (req, res) => {
     else if (req.body.meetingLink && req.body.meetingLink !== originalMeetingLink) {
       console.log('--- ENTERING LINK UPDATE EMAIL BLOCK ---');
       try {
-        const message = `
-              A video call link has been added to your appointment.
-              
-              Doctor: ${appointment.doctor.name}
-              Link: ${req.body.meetingLink}
-              
-              Note: You can only join the meeting at the scheduled time.
-            `;
+        const doctorName = updatedAppointment.doctor?.name || 'Your Doctor';
+        const patientEmail = updatedAppointment.patient?.email;
+        const patientName = updatedAppointment.patient?.name || 'Patient';
 
-        console.log('Sending Link Update Email to:', updatedAppointment.patient.email);
+        if (!patientEmail) {
+          console.error('Recipient email (patient) missing, cannot send link update.');
+        } else {
+          const message = `
+                Dear ${patientName},
 
-        await sendEmail({
-          email: updatedAppointment.patient.email,
-          subject: 'Video Call Link Added - Healora',
-          message,
-          html: `<h1>Video Call Link Added</h1>
-                     <p>Dr. ${appointment.doctor.name} has added a Google Meet link for your appointment.</p>
-                     <p><strong>Link:</strong> <a href="${req.body.meetingLink}">${req.body.meetingLink}</a></p>
-                     <p><em>Note: You can only join the meeting at the scheduled time.</em></p>`
-        });
-        console.log('--- LINK UPDATE EMAIL SENT ---');
+                A video call link has been added to your appointment.
+                
+                Doctor: Dr. ${doctorName}
+                Link: ${updatedAppointment.meetingLink}
+                
+                Note: You can only join the meeting at the scheduled time.
+              `;
+
+          console.log(`Sending Link Update Email to Patient: ${patientEmail}`);
+
+          await sendEmail({
+            email: patientEmail,
+            subject: 'Video Call Link Added - Healora',
+            message,
+            html: `<h1>Video Call Link Added</h1>
+                       <p>Dear ${patientName},</p>
+                       <p>Dr. ${doctorName} has added a Google Meet link for your appointment.</p>
+                       <p><strong>Link:</strong> <a href="${updatedAppointment.meetingLink}">${updatedAppointment.meetingLink}</a></p>
+                       <p><em>Note: You can only join the meeting at the scheduled time.</em></p>`
+          });
+          console.log('--- LINK UPDATE EMAIL SENT TO PATIENT ---');
+        }
       } catch (error) {
         console.error('Link update email send failed:', error);
       }
@@ -286,29 +308,40 @@ export const updateAppointment = asyncHandler(async (req, res) => {
     else if (req.body.status === 'cancelled' && originalStatus !== 'cancelled') {
       console.log('--- ENTERING CANCELLATION EMAIL BLOCK ---');
       try {
-        const message = `
-              Your appointment has been cancelled.
-              
-              Doctor: ${appointment.doctor.name}
-              Date: ${new Date(appointment.date).toLocaleDateString()}
-              Time: ${appointment.time}
-              
-              Reason: The doctor has cancelled this appointment. Please reschedule if necessary.
-            `;
+        const doctorName = updatedAppointment.doctor?.name || 'Your Doctor';
+        const patientEmail = updatedAppointment.patient?.email;
+        const patientName = updatedAppointment.patient?.name || 'Patient';
 
-        console.log('Sending Cancellation Email to:', updatedAppointment.patient.email);
+        if (!patientEmail) {
+          console.error('Recipient email (patient) missing, cannot send cancellation.');
+        } else {
+          const message = `
+                Dear ${patientName},
 
-        await sendEmail({
-          email: updatedAppointment.patient.email,
-          subject: 'Appointment Cancelled - Healora',
-          message,
-          html: `<h1>Appointment Cancelled</h1>
-                     <p>Your appointment with Dr. ${appointment.doctor.name} has been cancelled.</p>
-                     <p><strong>Date:</strong> ${new Date(appointment.date).toLocaleDateString()}</p>
-                     <p><strong>Time:</strong> ${appointment.time}</p>
-                     <p><em>Reason: The doctor has cancelled this appointment. Please reschedule if necessary.</em></p>`
-        });
-        console.log('--- CANCELLATION EMAIL SENT ---');
+                Your appointment has been cancelled.
+                
+                Doctor: Dr. ${doctorName}
+                Date: ${new Date(updatedAppointment.date).toLocaleDateString()}
+                Time: ${updatedAppointment.time}
+                
+                Reason: The doctor has cancelled this appointment. Please reschedule if necessary.
+              `;
+
+          console.log(`Sending Cancellation Email to Patient: ${patientEmail}`);
+
+          await sendEmail({
+            email: patientEmail,
+            subject: 'Appointment Cancelled - Healora',
+            message,
+            html: `<h1>Appointment Cancelled</h1>
+                       <p>Dear ${patientName},</p>
+                       <p>Your appointment with Dr. ${doctorName} has been cancelled.</p>
+                       <p><strong>Date:</strong> ${new Date(updatedAppointment.date).toLocaleDateString()}</p>
+                       <p><strong>Time:</strong> ${updatedAppointment.time}</p>
+                       <p><em>Reason: The doctor has cancelled this appointment. Please reschedule if necessary.</em></p>`
+          });
+          console.log('--- CANCELLATION EMAIL SENT TO PATIENT ---');
+        }
       } catch (error) {
         console.error('Cancellation email send failed:', error);
       }
