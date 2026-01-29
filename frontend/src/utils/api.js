@@ -17,7 +17,8 @@ const api = axios.create({
 
 export const BASE_URL = api.defaults.baseURL.replace('/api', '');
 
-console.log('API Configured with baseURL:', api.defaults.baseURL);
+console.log('API Client initialized with baseURL:', api.defaults.baseURL);
+console.log('Environment REACT_APP_API_URL:', process.env.REACT_APP_API_URL);
 
 // Add auth token to requests
 api.interceptors.request.use(
