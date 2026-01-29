@@ -42,6 +42,7 @@ const DoctorProfile = () => {
                     console.log("Could not fetch extra doctor details", err);
                 }
 
+                setDoctorDetails(doctorDetails);
                 setFormData({
                     name: userData.name || '',
                     email: userData.email || '',

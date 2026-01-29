@@ -116,14 +116,34 @@ const DoctorProfilePublic = () => {
                         </div>
 
                         {/* Verification Certificate Link */}
-                        {doctorDetails.verificationStatus === 'Verified' && doctorDetails.certificateImage && (
+                        {doctorDetails.certificateImage && (
                             <div className="certificate-link" style={{ textAlign: 'center', marginTop: '2rem' }}>
+                                <div style={{ marginBottom: '1rem' }}>
+                                    {doctorDetails.verificationStatus === 'Verified' ? (
+                                        <span style={{ color: '#34a853', fontWeight: '600', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '5px' }}>
+                                            ✅ Verified Professional
+                                        </span>
+                                    ) : (
+                                        <span style={{ color: '#fbbc05', fontWeight: '600', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '5px' }}>
+                                            ⏳ Verification Pending
+                                        </span>
+                                    )}
+                                </div>
                                 <button
                                     onClick={toggleCertificate}
                                     className="view-cert-btn"
-                                    style={{ margin: '0 auto', padding: '10px 20px', fontSize: '1rem' }}
+                                    style={{
+                                        margin: '0 auto',
+                                        padding: '10px 20px',
+                                        fontSize: '1rem',
+                                        backgroundColor: 'var(--primary-color)',
+                                        color: 'white',
+                                        border: 'none',
+                                        borderRadius: '5px',
+                                        cursor: 'pointer'
+                                    }}
                                 >
-                                    📜 View Verified Certificate
+                                    📜 View Medical Certificate
                                 </button>
                             </div>
                         )}
@@ -143,10 +163,14 @@ const DoctorProfilePublic = () => {
                     <div className="cert-modal-content" onClick={e => e.stopPropagation()}>
                         <button className="cert-modal-close" onClick={toggleCertificate}>×</button>
                         <img
-                            src={doctorDetails.certificateImage}
+                            src={doctorDetails.certificateImage.startsWith('http') ? doctorDetails.certificateImage : `${doctorDetails.certificateImage}`}
                             alt={`Certificate for Dr. ${doctor.name}`}
                             className="cert-image"
+                            style={{ maxWidth: '100%', maxHeight: '80vh' }}
                         />
+                        <div style={{ marginTop: '1rem', textAlign: 'center', color: '#666' }}>
+                            {doctorDetails.verificationStatus === 'Verified' ? 'This certificate has been verified by our medical board.' : 'This certificate is currently under review.'}
+                        </div>
                     </div>
                 </div>
             )}

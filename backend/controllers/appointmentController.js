@@ -254,9 +254,25 @@ export const updateAppointment = asyncHandler(async (req, res) => {
 
           await sendEmail({
             email: patientEmail,
-            subject: 'Appointment Confirmed - Healora',
+            subject: '✅ Appointment Confirmed - Healora',
             message,
-            html: htmlContent
+            html: `
+              <div style="font-family: Arial, sans-serif; padding: 20px; border: 1px solid #e0e0e0; border-radius: 10px;">
+                <h2 style="color: #27ae60;">Appointment Confirmed!</h2>
+                <p>Dear ${patientName},</p>
+                <p>Your appointment has been successfully confirmed by <strong>Dr. ${doctorName}</strong>.</p>
+                <div style="background-color: #f9f9f9; padding: 15px; border-radius: 5px; margin: 20px 0;">
+                  <p><strong>Date:</strong> ${new Date(updatedAppointment.date).toLocaleDateString()}</p>
+                  <p><strong>Time:</strong> ${updatedAppointment.time}</p>
+                  ${updatedAppointment.meetingLink ? `<p><strong>Meeting Link:</strong> <a href="${updatedAppointment.meetingLink}">${updatedAppointment.meetingLink}</a></p>` : '<p><em>Meeting link will be shared shortly.</em></p>'}
+                </div>
+                <p style="color: #e67e22; font-weight: bold;">⚠️ Important: You can join the meeting 10 minutes before the scheduled time.</p>
+                <p>Please ensure you have a stable internet connection.</p>
+                <a href="${process.env.CLIENT_URL || 'https://healora-five.vercel.app'}/dashboard/patient" 
+                   style="display: inline-block; padding: 10px 20px; background-color: #27ae60; color: white; text-decoration: none; border-radius: 5px;">
+                  View Appointment Details
+                </a>
+              </div>`
           });
           console.log('--- CONFIRMATION EMAIL SENT TO PATIENT ---');
         }
@@ -290,13 +306,23 @@ export const updateAppointment = asyncHandler(async (req, res) => {
 
           await sendEmail({
             email: patientEmail,
-            subject: 'Video Call Link Added - Healora',
+            subject: '🔗 Video Call Link Added - Healora',
             message,
-            html: `<h1>Video Call Link Added</h1>
-                       <p>Dear ${patientName},</p>
-                       <p>Dr. ${doctorName} has added a Google Meet link for your appointment.</p>
-                       <p><strong>Link:</strong> <a href="${updatedAppointment.meetingLink}">${updatedAppointment.meetingLink}</a></p>
-                       <p><em>Note: You can only join the meeting at the scheduled time.</em></p>`
+            html: `
+              <div style="font-family: Arial, sans-serif; padding: 20px; border: 1px solid #e0e0e0; border-radius: 10px;">
+                <h2 style="color: #2980b9;">Video Call Link Added</h2>
+                <p>Dear ${patientName},</p>
+                <p>Dr. ${doctorName} has added a Google Meet link for your upcoming consultation.</p>
+                <div style="background-color: #f1f7fe; padding: 15px; border-radius: 5px; margin: 20px 0;">
+                  <p><strong>Meeting Link:</strong> <a href="${updatedAppointment.meetingLink}">${updatedAppointment.meetingLink}</a></p>
+                  <p><strong>Scheduled Time:</strong> ${updatedAppointment.time} on ${new Date(updatedAppointment.date).toLocaleDateString()}</p>
+                </div>
+                <p style="color: #e67e22; font-weight: bold;">⚠️ Reminder: The "Join" button will be active 10 minutes before the meeting starts.</p>
+                <a href="${updatedAppointment.meetingLink}" 
+                   style="display: inline-block; padding: 10px 20px; background-color: #2980b9; color: white; text-decoration: none; border-radius: 5px;">
+                  Join Meeting
+                </a>
+              </div>`
           });
           console.log('--- LINK UPDATE EMAIL SENT TO PATIENT ---');
         }
@@ -332,14 +358,23 @@ export const updateAppointment = asyncHandler(async (req, res) => {
 
           await sendEmail({
             email: patientEmail,
-            subject: 'Appointment Cancelled - Healora',
+            subject: '❌ Appointment Cancelled - Healora',
             message,
-            html: `<h1>Appointment Cancelled</h1>
-                       <p>Dear ${patientName},</p>
-                       <p>Your appointment with Dr. ${doctorName} has been cancelled by the doctor.</p>
-                       <p><strong>Date:</strong> ${new Date(updatedAppointment.date).toLocaleDateString()}</p>
-                       <p><strong>Time:</strong> ${updatedAppointment.time}</p>
-                       <p><em>Reason: The doctor has cancelled this appointment. Please login to your dashboard to reschedule if necessary.</em></p>`
+            html: `
+              <div style="font-family: Arial, sans-serif; padding: 20px; border: 1px solid #e0e0e0; border-radius: 10px;">
+                <h2 style="color: #c0392b;">Appointment Cancelled</h2>
+                <p>Dear ${patientName},</p>
+                <p>We regret to inform you that your appointment with <strong>Dr. ${doctorName}</strong> has been cancelled.</p>
+                <div style="background-color: #fdf2f2; padding: 15px; border-radius: 5px; margin: 20px 0;">
+                  <p><strong>Date:</strong> ${new Date(updatedAppointment.date).toLocaleDateString()}</p>
+                  <p><strong>Time:</strong> ${updatedAppointment.time}</p>
+                </div>
+                <p><strong>Reason:</strong> The doctor is unavailable at the moment. Please visit the dashboard to reschedule your appointment.</p>
+                <a href="${process.env.CLIENT_URL || 'https://healora-five.vercel.app'}/dashboard/patient" 
+                   style="display: inline-block; padding: 10px 20px; background-color: #c0392b; color: white; text-decoration: none; border-radius: 5px;">
+                  Reschedule Now
+                </a>
+              </div>`
           });
           console.log('--- CANCELLATION EMAIL SENT TO PATIENT ---');
         }
