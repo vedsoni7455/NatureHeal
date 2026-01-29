@@ -33,34 +33,26 @@ app.use((req, res, next) => {
   next();
 });
 
-// CORS Configuration for Production Readiness
+// CORS Configuration
+const allowedOrigins = [
+  'https://healora-wine.vercel.app',
+  'https://healora-five.vercel.app',
+  'http://localhost:3000',
+  process.env.FRONTEND_URL?.replace(/\/$/, "")
+].filter(Boolean);
+
 const corsOptions = {
   origin: function (origin, callback) {
-    // List of allowed origins
-    const frontendUrl = process.env.FRONTEND_URL ? process.env.FRONTEND_URL.replace(/\/$/, "") : null;
-    const allowedOrigins = [
-      frontendUrl,
-      'http://localhost:3000',
-      'https://healora-five.vercel.app',
-      'https://healora-wine.vercel.app'
-    ].filter(Boolean);
-
-    // If no origin (like server-to-server) or origin is in allowed list
-    if (!origin || allowedOrigins.includes(origin)) {
+    if (!origin || allowedOrigins.includes(origin) || origin.endsWith('.vercel.app')) {
       callback(null, true);
     } else {
-      // Check if it's any vercel.app subdomain for debugging
-      if (origin.endsWith('.vercel.app')) {
-        callback(null, true);
-      } else if (!process.env.FRONTEND_URL) {
-        callback(null, true);
-      } else {
-        console.error(`CORS Blocked: Origin ${origin} not in allowed list:`, allowedOrigins);
-        callback(new Error('Not allowed by CORS'));
-      }
+      console.error(`CORS Blocked for origin: ${origin}`);
+      callback(new Error('Not allowed by CORS'));
     }
   },
   credentials: true,
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization', 'Origin', 'Accept'],
   optionsSuccessStatus: 200
 };
 app.use(cors(corsOptions));
