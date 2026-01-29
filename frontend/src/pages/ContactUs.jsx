@@ -9,7 +9,7 @@ const ContactUs = () => {
     message: ''
   });
 
-  const [status, setStatus] = useState(null); // null, 'success', 'error'
+  const [, setStatus] = useState(null);
   const [loading, setLoading] = useState(false);
 
   const handleChange = (e) => {
@@ -198,8 +198,8 @@ const ContactUs = () => {
                 ></textarea>
               </div>
 
-              <button type="submit" className="auth-btn">
-                Send Message
+              <button type="submit" className="auth-btn" disabled={loading}>
+                {loading ? 'Sending...' : 'Send Message'}
               </button>
             </form>
           </div>

@@ -1,4 +1,4 @@
-import React, { useState, useContext, useEffect } from 'react';
+import React, { useState, useContext } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import AuthContext from '../context/AuthContext';
 
@@ -6,7 +6,7 @@ const Login = () => {
   const [formData, setFormData] = useState({ email: '', password: '', role: 'patient' });
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState('');
-  const { login, user, loading } = useContext(AuthContext);
+  const { login, loading } = useContext(AuthContext);
   const navigate = useNavigate();
 
   // Redirect if already logged in - Removed to ensure credentials are always asked for
