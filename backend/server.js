@@ -38,14 +38,21 @@ const corsOptions = {
   origin: function (origin, callback) {
     // List of allowed origins
     const frontendUrl = process.env.FRONTEND_URL ? process.env.FRONTEND_URL.replace(/\/$/, "") : null;
-    const allowedOrigins = [frontendUrl, 'http://localhost:3000'].filter(Boolean);
+    const allowedOrigins = [
+      frontendUrl,
+      'http://localhost:3000',
+      'https://healora-five.vercel.app',
+      'https://healora-wine.vercel.app'
+    ].filter(Boolean);
 
     // If no origin (like server-to-server) or origin is in allowed list
     if (!origin || allowedOrigins.includes(origin)) {
       callback(null, true);
     } else {
-      // In development, if FRONTEND_URL is not set, allow everything (but reflect origin for credentials)
-      if (!process.env.FRONTEND_URL) {
+      // Check if it's any vercel.app subdomain for debugging
+      if (origin.endsWith('.vercel.app')) {
+        callback(null, true);
+      } else if (!process.env.FRONTEND_URL) {
         callback(null, true);
       } else {
         console.error(`CORS Blocked: Origin ${origin} not in allowed list:`, allowedOrigins);
