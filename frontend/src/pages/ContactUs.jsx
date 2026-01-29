@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import api from '../utils/api';
 import '../styles/contact.css';
 
 const ContactUs = () => {
@@ -25,18 +26,9 @@ const ContactUs = () => {
     setStatus(null);
 
     try {
-      const apiUrl = (process.env.REACT_APP_API_URL || 'http://localhost:5000/api').replace(/\/$/, "");
-      const response = await fetch(`${apiUrl}/contact`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(formData),
-      });
+      const response = await api.post('/contact', formData);
 
-      const data = await response.json();
-
-      if (response.ok) {
+      if (response.status === 200 || response.status === 201) {
         setStatus('success');
         alert('Thank you for your message! We will get back to you soon.');
         setFormData({
@@ -47,12 +39,13 @@ const ContactUs = () => {
         });
       } else {
         setStatus('error');
-        alert(data.message || 'Something went wrong. Please try again.');
+        alert('Something went wrong. Please try again.');
       }
     } catch (error) {
       console.error('Error submitting form:', error);
       setStatus('error');
-      alert('Network error. Please try again later.');
+      const errorMsg = error.response?.data?.message || 'Network error. Please try again later.';
+      alert(errorMsg);
     } finally {
       setLoading(false);
     }
