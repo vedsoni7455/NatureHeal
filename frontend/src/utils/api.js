@@ -1,8 +1,18 @@
 import axios from 'axios';
 
+const getBaseURL = () => {
+  let url = process.env.REACT_APP_API_URL || 'http://localhost:5000/api';
+  url = url.replace(/\/$/, ""); // Remove trailing slash
+
+  // Ensure it ends with /api
+  if (!url.endsWith('/api')) {
+    url = `${url}/api`;
+  }
+  return url;
+};
+
 const api = axios.create({
-  // Priority: Environment Variable (for Vercel/Netlify), Fallback: Local for development
-  baseURL: (process.env.REACT_APP_API_URL || 'http://localhost:5000/api').replace(/\/$/, ""),
+  baseURL: getBaseURL(),
 });
 
 export const BASE_URL = api.defaults.baseURL.replace('/api', '');
