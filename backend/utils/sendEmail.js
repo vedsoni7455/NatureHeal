@@ -26,12 +26,13 @@ const sendEmail = async (options) => {
         html: options.html, // Support HTML emails
     };
 
-    console.log(`📡 Attempting to send email to: ${options.email} | Subject: ${options.subject}`);
+    console.log(`📡 [sendEmail] Attempting to send email | To: ${options.email} | Subject: ${options.subject}`);
     try {
         const info = await transporter.sendMail(message);
-        console.log('✅ Email sent successfully! MessageId: %s', info.messageId);
+        console.log(`✅ [sendEmail] Success! To: ${options.email} | MessageId: ${info.messageId}`);
+        return info;
     } catch (err) {
-        console.error('❌ Nodemailer Error:', err);
+        console.error(`❌ [sendEmail] Error sending to ${options.email}:`, err);
         throw err;
     }
 };
