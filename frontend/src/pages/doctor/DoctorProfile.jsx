@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 // import AuthContext from '../../context/AuthContext'; // Not currently used
-import api from '../../utils/api';
+import api, { BASE_URL } from '../../utils/api';
 import '../../styles/global.css'; // Ensure global styles are applied
 
 const DoctorProfile = () => {
@@ -324,7 +324,7 @@ const DoctorProfile = () => {
                                     ✅ Certificate Uploaded
                                 </p>
                                 <img
-                                    src={doctorDetails.certificateImage}
+                                    src={`${BASE_URL}${doctorDetails.certificateImage}`}
                                     alt="Current Certificate"
                                     style={{ height: '100px', border: '1px solid #ddd', marginTop: '5px' }}
                                 />

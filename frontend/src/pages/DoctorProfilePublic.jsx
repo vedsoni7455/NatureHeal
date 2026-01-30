@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
-import api from '../utils/api';
+import api, { BASE_URL } from '../utils/api';
 import '../styles/doctors.css';
 
 const DoctorProfilePublic = () => {
@@ -163,7 +163,7 @@ const DoctorProfilePublic = () => {
                     <div className="cert-modal-content" onClick={e => e.stopPropagation()}>
                         <button className="cert-modal-close" onClick={toggleCertificate}>×</button>
                         <img
-                            src={doctorDetails.certificateImage.startsWith('http') ? doctorDetails.certificateImage : `${doctorDetails.certificateImage}`}
+                            src={doctorDetails.certificateImage.startsWith('http') ? doctorDetails.certificateImage : `${BASE_URL}${doctorDetails.certificateImage}`}
                             alt={`Certificate for Dr. ${doctor.name}`}
                             className="cert-image"
                             style={{ maxWidth: '100%', maxHeight: '80vh' }}
