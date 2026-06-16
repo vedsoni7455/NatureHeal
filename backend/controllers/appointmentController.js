@@ -140,8 +140,6 @@ export const createAppointment = asyncHandler(async (req, res) => {
   await createdAppointment.populate('patient', 'name email');
   await createdAppointment.populate('doctor', 'name email specialization');
 
-  res.status(201).json(createdAppointment);
-
   // Send email to Doctor
   try {
     const message = `
@@ -155,6 +153,7 @@ export const createAppointment = asyncHandler(async (req, res) => {
       Please login to your dashboard to accept or decline.
     `;
 
+    console.log(`📧 Dispatching new appointment email to doctor: ${doctorUser.email}`);
     await sendEmail({
       email: doctorUser.email,
       subject: 'New Appointment Request - Healora',
@@ -167,9 +166,11 @@ export const createAppointment = asyncHandler(async (req, res) => {
              <p><a href="${process.env.CLIENT_URL || 'http://localhost:3000'}/dashboard/doctor">Login to Dashboard</a></p>`
     });
   } catch (error) {
-    console.error('Email send failed:', error);
-    // Don't fail the request if email fails
+    console.error('❌ Email send failed in createAppointment:', error);
+    // Don't fail the request if email fails, but log it
   }
+
+  res.status(201).json(createdAppointment);
 });
 
 // @desc    Update appointment
@@ -211,8 +212,6 @@ export const updateAppointment = asyncHandler(async (req, res) => {
     const updatedAppointment = await appointment.save();
     await updatedAppointment.populate('patient', 'name email');
     await updatedAppointment.populate('doctor', 'name email specialization');
-
-    res.json(updatedAppointment);
 
     // Check for status update to 'confirmed'
     if (req.body.status === 'confirmed' && originalStatus !== 'confirmed') {
@@ -382,6 +381,9 @@ export const updateAppointment = asyncHandler(async (req, res) => {
         console.error('Cancellation email send failed:', error);
       }
     }
+
+    res.json(updatedAppointment);
+
   } else {
     res.status(404);
     throw new Error('Appointment not found');
