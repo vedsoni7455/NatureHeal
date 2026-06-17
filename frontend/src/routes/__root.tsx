@@ -81,11 +81,22 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       { name: "description", content: "Naturopathy, homeopathy, and AI-powered wellness — book doctors, get personalized healing plans, and check symptoms in one calm place." },
       { property: "og:title", content: "Healora — Holistic Healthcare, AI-Guided" },
       { property: "og:description", content: "Naturopathy, homeopathy, and AI-powered wellness in one calm place." },
+      { name: "theme-color", content: "#1b4332" },
+      { name: "apple-mobile-web-app-capable", content: "yes" },
+      { name: "apple-mobile-web-app-status-bar-style", content: "black-translucent" },
     ],
     links: [
       {
         rel: "stylesheet",
         href: appCss,
+      },
+      {
+        rel: "manifest",
+        href: "/manifest.json",
+      },
+      {
+        rel: "apple-touch-icon",
+        href: "/icon-192x192.png",
       },
     ],
   }),
@@ -111,6 +122,28 @@ function RootShell({ children }: { children: ReactNode }) {
 
 function RootComponent() {
   const { queryClient } = Route.useRouteContext();
+
+  useEffect(() => {
+    if (typeof window !== "undefined" && "serviceWorker" in navigator) {
+      // If document is already loaded, register directly
+      if (document.readyState === "complete") {
+        registerServiceWorker();
+      } else {
+        window.addEventListener("load", registerServiceWorker);
+      }
+    }
+
+    function registerServiceWorker() {
+      navigator.serviceWorker
+        .register("/sw.js")
+        .then((reg) => {
+          console.log("Service worker registered successfully:", reg.scope);
+        })
+        .catch((err) => {
+          console.error("Service worker registration failed:", err);
+        });
+    }
+  }, []);
 
   return (
     <QueryClientProvider client={queryClient}>

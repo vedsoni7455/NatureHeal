@@ -1,0 +1,24 @@
+{
+  "name": "Healora Holistic Healthcare",
+  "short_name": "Healora",
+  "description": "Naturopathy, homeopathy, and AI-powered wellness in one calm place.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#fcfdfa",
+  "theme_color": "#1b4332",
+  "orientation": "portrait-primary",
+  "icons": [
+    {
+      "src": "/icon-192x192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/icon-512x512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ]
+}
