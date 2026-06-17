@@ -26,3 +26,4 @@ Thumbs.db
 # Uploads (user-uploaded files should not be in git)
 backend/uploads/*
 !backend/uploads/.gitkeep
+.vercel
