@@ -1,4 +1,4 @@
-{
+{ "type": "module",
   "dependencies": {
     "@google/generative-ai": "^0.24.1",
     "dotenv": "^17.2.3",

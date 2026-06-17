@@ -1,7 +1,7 @@
 const TOKEN_KEY = "token";
 
 function getBaseURL(): string {
-  let url = import.meta.env.VITE_API_URL || "http://localhost:5000/api";
+  let url = import.meta.env.VITE_API_BASE || "https://healora-backend-netj.onrender.com/api";
   url = url.replace(/\/$/, "");
   if (!url.endsWith("/api")) {
     url = `${url}/api`;
